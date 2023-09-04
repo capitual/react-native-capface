@@ -6,7 +6,7 @@ const LINKING_ERROR =
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo Go\n';
 
-const ReactNativeCapfaceSdk = NativeModules.ReactNativeCapfaceSdk
+export const ReactNativeCapfaceSdk = NativeModules.ReactNativeCapfaceSdk
   ? NativeModules.ReactNativeCapfaceSdk
   : new Proxy(
       {},
@@ -17,6 +17,6 @@ const ReactNativeCapfaceSdk = NativeModules.ReactNativeCapfaceSdk
       }
     );
 
-export function multiply(a: number, b: number): Promise<number> {
-  return ReactNativeCapfaceSdk.multiply(a, b);
+export function logger(): void {
+  return console.log(ReactNativeCapfaceSdk);
 }
