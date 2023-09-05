@@ -7,8 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5E555C0D2413F4C50049A1A2 /* ReactNativeCapfaceSdk.mm in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* ReactNativeCapfaceSdk.mm */; };
-		F4FF95D7245B92E800C19C63 /*  ReactNativeCapfaceSdk.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF95D6245B92E800C19C63 /*  ReactNativeCapfaceSdk.swift */; };
+		CEBC6E922AA66F3900A76DE0 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC6E912AA66F3900A76DE0 /* Config.swift */; };
+		CEBC6E952AA66F4900A76DE0 /* FaceTecViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC6E942AA66F4900A76DE0 /* FaceTecViewController.swift */; };
+		CEBC6E982AA66F5800A76DE0 /* FaceTecUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC6E972AA66F5800A76DE0 /* FaceTecUtilities.swift */; };
+		CEBC6E9F2AA66F8200A76DE0 /* AdditionalReviewAnimationViewOrange.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC6E9C2AA66F8200A76DE0 /* AdditionalReviewAnimationViewOrange.swift */; };
+		CEBC6EA02AA66F8200A76DE0 /* AdditionalReviewAnimationViewRed.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC6E9D2AA66F8200A76DE0 /* AdditionalReviewAnimationViewRed.swift */; };
+		CEBC6EA12AA66F8200A76DE0 /* AdditionalReviewAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC6E9E2AA66F8200A76DE0 /* AdditionalReviewAnimationView.swift */; };
+		CEBC6EA52AA66FDD00A76DE0 /* ThemeHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC6EA42AA66FDD00A76DE0 /* ThemeHelpers.swift */; };
+		CEBC6EAC2AA66FF300A76DE0 /* LivenessCheckProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC6EA62AA66FF300A76DE0 /* LivenessCheckProcessor.swift */; };
+		CEBC6EAD2AA66FF300A76DE0 /* ProcesingDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC6EA72AA66FF300A76DE0 /* ProcesingDelegate.swift */; };
+		CEBC6EAE2AA66FF300A76DE0 /* EnrollmentProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC6EA82AA66FF300A76DE0 /* EnrollmentProcessor.swift */; };
+		CEBC6EAF2AA66FF300A76DE0 /* PhotoIDMatchProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC6EA92AA66FF300A76DE0 /* PhotoIDMatchProcessor.swift */; };
+		CEBC6EB02AA66FF300A76DE0 /* PhotoIDScanProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC6EAA2AA66FF300A76DE0 /* PhotoIDScanProcessor.swift */; };
+		CEBC6EB12AA66FF300A76DE0 /* AuthenticateProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC6EAB2AA66FF300A76DE0 /* AuthenticateProcessor.swift */; };
+		CEE455C32AA6869C0063FD54 /* ThemeUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE455C22AA6869C0063FD54 /* ThemeUtils.swift */; };
+		CEF929ED2AA6837400777D78 /* FaceTecSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF929EC2AA6837400777D78 /* FaceTecSDK.framework */; };
+		F4FF95D7245B92E800C19C63 /* ReactNativeCapfaceSdk.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF95D6245B92E800C19C63 /* ReactNativeCapfaceSdk.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,6 +40,21 @@
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libReactNativeCapfaceSdk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libReactNativeCapfaceSdk.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3E7B5891CC2AC0600A0062D /* ReactNativeCapfaceSdk.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReactNativeCapfaceSdk.mm; sourceTree = "<group>"; };
+		CEBC6E912AA66F3900A76DE0 /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		CEBC6E942AA66F4900A76DE0 /* FaceTecViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FaceTecViewController.swift; sourceTree = "<group>"; };
+		CEBC6E972AA66F5800A76DE0 /* FaceTecUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FaceTecUtilities.swift; sourceTree = "<group>"; };
+		CEBC6E9C2AA66F8200A76DE0 /* AdditionalReviewAnimationViewOrange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdditionalReviewAnimationViewOrange.swift; sourceTree = "<group>"; };
+		CEBC6E9D2AA66F8200A76DE0 /* AdditionalReviewAnimationViewRed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdditionalReviewAnimationViewRed.swift; sourceTree = "<group>"; };
+		CEBC6E9E2AA66F8200A76DE0 /* AdditionalReviewAnimationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdditionalReviewAnimationView.swift; sourceTree = "<group>"; };
+		CEBC6EA42AA66FDD00A76DE0 /* ThemeHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeHelpers.swift; sourceTree = "<group>"; };
+		CEBC6EA62AA66FF300A76DE0 /* LivenessCheckProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LivenessCheckProcessor.swift; sourceTree = "<group>"; };
+		CEBC6EA72AA66FF300A76DE0 /* ProcesingDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProcesingDelegate.swift; sourceTree = "<group>"; };
+		CEBC6EA82AA66FF300A76DE0 /* EnrollmentProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnrollmentProcessor.swift; sourceTree = "<group>"; };
+		CEBC6EA92AA66FF300A76DE0 /* PhotoIDMatchProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoIDMatchProcessor.swift; sourceTree = "<group>"; };
+		CEBC6EAA2AA66FF300A76DE0 /* PhotoIDScanProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoIDScanProcessor.swift; sourceTree = "<group>"; };
+		CEBC6EAB2AA66FF300A76DE0 /* AuthenticateProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticateProcessor.swift; sourceTree = "<group>"; };
+		CEE455C22AA6869C0063FD54 /* ThemeUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeUtils.swift; sourceTree = "<group>"; };
+		CEF929EC2AA6837400777D78 /* FaceTecSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FaceTecSDK.framework; sourceTree = "<group>"; };
 		F4FF95D5245B92E700C19C63 /* ReactNativeCapfaceSdk-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ReactNativeCapfaceSdk-Bridging-Header.h"; sourceTree = "<group>"; };
 		F4FF95D6245B92E800C19C63 /* ReactNativeCapfaceSdk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactNativeCapfaceSdk.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -35,6 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEF929ED2AA6837400777D78 /* FaceTecSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -52,11 +82,82 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				CEF929EB2AA6836600777D78 /* Frameworks */,
+				CEBC6EA22AA66FC900A76DE0 /* Processors */,
+				CEBC6E992AA66F5E00A76DE0 /* SupportingFiles */,
+				CEBC6E962AA66F4E00A76DE0 /* Utilities */,
+				CEBC6E932AA66F4000A76DE0 /* ViewController */,
+				CEBC6E912AA66F3900A76DE0 /* Config.swift */,
 				F4FF95D6245B92E800C19C63 /* ReactNativeCapfaceSdk.swift */,
 				B3E7B5891CC2AC0600A0062D /* ReactNativeCapfaceSdk.mm */,
 				F4FF95D5245B92E700C19C63 /* ReactNativeCapfaceSdk-Bridging-Header.h */,
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		CEBC6E932AA66F4000A76DE0 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				CEBC6E942AA66F4900A76DE0 /* FaceTecViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		CEBC6E962AA66F4E00A76DE0 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				CEBC6E972AA66F5800A76DE0 /* FaceTecUtilities.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		CEBC6E992AA66F5E00A76DE0 /* SupportingFiles */ = {
+			isa = PBXGroup;
+			children = (
+				CEBC6E9B2AA66F7000A76DE0 /* ThemeViews */,
+			);
+			path = SupportingFiles;
+			sourceTree = "<group>";
+		};
+		CEBC6E9B2AA66F7000A76DE0 /* ThemeViews */ = {
+			isa = PBXGroup;
+			children = (
+				CEBC6E9E2AA66F8200A76DE0 /* AdditionalReviewAnimationView.swift */,
+				CEBC6E9C2AA66F8200A76DE0 /* AdditionalReviewAnimationViewOrange.swift */,
+				CEBC6E9D2AA66F8200A76DE0 /* AdditionalReviewAnimationViewRed.swift */,
+			);
+			path = ThemeViews;
+			sourceTree = "<group>";
+		};
+		CEBC6EA22AA66FC900A76DE0 /* Processors */ = {
+			isa = PBXGroup;
+			children = (
+				CEBC6EA32AA66FD200A76DE0 /* Helpers */,
+				CEBC6EAB2AA66FF300A76DE0 /* AuthenticateProcessor.swift */,
+				CEBC6EA82AA66FF300A76DE0 /* EnrollmentProcessor.swift */,
+				CEBC6EA62AA66FF300A76DE0 /* LivenessCheckProcessor.swift */,
+				CEBC6EA92AA66FF300A76DE0 /* PhotoIDMatchProcessor.swift */,
+				CEBC6EAA2AA66FF300A76DE0 /* PhotoIDScanProcessor.swift */,
+				CEBC6EA72AA66FF300A76DE0 /* ProcesingDelegate.swift */,
+			);
+			path = Processors;
+			sourceTree = "<group>";
+		};
+		CEBC6EA32AA66FD200A76DE0 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				CEBC6EA42AA66FDD00A76DE0 /* ThemeHelpers.swift */,
+				CEE455C22AA6869C0063FD54 /* ThemeUtils.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		CEF929EB2AA6836600777D78 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CEF929EC2AA6837400777D78 /* FaceTecSDK.framework */,
+			);
+			path = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -116,8 +217,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEBC6E982AA66F5800A76DE0 /* FaceTecUtilities.swift in Sources */,
+				CEBC6E952AA66F4900A76DE0 /* FaceTecViewController.swift in Sources */,
 				F4FF95D7245B92E800C19C63 /* ReactNativeCapfaceSdk.swift in Sources */,
-				B3E7B58A1CC2AC0600A0062D /* ReactNativeCapfaceSdk.mm in Sources */,
+				CEE455C32AA6869C0063FD54 /* ThemeUtils.swift in Sources */,
+				CEBC6EAD2AA66FF300A76DE0 /* ProcesingDelegate.swift in Sources */,
+				CEBC6EA52AA66FDD00A76DE0 /* ThemeHelpers.swift in Sources */,
+				CEBC6EA12AA66F8200A76DE0 /* AdditionalReviewAnimationView.swift in Sources */,
+				CEBC6EAF2AA66FF300A76DE0 /* PhotoIDMatchProcessor.swift in Sources */,
+				CEBC6EB12AA66FF300A76DE0 /* AuthenticateProcessor.swift in Sources */,
+				CEBC6E9F2AA66F8200A76DE0 /* AdditionalReviewAnimationViewOrange.swift in Sources */,
+				CEBC6EB02AA66FF300A76DE0 /* PhotoIDScanProcessor.swift in Sources */,
+				CEBC6EAE2AA66FF300A76DE0 /* EnrollmentProcessor.swift in Sources */,
+				CEBC6EA02AA66F8200A76DE0 /* AdditionalReviewAnimationViewRed.swift in Sources */,
+				CEBC6EAC2AA66FF300A76DE0 /* LivenessCheckProcessor.swift in Sources */,
+				CEBC6E922AA66F3900A76DE0 /* Config.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -222,6 +336,10 @@
 		58B511F01A9E6C8500147676 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -241,6 +359,10 @@
 		58B511F11A9E6C8500147676 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
