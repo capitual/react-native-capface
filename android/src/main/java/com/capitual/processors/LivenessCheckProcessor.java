@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -117,7 +116,7 @@ public class LivenessCheckProcessor extends Processor implements FaceTecFaceScan
       }
 
       @Override
-      public void onFailure(@NonNull Call call, @Nullable IOException e) {
+      public void onFailure(@NonNull Call call, IOException e) {
         Log.d("Capitual - HTTPS", "Exception raised while attempting HTTPS call.");
         faceScanResultCallback.cancel();
         capFaceModule.sendEvent("onCloseModal", false);
