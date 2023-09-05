@@ -16,7 +16,3 @@ export const ReactNativeCapfaceSdk = NativeModules.ReactNativeCapfaceSdk
         },
       }
     );
-
-export function logger(): void {
-  return console.log(ReactNativeCapfaceSdk);
-}

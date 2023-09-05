@@ -96,6 +96,11 @@ public class EnrollmentProcessor extends Processor implements FaceTecFaceScanPro
             success = faceScanResultCallback.proceedToNextStep(scanResultBlob);
             if (success) {
               capFaceModule.processorPromise.resolve(true);
+            } else {
+              faceScanResultCallback.cancel();
+              capFaceModule.processorPromise.reject("FaceTec SDK wasn't have to values processed!",
+                  "FaceTecWasntProcessed");
+              capFaceModule.sendEvent("onCloseModal", false);
             }
           } else {
             faceScanResultCallback.cancel();

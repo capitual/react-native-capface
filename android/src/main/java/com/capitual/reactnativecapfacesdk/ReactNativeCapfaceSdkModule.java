@@ -3,7 +3,6 @@ package com.capitual.reactnativecapfacesdk;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.capitual.processors.ThemeHelpers;
 import com.capitual.processors.helpers.ThemeUtils;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -24,14 +23,7 @@ import java.util.Map;
 import okhttp3.Call;
 import okhttp3.Callback;
 
-import com.capitual.processors.Config;
-import com.capitual.processors.NetworkingHelpers;
-import com.capitual.processors.Processor;
-import com.capitual.processors.LivenessCheckProcessor;
-import com.capitual.processors.EnrollmentProcessor;
-import com.capitual.processors.AuthenticateProcessor;
-import com.capitual.processors.PhotoIDMatchProcessor;
-import com.capitual.processors.PhotoIDScanProcessor;
+import com.capitual.processors.*;
 
 import static java.util.UUID.randomUUID;
 
@@ -148,6 +140,13 @@ public class ReactNativeCapfaceSdkModule extends ReactContextBaseJavaModule {
           JSONObject responseJSON = new JSONObject(responseString);
           if (responseJSON.has("sessionToken")) {
             sessionTokenCallback.onSessionTokenReceived(responseJSON.getString("sessionToken"));
+          } else {
+            final String errorMessage = responseJSON.has("errorMessage")
+                ? responseJSON.getString("errorMessage")
+                : "Response JSON is missing sessionToken.";
+            if (processorPromise != null) {
+              processorPromise.reject(errorMessage, "JSONError");
+            }
           }
         } catch (JSONException e) {
           e.printStackTrace();
