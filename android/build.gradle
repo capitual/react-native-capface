@@ -114,7 +114,6 @@ dependencies {
 
   // Note: FaceTec SDK implementation
   implementation files("./libs/facetec-sdk-9.6.46.aar")
-  implementation(name: 'facetec-sdk-9.6.46', ext: 'aar')
   implementation fileTree(dir: 'libs', include: ['*.aar'])
 }
 
