@@ -22,7 +22,7 @@ import com.facetec.sdk.*;
 
 public class AuthenticateProcessor extends Processor implements FaceTecFaceScanProcessor {
   private boolean success = false;
-  private final String principalKey = "autheticanteMessage";
+  private final String principalKey = "authenticateMessage";
   private final ReactNativeCapfaceSdkModule capFaceModule;
   private final ReadableMap data;
   private final ThemeUtils capThemeUtils = new ThemeUtils();
