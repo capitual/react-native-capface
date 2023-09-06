@@ -113,7 +113,7 @@ dependencies {
   implementation 'com.google.android.material:material:1.5.0'
 
   // Note: FaceTec SDK implementation
-  implementation files("./libs/facetec-sdk-9.6.46.aar")
+  implementation files("./libs/facetec-sdk-9.6.47.aar")
   implementation fileTree(dir: 'libs', include: ['*.aar'])
 }
 

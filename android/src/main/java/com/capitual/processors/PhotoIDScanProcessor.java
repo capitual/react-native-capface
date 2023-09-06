@@ -227,11 +227,6 @@ public class PhotoIDScanProcessor extends Processor implements FaceTecIDScanProc
 						success = idScanResultCallback.proceedToNextStep(scanResultBlob);
 						if (success) {
 							capFaceModule.processorPromise.resolve(true);
-						} else {
-							idScanResultCallback.cancel();
-							capFaceModule.sendEvent("onCloseModal", false);
-							capFaceModule.processorPromise.reject("FaceTec SDK wasn't have to scan values processed!",
-									"FaceTecScanWasntProcessed");
 						}
 					} else {
 						idScanResultCallback.cancel();
