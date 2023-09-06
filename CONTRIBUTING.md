@@ -6,10 +6,10 @@ We want this community to be friendly and respectful to each other. Please follo
 
 ## Development workflow
 
-To get started with the project, run `NPM` in the root directory to install the required dependencies for each package:
+To get started with the project, run `npm i` in the root directory to install the required dependencies for each package:
 
 ```sh
-npm run
+npm i
 ```
 
 > While it's possible to use [`npm`](https://github.com/npm/cli), the tooling is built around [`npm`](https://docs.npmjs.com/), so you'll have an easier time if you use `npm` for development.
@@ -78,16 +78,6 @@ Our pre-commit hooks verify that your commit message matches this format when co
 We use [TypeScript](https://www.typescriptlang.org/) for type checking, [ESLint](https://eslint.org/) with [Prettier](https://prettier.io/) for linting and formatting the code, and [Jest](https://jestjs.io/) for testing.
 
 Our pre-commit hooks verify that the linter and tests pass when committing.
-
-### Publishing to npm
-
-We use [release-it](https://github.com/release-it/release-it) to make it easier to publish new versions. It handles common tasks like bumping version based on semver, creating tags and releases etc.
-
-To publish new versions, run the following:
-
-```sh
-npm run release
-```
 
 ### Scripts
 
