@@ -1,6 +1,6 @@
 # @capitual/react-native-capface-sdk
 
-Capface sdk adapter to react native.  📱 
+Capface sdk adapter to react native. 📱
 
 - [Installation](#installation)
 - [Usage](#usage)
@@ -8,8 +8,6 @@ Capface sdk adapter to react native.  📱
   - [`initialize(init: CapfaceSdk.Initialize)`](#initializeinit-capfacesdkinitialize)
   - [`enroll(data?: Object)`](#enrolldata-capfacesdkdata)
   - [`authenticate(data?: Object)`](#authenticatedata-capfacesdkdata)
-  - [`liveness(data?: Object)`](#livenessdata-capfacesdkdata)
-  - [`photoScan(data?: Object)`](#photoscandata-capfacesdkdata)
   - [`photoMatch(data?: Object)`](#photomatchdata-capfacesdkdata)
   - [`setTheme(options?: CapfaceSdk.Theme)`](#setthemeoptions-capfacesdktheme)
 - [Types](#types)
@@ -46,80 +44,138 @@ npm install @capitual/react-native-capface-sdk
 ## Usage
 
 ```tsx
-import React, { useEffect } from 'react';
-import { View, TouchableOpacity, Text, NativeEventEmitter } from 'react-native';
+import * as React from 'react';
+
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  NativeEventEmitter,
+} from 'react-native';
 import ReactNativeCapfaceSdk, {
-  initialize,
+  authenticate,
   enroll,
-  setTheme,
+  initialize,
+  photoMatch,
 } from '@capitual/react-native-capface-sdk';
 
 export default function App() {
-  useEffect(() => {
+  const init = async () => {
     /*
      * The SDK must be initialized first
      * so that the rest of the library
      * functions can work!
      *
      * */
+    const headers = {
+      'clientInfo': 'YUOR_CLIENT_INFO',
+      'contentType': 'YOUR_CONTENT_TYPE',
+      'device': 'YOUR_DEVICE',
+      'deviceid': 'YOUR_DEVICE_ID',
+      'deviceip': 'YOUR_DEVICE_IP',
+      'locale': 'YOUR_LOCALE',
+      'xForwardedFor': 'YOUR_X_FORWARDED_FOR',
+      'user-agent': 'YOUR_USER_AGENT',
+    };
     const params = {
       device: 'YOUR_DEVICE',
-      url: 'YOUR_URL',
-      key: 'YOUR_PUBLIC_KEY',
+      url: 'YOUR_BASE_URL',
+      key: 'YOUR_KEY',
       productionKey: 'YOUR_PRODUCTION_KEY',
     };
 
-    async function initialize() {
-      const isInitialized = await initialize({ params });
-      setTheme({
-        frameBackgroundColor: '#FF0000',
-        frameCornerRadius: 0,
-        frameBackgroundColor: '#000000',
-      });
-      console.log(isInitialized);
-    }
+    const isInitialized = await initialize({
+      params,
+      headers,
+    });
 
-    initialize();
-  }, []);
+    console.log(isInitialized);
+  };
 
   const emitter = new NativeEventEmitter(ReactNativeCapfaceSdk);
-  emitter.addListener('onCloseModal', (event) =>
-    console.log('onCloseModal:', event)
+  emitter.addListener('onCloseModal', (event: boolean) =>
+    console.log('onCloseModal', event)
   );
 
+  const onPressPhotoMatch = async () => {
+    try {
+      const isSuccess = await photoMatch();
+      console.log(isSuccess);
+    } catch (error: any) {
+      console.error(error.message);
+    }
+  };
+
+  const onPressEnroll = async () => {
+    try {
+      const isSuccess = await enroll();
+      console.log(isSuccess);
+    } catch (error: any) {
+      console.error(error.message);
+    }
+  };
+
+  const onPressAuthenticate = async () => {
+    try {
+      const isSuccess = await authenticate();
+      console.log(isSuccess);
+    } catch (error: any) {
+      console.error(error.message);
+    }
+  };
+
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingHorizontal: 20,
-      }}
-    >
-      <TouchableOpacity
-        style={{
-          width: '100%',
-          height: 64,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'black',
-        }}
-        onPress={async () => {
-          try {
-            const isSuccess = await enroll();
-            console.log(isSuccess);
-          } catch (error: any) {
-            console.error(error);
-          }
-        }}
-      >
-        <Text style={{ textAlign: 'center', fontSize: 24, color: 'white' }}>
-          Open!
-        </Text>
-      </TouchableOpacity>
-    </View>
+    <ScrollView style={styles.container}>
+      <View style={styles.content}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={async () => await init()}
+        >
+          <Text style={styles.text}>Init Facetec Module</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={onPressPhotoMatch}>
+          <Text style={styles.text}>Open Photo Match</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.button} onPress={onPressEnroll}>
+          <Text style={styles.text}>Open Enroll</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={onPressAuthenticate}>
+          <Text style={styles.text}>Open Authenticate</Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  content: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 30,
+  },
+  button: {
+    width: '100%',
+    backgroundColor: '#4a68b3',
+    padding: 20,
+    borderRadius: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 20,
+  },
+  text: {
+    color: 'white',
+    fontWeight: '700',
+    fontSize: 22,
+  },
+});
+
 ```
 
 <hr/>
@@ -131,8 +187,6 @@ export default function App() {
 | [`initialize(init: CapfaceSdk.Initialize)`](#initializeinit-capfacesdkinitialize) | `Promise<boolean>` | ✅  | ✅      |
 | [`enroll(data?: Object)`](#enrolldata-capfacesdkdata)                             | `Promise<boolean>` | ✅  | ✅      |
 | [`authenticate(data?: Object)`](#authenticatedata-capfacesdkdata)                 | `Promise<boolean>` | ✅  | ✅      |
-| [`liveness(data?: Object)`](#livenessdata-capfacesdkdata)                         | `Promise<boolean>` | ✅  | ✅      |
-| [`photoScan(data?: Object)`](#photoscandata-capfacesdkdata)                       | `Promise<boolean>` | ✅  | ✅      |
 | [`photoMatch(data?: Object)`](#photomatchdata-capfacesdkdata)                     | `Promise<boolean>` | ✅  | ✅      |
 | [`setTheme(options?: CapfaceSdk.Theme)`](#setthemeoptions-capfacesdktheme)        | `void`             | ✅  | ✅      |
 
@@ -156,14 +210,6 @@ This method makes a 3D reading of the user's face. But, you must use to **subscr
 ### `authenticate(data?: Object)`
 
 This method makes a 3D reading of the user's face. But, you must use to **authenticate** user in FaceTec SDK or in your server.
-
-| `Object` | type     | Required | Default     |
-| -------- | -------- | -------- | ----------- |
-| `data`   | `Object` | ❌       | `undefined` |
-
-### `liveness(data?: Object)`
-
-This method makes a 3D reading of the user's face.
 
 | `Object` | type     | Required | Default     |
 | -------- | -------- | -------- | ----------- |
@@ -219,6 +265,7 @@ Here must be passed to initialize the FaceTec SDK! Case the parameters isn't pro
 | `url`               | `string` | ✅       |
 | `key`               | `string` | ✅       |
 | `productionKey`     | `string` | ✅       |
+| `isDeveloperMode`   | `boolean`| ❌       |
 
 ### `CapfaceSdk.Headers`
 
@@ -283,7 +330,6 @@ This is a list of theme properties that can be used to styling. Note, we recomme
 | `idScanCaptureFrameStrokeColor`                | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
 | `autheticanteMessage`                          | [`CapfaceSdk.DefaultMessage`](#capfacesdkdefaultmessage)                                                                      | ✅  | ✅      | ❌       | [`DefaultMessage`](#capfacesdkdefaultmessage)                                                           |
 | `enrollMessage`                                | [`CapfaceSdk.DefaultMessage`](#capfacesdkdefaultmessage)                                                                      | ✅  | ✅      | ❌       | [`DefaultMessage`](#capfacesdkdefaultmessage)                                                           |
-| `livenessMessage`                              | [`CapfaceSdk.DefaultMessage`](#capfacesdkdefaultmessage)                                                                      | ✅  | ✅      | ❌       | [`DefaultMessage`](#capfacesdkdefaultmessage)                                                           |
 | `photoIdScanMessage`                           | [`CapfaceSdk.DefaultScanMessage`](#capfacesdkdefaultscanmessage)                                                              | ✅  | ✅      | ❌       | [`DefaultScanMessage`](#capfacesdkdefaultscanmessage)                                                   |
 | `photoIdMatchMessage`                          | [`CapfaceSdk.DefaultScanMessage`](#capfacesdkdefaultscanmessage) and [`CapfaceSdk.DefaultMessage`](#capfacesdkdefaultmessage) | ✅  | ✅      | ❌       | [`DefaultScanMessage`](#capfacesdkdefaultscanmessage) and [`DefaultMessage`](#capfacesdkdefaultmessage) |
 
@@ -329,7 +375,7 @@ This interface defines the drawn in the layer's coordinate space.
 
 ### `CapfaceSdk.DefaultMessage`
 
-This interface represents the success message and loading data message during to FaceTecSDK flow. It interface is used **more** by processors's [authenticate](#authenticatedata-capfacesdkdata), [enroll](#enrolldata-capfacesdkdata) and [liveness](#livenessdata-capfacesdkdata) processors.
+This interface represents the success message and loading data message during to FaceTecSDK flow. It interface is used **more** by processors's [authenticate](#authenticatedata-capfacesdkdata) and [enroll](#enrolldata-capfacesdkdata) processors.
 
 | `CapfaceSdk.DefaultMessage` | type     | iOS | Android | Required | Default                                                                 |
 | --------------------------- | -------- | --- | ------- | -------- | ----------------------------------------------------------------------- |
@@ -338,7 +384,7 @@ This interface represents the success message and loading data message during to
 
 ### `CapfaceSdk.DefaultScanMessage`
 
-This interface represents the all scan messages during to FaceTecSDK flow. It interface is used by processors's [photoScan](#photoscandata-capfacesdkdata) and [photoMatch](#photomatchdata-capfacesdkdata) processors.
+This interface represents the all scan messages during to FaceTecSDK flow. It interface is used by [photoMatch](#photomatchdata-capfacesdkdata) processors.
 
 | `CapfaceSdk.DefaultScanMessage`                     | type     | iOS | Android | Required | Default                              |
 | --------------------------------------------------- | -------- | --- | ------- | -------- | ------------------------------------ |
@@ -388,6 +434,7 @@ This interface represents the all scan messages during to FaceTecSDK flow. It in
 | `FaceTecDifferentStatus`        | When session status is different completed successfully.                             | ❌  | ✅      |
 | `FaceTecLivenessWasntProcessed` | When the image user sent to the processors cannot be processed due to inconsistency. | ❌  | ✅      |
 | `FaceTecScanWasntProcessed`     | When the image ID sent to the processors cannot be processed due to inconsistency.   | ❌  | ✅      |
+| `NoParametersProvided`     | When parameters is not provided.   | ❌  | ✅      |
 
 <hr/>
 
