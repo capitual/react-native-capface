@@ -83,16 +83,12 @@ export default function App() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.content}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={async () => await init()}
-        >
+        <TouchableOpacity style={styles.button} onPress={init}>
           <Text style={styles.text}>Init Facetec Module</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={onPressPhotoMatch}>
           <Text style={styles.text}>Open Photo Match</Text>
         </TouchableOpacity>
-
         <TouchableOpacity style={styles.button} onPress={onPressEnroll}>
           <Text style={styles.text}>Open Enroll</Text>
         </TouchableOpacity>
