@@ -23,7 +23,7 @@ Capface sdk adapter to react native. 📱
   - [`CapfaceSdk.Errors`](#capfacesdkerrors)
 - [Native Events](#native-events)
   - [`Event Types`](#event-types)
-- [How to add images in FaceTecSDK module?](#how-to-add-images-in-capfacesdk-module)
+- [How to add images in CapfaceSDK module?](#how-to-add-images-in-capfacesdk-module)
   - [How to add images in Android?](#how-to-add-images-in-android)
   - [How to add images in iOS?](#how-to-add-images-in-ios)
   - [Example with images added](#example-with-images-added)
@@ -133,7 +133,7 @@ export default function App() {
           style={styles.button}
           onPress={async () => await init()}
         >
-          <Text style={styles.text}>Init Facetec Module</Text>
+          <Text style={styles.text}>Init Capface Module</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={onPressPhotoMatch}>
           <Text style={styles.text}>Open Photo Match</Text>
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
 
 ### `initialize(init: CapfaceSdk.Initialize)`
 
-This is the **principal** method to be called, he must be **called first** to initialize the FaceTec SDK. If he doens't be called the other methods **don't works!**
+This is the **principal** method to be called, he must be **called first** to initialize the Capface SDK. If he doens't be called the other methods **don't works!**
 
 | `CapfaceSdk.Initialize` | type                                       | Required | Default     |
 | ----------------------- | ------------------------------------------ | -------- | ----------- |
@@ -201,7 +201,7 @@ This is the **principal** method to be called, he must be **called first** to in
 
 ### `enroll(data?: Object)`
 
-This method makes a 3D reading of the user's face. But, you must use to **subscribe** user in FaceTec SDK or in your server.
+This method makes a 3D reading of the user's face. But, you must use to **subscribe** user in Capface SDK or in your server.
 
 | `Object` | type     | Required | Default     |
 | -------- | -------- | -------- | ----------- |
@@ -209,7 +209,7 @@ This method makes a 3D reading of the user's face. But, you must use to **subscr
 
 ### `authenticate(data?: Object)`
 
-This method makes a 3D reading of the user's face. But, you must use to **authenticate** user in FaceTec SDK or in your server.
+This method makes a 3D reading of the user's face. But, you must use to **authenticate** user in Capface SDK or in your server.
 
 | `Object` | type     | Required | Default     |
 | -------- | -------- | -------- | ----------- |
@@ -233,7 +233,7 @@ This method make to read from face and documents for user, after comparate face 
 
 ### `setTheme(options?: CapfaceSdk.Theme)`
 
-This method must be used to **set** the **theme** of the FaceTec SDK screen.
+This method must be used to **set** the **theme** of the Capface SDK screen.
 
 | `CapfaceSdk.Theme` | type                                   | Required | Default     |
 | ------------------ | -------------------------------------- | -------- | ----------- |
@@ -243,7 +243,7 @@ This method must be used to **set** the **theme** of the FaceTec SDK screen.
 
 ## Types
 
-| `FacetecSdk` - Types                                                                | iOS | Android |
+| `CapfaceSdk` - Types                                                                | iOS | Android |
 | ----------------------------------------------------------------------------------- | --- | ------- |
 | [`CapfaceSdk.Params`](#capfacesdkparams)                                            | ✅  | ✅      |
 | [`CapfaceSdk.Headers`](#capfacesdkheaders)                                          | ✅  | ✅      |
@@ -257,7 +257,7 @@ This method must be used to **set** the **theme** of the FaceTec SDK screen.
 
 ### `CapfaceSdk.Params`
 
-Here must be passed to initialize the FaceTec SDK! Case the parameters isn't provided the FaceTec SDK goes to be not initialized.
+Here must be passed to initialize the Capface SDK! Case the parameters isn't provided the Capface SDK goes to be not initialized.
 
 | `CapfaceSdk.Params` | type     | Required |
 | ------------------- | -------- | -------- |
@@ -375,7 +375,7 @@ This interface defines the drawn in the layer's coordinate space.
 
 ### `CapfaceSdk.DefaultMessage`
 
-This interface represents the success message and loading data message during to FaceTecSDK flow. It interface is used **more** by processors's [authenticate](#authenticatedata-capfacesdkdata) and [enroll](#enrolldata-capfacesdkdata) processors.
+This interface represents the success message and loading data message during to CapfaceSDK flow. It interface is used **more** by processors's [authenticate](#authenticatedata-capfacesdkdata) and [enroll](#enrolldata-capfacesdkdata) processors.
 
 | `CapfaceSdk.DefaultMessage` | type     | iOS | Android | Required | Default                                                                 |
 | --------------------------- | -------- | --- | ------- | -------- | ----------------------------------------------------------------------- |
@@ -384,7 +384,7 @@ This interface represents the success message and loading data message during to
 
 ### `CapfaceSdk.DefaultScanMessage`
 
-This interface represents the all scan messages during to FaceTecSDK flow. It interface is used by [photoMatch](#photomatchdata-capfacesdkdata) processors.
+This interface represents the all scan messages during to CapfaceSDK flow. It interface is used by [photoMatch](#photomatchdata-capfacesdkdata) processors.
 
 | `CapfaceSdk.DefaultScanMessage`                     | type     | iOS | Android | Required | Default                              |
 | --------------------------------------------------- | -------- | --- | ------- | -------- | ------------------------------------ |
@@ -427,7 +427,7 @@ This interface represents the all scan messages during to FaceTecSDK flow. It in
 
 | `CapfaceSdk.Errors`             | Description                                                                          | iOS | Android |
 | ------------------------------- | ------------------------------------------------------------------------------------ | --- | ------- |
-| `FaceTecDoenstInitialized`      | When some processors method is runned, but FaceTecSDK **wasn't initialized**.        | ✅  | ✅      |
+| `FaceTecDoenstInitialized`      | When some processors method is runned, but CapfaceSDK **wasn't initialized**.        | ✅  | ✅      |
 | `FaceTecWasntProcessed`         | When the image sent to the processors cannot be processed due to inconsistency.      | ✅  | ✅      |
 | `HTTPSError`                    | When exists some network error.                                                      | ✅  | ✅      |
 | `JSONError`                     | When exists some problem in getting data in request of **base URL** information.     | ❌  | ✅      |
@@ -450,11 +450,11 @@ This is a list of event types that can be used on `addListener`.
 
 | `eventType`    | Return    | Description                                                                                                       |
 | -------------- | --------- | ----------------------------------------------------------------------------------------------------------------- |
-| `onCloseModal` | `boolean` | This event listener verify if FaceTec modal biometric is open. Return `true` if modal is open, `false` otherwise. |
+| `onCloseModal` | `boolean` | This event listener verify if Capface modal biometric is open. Return `true` if modal is open, `false` otherwise. |
 
 <hr/>
 
-## How to add images in FaceTecSDK module?
+## How to add images in CapfaceSDK module?
 
 The `logoImage` and `cancelImage` properties represents your logo and icon of the button cancel. Does not possible to remove them from the module. Default are [Capitual](https://www.capitual.com/) images and `.png` format. In `Android` you can find the image's full name in lower case and in `iOS` the image's full name, but, with a difference of the first letter to be in the upper case.
 

@@ -1,4 +1,4 @@
-import ReactNativeCapfaceSdk, { CapfaceSdk } from './types';
+import { CapfaceSdk, ReactNativeCapfaceSdk } from './types';
 
 /**
  * @description This is the **principal** method to be called, he must be

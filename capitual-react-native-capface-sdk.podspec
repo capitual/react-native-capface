@@ -26,7 +26,7 @@ Pod::Spec.new do |s|
     s.dependency "React-Core"
     
     s.ios.resource_bundles = {
-      'ReactNativeFaceTecSdk' => ['ios/SupportingFiles/*.xcassets']
+      'ReactNativeCapfaceSdk' => ['ios/SupportingFiles/*.xcassets']
     }
     
     # Don't install the dependencies when we run `pod install` in the old architecture.

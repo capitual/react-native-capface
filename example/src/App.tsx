@@ -84,7 +84,7 @@ export default function App() {
     <ScrollView style={styles.container}>
       <View style={styles.content}>
         <TouchableOpacity style={styles.button} onPress={init}>
-          <Text style={styles.text}>Init Facetec Module</Text>
+          <Text style={styles.text}>Init Capface Module</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={onPressPhotoMatch}>
           <Text style={styles.text}>Open Photo Match</Text>

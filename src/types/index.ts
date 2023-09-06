@@ -6,30 +6,6 @@ const LINKING_ERROR =
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo Go\n';
 
-const ReactNativeCapfaceSdk = NativeModules.ReactNativeCapfaceSdk
-  ? NativeModules.ReactNativeCapfaceSdk
-  : new Proxy(
-      {},
-      {
-        get() {
-          throw new Error(LINKING_ERROR);
-        },
-      }
-    );
-
-/**
- * @description Native module CapfaceSDK, it's recommended use it with event
- * types.
- *
- * @example
- * import { NativeEventEmitter } from 'react-native';
- * import ReactNativeCapfaceSdk from '@capitual/react-native-capface-sdk';
- *
- * const emitter = new NativeEventEmitter(ReactNativeCapfaceSdk);
- * emitter.addListener('onCloseModal', (event: boolean) => console.log('onCloseModal', event));
- */
-export default ReactNativeCapfaceSdk;
-
 /**
  * @namespace
  *
@@ -768,6 +744,11 @@ export declare namespace CapfaceSdk {
      * Available in your Capface account.
      */
     productionKey: string;
+
+    /**
+     * @description Option to select production or developement mode for initialize CapfaceSDK.
+     */
+    isDeveloperMode: string;
   }
 
   /**
@@ -822,4 +803,47 @@ export declare namespace CapfaceSdk {
      */
     CapfaceScanWasntProcessed = 'CapfaceScanWasntProcessed',
   }
+
+  /**
+   * @interface Methods
+   *
+   * @description This is the available methods in Capface SDK.
+   */
+  interface Methods {
+    /**
+     * @description ....
+     */
+    initializeSdk(
+      params: Params,
+      headers?: Headers,
+      callback?: Function
+    ): Promise<boolean>;
+    handlePhotoIDMatch(data?: Object): Promise<boolean>;
+    handleEnrollUser(data?: Object): Promise<boolean>;
+    handleAuthenticateUser(data?: Object): Promise<boolean>;
+    handleTheme(options?: Theme): void;
+  }
 }
+
+/**
+ * @description Native module CapfaceSDK, it's recommended use it with event
+ * types.
+ *
+ * @example
+ * import { NativeEventEmitter } from 'react-native';
+ * import ReactNativeCapfaceSdk from '@capitual/react-native-capface-sdk';
+ *
+ * const emitter = new NativeEventEmitter(ReactNativeCapfaceSdk);
+ * emitter.addListener('onCloseModal', (event: boolean) => console.log('onCloseModal', event));
+ */
+export const ReactNativeCapfaceSdk: CapfaceSdk.Methods =
+  NativeModules.ReactNativeCapfaceSdk
+    ? NativeModules.ReactNativeCapfaceSdk
+    : new Proxy(
+        {},
+        {
+          get() {
+            throw new Error(LINKING_ERROR);
+          },
+        }
+      );
