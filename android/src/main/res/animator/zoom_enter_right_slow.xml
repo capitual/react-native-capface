@@ -1,0 +1,6 @@
+<objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+  android:duration="800"
+  android:propertyName="translationX"
+  android:valueFrom="1500"
+  android:valueTo="0"
+  android:valueType="floatType" />

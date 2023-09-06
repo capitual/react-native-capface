@@ -1,3 +1,8 @@
+def RN_VERSION = new File(['node', '--print',"JSON.parse(require('fs').readFileSync(require.resolve('react-native/package.json'), 'utf-8')).version"].execute(null, rootDir).text.trim());
+def RN_VERSION_STRINGIFY = RN_VERSION.toString();
+def MINOR_VERSION = RN_VERSION_STRINGIFY.substring(RN_VERSION_STRINGIFY.indexOf(".") + 1, RN_VERSION_STRINGIFY.lastIndexOf("."));
+def IS_NEW_REACT_NATIVE_VERSION = Integer.parseInt(MINOR_VERSION) >= 71;
+
 buildscript {
   repositories {
     google()
@@ -76,6 +81,14 @@ android {
     targetCompatibility JavaVersion.VERSION_1_8
   }
 
+  dataBinding {
+    enabled = true
+  }
+  sourceSets {
+    main {
+      jniLibs.srcDirs = ['libs']
+    }
+  }
 }
 
 repositories {
@@ -87,8 +100,21 @@ repositories {
 dependencies {
   // For < 0.71, this will be from the local maven repo
   // For > 0.71, this will be replaced by `com.facebook.react:react-android:$version` by react gradle plugin
-  //noinspection GradleDynamicVersion
-  implementation "com.facebook.react:react-native:+"
+  if (IS_NEW_REACT_NATIVE_VERSION) {
+    implementation "com.facebook.react:react-android:+"
+  } else {
+    implementation "com.facebook.react:react-native:+"
+  }
+
+  implementation 'com.squareup.okhttp3:okhttp:3.12.1'
+  implementation 'com.squareup.okio:okio:1.15.0'
+  implementation 'androidx.appcompat:appcompat:1.3.0'
+  implementation 'com.google.code.gson:gson:2.8.6'
+  implementation 'com.google.android.material:material:1.5.0'
+
+  // Note: FaceTec SDK implementation
+  implementation files("./libs/facetec-sdk-9.6.47.aar")
+  implementation fileTree(dir: 'libs', include: ['*.aar'])
 }
 
 if (isNewArchitectureEnabled()) {
