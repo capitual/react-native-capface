@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/capitual/react-native-capface/compare/v1.0.1...v1.0.2) (2023-09-06)
+
+
+### Bug Fixes
+
+* modules  exports and imports ([1256976](https://github.com/capitual/react-native-capface/commit/125697657502899bb25a76dd213ef92a08647aad))
+
 ## [1.0.1](https://github.com/capitual/react-native-capface/compare/v1.0.0...v1.0.1) (2023-09-06)
 
 
