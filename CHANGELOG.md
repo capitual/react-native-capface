@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/capitual/react-native-capface/compare/v1.0.0...v1.0.1) (2023-09-06)
+
+
+### Bug Fixes
+
+* adjust publish config of access ([387b810](https://github.com/capitual/react-native-capface/commit/387b810cfd160e4a781ae1e537e5cb6b83076506))
+
 # 1.0.0 (2023-09-06)
 
 
