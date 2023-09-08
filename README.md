@@ -138,7 +138,6 @@ export default function App() {
         <TouchableOpacity style={styles.button} onPress={onPressPhotoMatch}>
           <Text style={styles.text}>Open Photo Match</Text>
         </TouchableOpacity>
-
         <TouchableOpacity style={styles.button} onPress={onPressEnroll}>
           <Text style={styles.text}>Open Enroll</Text>
         </TouchableOpacity>
@@ -175,7 +174,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
   },
 });
-
 ```
 
 <hr/>
@@ -259,13 +257,13 @@ This method must be used to **set** the **theme** of the Capface SDK screen.
 
 Here must be passed to initialize the Capface SDK! Case the parameters isn't provided the Capface SDK goes to be not initialized.
 
-| `CapfaceSdk.Params` | type     | Required |
-| ------------------- | -------- | -------- |
-| `device`            | `string` | ✅       |
-| `url`               | `string` | ✅       |
-| `key`               | `string` | ✅       |
-| `productionKey`     | `string` | ✅       |
-| `isDeveloperMode`   | `boolean`| ❌       |
+| `CapfaceSdk.Params` | type      | Required |
+| ------------------- | --------- | -------- |
+| `device`            | `string`  | ✅       |
+| `url`               | `string`  | ✅       |
+| `key`               | `string`  | ✅       |
+| `productionKey`     | `string`  | ✅       |
+| `isDeveloperMode`   | `boolean` | ❌       |
 
 ### `CapfaceSdk.Headers`
 
@@ -427,14 +425,13 @@ This interface represents the all scan messages during to CapfaceSDK flow. It in
 
 | `CapfaceSdk.Errors`             | Description                                                                          | iOS | Android |
 | ------------------------------- | ------------------------------------------------------------------------------------ | --- | ------- |
-| `FaceTecDoenstInitialized`      | When some processors method is runned, but CapfaceSDK **wasn't initialized**.        | ✅  | ✅      |
-| `FaceTecWasntProcessed`         | When the image sent to the processors cannot be processed due to inconsistency.      | ✅  | ✅      |
+| `CapFaceHasNotBeenInitialized`  | When some processors method is runned, but CapfaceSDK **has not been initialized**.  | ✅  | ✅      |
+| `CapFaceValuesWereNotProcessed` | When the image sent to the processors cannot be processed due to inconsistency.      | ✅  | ✅      |
 | `HTTPSError`                    | When exists some network error.                                                      | ✅  | ✅      |
 | `JSONError`                     | When exists some problem in getting data in request of **base URL** information.     | ❌  | ✅      |
-| `FaceTecDifferentStatus`        | When session status is different completed successfully.                             | ❌  | ✅      |
-| `FaceTecLivenessWasntProcessed` | When the image user sent to the processors cannot be processed due to inconsistency. | ❌  | ✅      |
-| `FaceTecScanWasntProcessed`     | When the image ID sent to the processors cannot be processed due to inconsistency.   | ❌  | ✅      |
-| `NoParametersProvided`     | When parameters is not provided.   | ❌  | ✅      |
+| `CapFaceDifferentStatus`        | When session status is different completed successfully.                             | ❌  | ✅      |
+| `CapFaceLivenessWasntProcessed` | When the image user sent to the processors cannot be processed due to inconsistency. | ❌  | ✅      |
+| `CapFaceScanWasntProcessed`     | When the image ID sent to the processors cannot be processed due to inconsistency.   | ❌  | ✅      |
 
 <hr/>
 
