@@ -10,9 +10,6 @@
 		CEBC6E922AA66F3900A76DE0 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC6E912AA66F3900A76DE0 /* Config.swift */; };
 		CEBC6E952AA66F4900A76DE0 /* FaceTecViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC6E942AA66F4900A76DE0 /* FaceTecViewController.swift */; };
 		CEBC6E982AA66F5800A76DE0 /* FaceTecUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC6E972AA66F5800A76DE0 /* FaceTecUtilities.swift */; };
-		CEBC6E9F2AA66F8200A76DE0 /* AdditionalReviewAnimationViewOrange.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC6E9C2AA66F8200A76DE0 /* AdditionalReviewAnimationViewOrange.swift */; };
-		CEBC6EA02AA66F8200A76DE0 /* AdditionalReviewAnimationViewRed.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC6E9D2AA66F8200A76DE0 /* AdditionalReviewAnimationViewRed.swift */; };
-		CEBC6EA12AA66F8200A76DE0 /* AdditionalReviewAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC6E9E2AA66F8200A76DE0 /* AdditionalReviewAnimationView.swift */; };
 		CEBC6EA52AA66FDD00A76DE0 /* ThemeHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC6EA42AA66FDD00A76DE0 /* ThemeHelpers.swift */; };
 		CEBC6EAC2AA66FF300A76DE0 /* LivenessCheckProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC6EA62AA66FF300A76DE0 /* LivenessCheckProcessor.swift */; };
 		CEBC6EAD2AA66FF300A76DE0 /* ProcesingDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC6EA72AA66FF300A76DE0 /* ProcesingDelegate.swift */; };
@@ -40,12 +37,10 @@
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libReactNativeCapfaceSdk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libReactNativeCapfaceSdk.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3E7B5891CC2AC0600A0062D /* ReactNativeCapfaceSdk.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReactNativeCapfaceSdk.mm; sourceTree = "<group>"; };
+		CE41F0D92AABAFD400C07404 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CEBC6E912AA66F3900A76DE0 /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		CEBC6E942AA66F4900A76DE0 /* FaceTecViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FaceTecViewController.swift; sourceTree = "<group>"; };
 		CEBC6E972AA66F5800A76DE0 /* FaceTecUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FaceTecUtilities.swift; sourceTree = "<group>"; };
-		CEBC6E9C2AA66F8200A76DE0 /* AdditionalReviewAnimationViewOrange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdditionalReviewAnimationViewOrange.swift; sourceTree = "<group>"; };
-		CEBC6E9D2AA66F8200A76DE0 /* AdditionalReviewAnimationViewRed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdditionalReviewAnimationViewRed.swift; sourceTree = "<group>"; };
-		CEBC6E9E2AA66F8200A76DE0 /* AdditionalReviewAnimationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdditionalReviewAnimationView.swift; sourceTree = "<group>"; };
 		CEBC6EA42AA66FDD00A76DE0 /* ThemeHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeHelpers.swift; sourceTree = "<group>"; };
 		CEBC6EA62AA66FF300A76DE0 /* LivenessCheckProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LivenessCheckProcessor.swift; sourceTree = "<group>"; };
 		CEBC6EA72AA66FF300A76DE0 /* ProcesingDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProcesingDelegate.swift; sourceTree = "<group>"; };
@@ -82,9 +77,9 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				CE41F0D82AABAFC600C07404 /* Supporting Files */,
 				CEF929EB2AA6836600777D78 /* Frameworks */,
 				CEBC6EA22AA66FC900A76DE0 /* Processors */,
-				CEBC6E992AA66F5E00A76DE0 /* SupportingFiles */,
 				CEBC6E962AA66F4E00A76DE0 /* Utilities */,
 				CEBC6E932AA66F4000A76DE0 /* ViewController */,
 				CEBC6E912AA66F3900A76DE0 /* Config.swift */,
@@ -93,6 +88,14 @@
 				F4FF95D5245B92E700C19C63 /* ReactNativeCapfaceSdk-Bridging-Header.h */,
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		CE41F0D82AABAFC600C07404 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				CE41F0D92AABAFD400C07404 /* Assets.xcassets */,
+			);
+			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		CEBC6E932AA66F4000A76DE0 /* ViewController */ = {
@@ -109,24 +112,6 @@
 				CEBC6E972AA66F5800A76DE0 /* FaceTecUtilities.swift */,
 			);
 			path = Utilities;
-			sourceTree = "<group>";
-		};
-		CEBC6E992AA66F5E00A76DE0 /* SupportingFiles */ = {
-			isa = PBXGroup;
-			children = (
-				CEBC6E9B2AA66F7000A76DE0 /* ThemeViews */,
-			);
-			path = SupportingFiles;
-			sourceTree = "<group>";
-		};
-		CEBC6E9B2AA66F7000A76DE0 /* ThemeViews */ = {
-			isa = PBXGroup;
-			children = (
-				CEBC6E9E2AA66F8200A76DE0 /* AdditionalReviewAnimationView.swift */,
-				CEBC6E9C2AA66F8200A76DE0 /* AdditionalReviewAnimationViewOrange.swift */,
-				CEBC6E9D2AA66F8200A76DE0 /* AdditionalReviewAnimationViewRed.swift */,
-			);
-			path = ThemeViews;
 			sourceTree = "<group>";
 		};
 		CEBC6EA22AA66FC900A76DE0 /* Processors */ = {
@@ -223,13 +208,10 @@
 				CEE455C32AA6869C0063FD54 /* ThemeUtils.swift in Sources */,
 				CEBC6EAD2AA66FF300A76DE0 /* ProcesingDelegate.swift in Sources */,
 				CEBC6EA52AA66FDD00A76DE0 /* ThemeHelpers.swift in Sources */,
-				CEBC6EA12AA66F8200A76DE0 /* AdditionalReviewAnimationView.swift in Sources */,
 				CEBC6EAF2AA66FF300A76DE0 /* PhotoIDMatchProcessor.swift in Sources */,
 				CEBC6EB12AA66FF300A76DE0 /* AuthenticateProcessor.swift in Sources */,
-				CEBC6E9F2AA66F8200A76DE0 /* AdditionalReviewAnimationViewOrange.swift in Sources */,
 				CEBC6EB02AA66FF300A76DE0 /* PhotoIDScanProcessor.swift in Sources */,
 				CEBC6EAE2AA66FF300A76DE0 /* EnrollmentProcessor.swift in Sources */,
-				CEBC6EA02AA66F8200A76DE0 /* AdditionalReviewAnimationViewRed.swift in Sources */,
 				CEBC6EAC2AA66FF300A76DE0 /* LivenessCheckProcessor.swift in Sources */,
 				CEBC6E922AA66F3900A76DE0 /* Config.swift in Sources */,
 			);
