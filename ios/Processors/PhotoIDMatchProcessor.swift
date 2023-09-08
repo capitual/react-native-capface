@@ -16,14 +16,14 @@ class PhotoIDMatchProcessor: NSObject, Processor, FaceTecFaceScanProcessorDelega
     var latestExternalDatabaseRefID: String!
     var data: NSDictionary!
     var latestNetworkRequest: URLSessionTask!
-    var fromViewController: FaceTecViewController!
+    var fromViewController: CapFaceViewController!
     var faceScanResultCallback: FaceTecFaceScanResultCallback!
     var idScanResultCallback: FaceTecIDScanResultCallback!
     private let principalKey = "photoIdMatchMessage";
     private let FaceThemeUtils: ThemeUtils! = ThemeUtils();
     
     
-    init(sessionToken: String, fromViewController: FaceTecViewController, data: NSDictionary) {
+    init(sessionToken: String, fromViewController: CapFaceViewController, data: NSDictionary) {
         self.fromViewController = fromViewController
         self.latestExternalDatabaseRefID = self.fromViewController.getLatestExternalDatabaseRefID()
         self.data = data

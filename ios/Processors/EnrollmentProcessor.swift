@@ -14,12 +14,12 @@ class EnrollmentProcessor: NSObject, Processor, FaceTecFaceScanProcessorDelegate
     var success = false
     var data: NSDictionary!
     var latestNetworkRequest: URLSessionTask!
-    var fromViewController: FaceTecViewController!
+    var fromViewController: CapFaceViewController!
     var faceScanResultCallback: FaceTecFaceScanResultCallback!
     private let principalKey = "enrollMessage";
     private let FaceThemeUtils: ThemeUtils! = ThemeUtils();
     
-    init(sessionToken: String, fromViewController: FaceTecViewController, data: NSDictionary) {
+    init(sessionToken: String, fromViewController: CapFaceViewController, data: NSDictionary) {
         self.fromViewController = fromViewController
         self.data = data
         super.init()

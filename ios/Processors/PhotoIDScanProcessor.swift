@@ -14,12 +14,12 @@ class PhotoIDScanProcessor: NSObject, Processor, FaceTecIDScanProcessorDelegate,
     var success = false
     var data: NSDictionary!
     var latestNetworkRequest: URLSessionTask!
-    var fromViewController: FaceTecViewController!
+    var fromViewController: CapFaceViewController!
     var idScanResultCallback: FaceTecIDScanResultCallback!
     private let principalKey = "photoIdScanMessage";
     private let FaceThemeUtils: ThemeUtils! = ThemeUtils();
     
-    init(sessionToken: String, fromViewController: FaceTecViewController, data: NSDictionary) {
+    init(sessionToken: String, fromViewController: CapFaceViewController, data: NSDictionary) {
         self.fromViewController = fromViewController
         self.data = data
         super.init()
