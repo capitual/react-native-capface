@@ -120,7 +120,7 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
       NetworkingHelpers.cancelPendingRequests();
       faceScanResultCallback.cancel();
       capFaceModule.sendEvent("onCloseModal", false);
-      capFaceModule.processorPromise.reject("The session status has not been completed!", "CapFaceDifferentStatus");
+      capFaceModule.processorPromise.reject("The session status has not been completed!", "CapFaceInvalidSession");
       return;
     }
 
@@ -204,7 +204,7 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
       NetworkingHelpers.cancelPendingRequests();
       idScanResultCallback.cancel();
       capFaceModule.sendEvent("onCloseModal", false);
-      capFaceModule.processorPromise.reject("Status is not success!", "CapFaceDifferentStatus");
+      capFaceModule.processorPromise.reject("The scan status has not been completed!", "CapFaceInvalidSession");
       return;
     }
 

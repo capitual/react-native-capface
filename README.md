@@ -429,7 +429,7 @@ This interface represents the all scan messages during to CapfaceSDK flow. It in
 | `CapFaceValuesWereNotProcessed` | When the image sent to the processors cannot be processed due to inconsistency.      | ✅  | ✅      |
 | `HTTPSError`                    | When exists some network error.                                                      | ✅  | ✅      |
 | `JSONError`                     | When exists some problem in getting data in request of **base URL** information.     | ❌  | ✅      |
-| `CapFaceDifferentStatus`        | When session status is different completed successfully.                             | ❌  | ✅      |
+| `CapFaceInvalidSession`         | When session status is invalid.                                                      | ❌  | ✅      |
 | `CapFaceLivenessWasntProcessed` | When the image user sent to the processors cannot be processed due to inconsistency. | ❌  | ✅      |
 | `CapFaceScanWasntProcessed`     | When the image ID sent to the processors cannot be processed due to inconsistency.   | ❌  | ✅      |
 

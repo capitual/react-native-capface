@@ -44,7 +44,7 @@ public class AuthenticateProcessor extends Processor implements FaceTecFaceScanP
       NetworkingHelpers.cancelPendingRequests();
       faceScanResultCallback.cancel();
       capFaceModule.sendEvent("onCloseModal", false);
-      capFaceModule.processorPromise.reject("The session status has not been completed!", "CapFaceDifferentStatus");
+      capFaceModule.processorPromise.reject("The session status has not been completed!", "CapFaceInvalidSession");
       return;
     }
 

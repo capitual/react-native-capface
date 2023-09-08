@@ -122,7 +122,7 @@ public class PhotoIDScanProcessor extends Processor implements FaceTecIDScanProc
 			NetworkingHelpers.cancelPendingRequests();
 			idScanResultCallback.cancel();
 			capFaceModule.sendEvent("onCloseModal", false);
-			capFaceModule.processorPromise.reject("The scan status has not been completed!", "CapFaceDifferentStatus");
+			capFaceModule.processorPromise.reject("The scan status has not been completed!", "CapFaceInvalidSession");
 			return;
 		}
 

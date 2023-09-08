@@ -781,10 +781,9 @@ export declare namespace CapfaceSdk {
     JSONError = 'JSONError',
 
     /**
-     * @description When session status is different completed successfully.
-     * Only Android.
+     * @description When session status is invalid. Only Android.
      */
-    CapfaceDifferentStatus = 'CapfaceDifferentStatus',
+    CapFaceInvalidSession = 'CapFaceInvalidSession',
 
     /**
      * @description When the image user sent to the processors cannot be
