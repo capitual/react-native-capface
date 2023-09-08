@@ -1,5 +1,5 @@
 <resources>
-  <string name="app_name" translatable="false">FaceTec SDK</string>
+  <string name="app_name" translatable="false">CapFace SDK</string>
   <string name="enroll_simple">Enroll User</string>
   <string name="auth_simple">Authenticate User</string>
   <string name="liveness_check">3D Liveness Check</string>

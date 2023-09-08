@@ -122,7 +122,7 @@ public class PhotoIDScanProcessor extends Processor implements FaceTecIDScanProc
 			NetworkingHelpers.cancelPendingRequests();
 			idScanResultCallback.cancel();
 			capFaceModule.sendEvent("onCloseModal", false);
-			capFaceModule.processorPromise.reject("Status is not success!", "FaceTecDifferentStatus");
+			capFaceModule.processorPromise.reject("Status is not success!", "CapFaceDifferentStatus");
 			return;
 		}
 
@@ -231,8 +231,8 @@ public class PhotoIDScanProcessor extends Processor implements FaceTecIDScanProc
 					} else {
 						idScanResultCallback.cancel();
 						capFaceModule.sendEvent("onCloseModal", false);
-						capFaceModule.processorPromise.reject("FaceTec SDK wasn't have to values processed!",
-								"FaceTecWasntProcessed");
+						capFaceModule.processorPromise.reject("CapFace SDK values were not processed!",
+								"CapFaceValuesWereNotProcessed");
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();

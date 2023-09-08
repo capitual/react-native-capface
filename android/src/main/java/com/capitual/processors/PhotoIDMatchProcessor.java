@@ -120,7 +120,7 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
       NetworkingHelpers.cancelPendingRequests();
       faceScanResultCallback.cancel();
       capFaceModule.sendEvent("onCloseModal", false);
-      capFaceModule.processorPromise.reject("Status is not session completed successfully!", "FaceTecDifferentStatus");
+      capFaceModule.processorPromise.reject("Status is not session completed successfully!", "CapFaceDifferentStatus");
       return;
     }
 
@@ -173,8 +173,8 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
           } else {
             faceScanResultCallback.cancel();
             capFaceModule.sendEvent("onCloseModal", false);
-            capFaceModule.processorPromise.reject("FaceTec SDK wasn't have to liveness values processed!",
-                "FaceTecLivenessWasntProcessed");
+            capFaceModule.processorPromise.reject("CapFace SDK wasn't have to liveness values processed!",
+                "CapFaceLivenessWasntProcessed");
           }
         } catch (JSONException e) {
           e.printStackTrace();
@@ -204,7 +204,7 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
       NetworkingHelpers.cancelPendingRequests();
       idScanResultCallback.cancel();
       capFaceModule.sendEvent("onCloseModal", false);
-      capFaceModule.processorPromise.reject("Status is not success!", "FaceTecDifferentStatus");
+      capFaceModule.processorPromise.reject("Status is not success!", "CapFaceDifferentStatus");
       return;
     }
 
@@ -314,8 +314,8 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
           } else {
             idScanResultCallback.cancel();
             capFaceModule.sendEvent("onCloseModal", false);
-            capFaceModule.processorPromise.reject("FaceTec SDK wasn't have to scan values processed!",
-                "FaceTecScanWasntProcessed");
+            capFaceModule.processorPromise.reject("CapFace SDK wasn't have to scan values processed!",
+                "CapFaceScanWasntProcessed");
           }
         } catch (JSONException e) {
           e.printStackTrace();
