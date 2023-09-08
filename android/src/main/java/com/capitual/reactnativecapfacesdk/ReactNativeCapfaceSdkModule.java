@@ -98,11 +98,6 @@ public class ReactNativeCapfaceSdkModule extends ReactContextBaseJavaModule {
         public void onCompletion(final boolean successful) {
           isInitialized = successful;
           callback.invoke(successful);
-          if (!successful) {
-            Log.d("Capitual - SDK", "CapFace SDK doesn't initialized!");
-          } else {
-            Log.d("Capitual - SDK", "CapFace SDK initialized!");
-          }
         }
       });
     } else {
