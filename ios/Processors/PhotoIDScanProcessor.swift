@@ -86,6 +86,21 @@ class PhotoIDScanProcessor: NSObject, Processor, FaceTecIDScanProcessorDelegate,
 
         let session = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: OperationQueue.main)
         latestNetworkRequest = session.dataTask(with: request as URLRequest, completionHandler: { data, response, error in
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode < 200 || httpResponse.statusCode >= 299 {
+                    print("Exception raised while attempting HTTPS call. Status code: \(httpResponse.statusCode)");
+                    ReactNativeCapfaceSdk.emitter.sendEvent(withName: "onCloseModal", body: false);
+                    idScanResultCallback.onIDScanResultCancel()
+                    return
+                }
+            }
+
+            if let error = error {
+                print("Exception raised while attempting HTTPS call.")
+                ReactNativeCapfaceSdk.emitter.sendEvent(withName: "onCloseModal", body: false);
+                idScanResultCallback.onIDScanResultCancel()
+                return
+            }
 
             guard let data = data else {
                 ReactNativeCapfaceSdk.emitter.sendEvent(withName: "onCloseModal", body: false);

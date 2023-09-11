@@ -60,6 +60,21 @@ class AuthenticateProcessor: NSObject, Processor, FaceTecFaceScanProcessorDelega
 
         let session = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: OperationQueue.main)
         latestNetworkRequest = session.dataTask(with: request as URLRequest, completionHandler: { data, response, error in
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode < 200 || httpResponse.statusCode >= 299 {
+                    print("Exception raised while attempting HTTPS call. Status code: \(httpResponse.statusCode)");
+                    faceScanResultCallback.onFaceScanResultCancel()
+                    ReactNativeCapfaceSdk.emitter.sendEvent(withName: "onCloseModal", body: false);
+                    return
+                }
+            }
+
+            if let error = error {
+                print("Exception raised while attempting HTTPS call.")
+                faceScanResultCallback.onFaceScanResultCancel()
+                ReactNativeCapfaceSdk.emitter.sendEvent(withName: "onCloseModal", body: false);
+                return
+            }
 
             guard let data = data else {
                 faceScanResultCallback.onFaceScanResultCancel()

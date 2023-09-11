@@ -32,7 +32,6 @@ class EnrollmentProcessor: NSObject, Processor, FaceTecFaceScanProcessorDelegate
     }
 
     func processSessionWhileFaceTecSDKWaits(sessionResult: FaceTecSessionResult, faceScanResultCallback: FaceTecFaceScanResultCallback) {
-
         fromViewController.setLatestSessionResult(sessionResult: sessionResult)
 
         self.faceScanResultCallback = faceScanResultCallback
@@ -61,6 +60,21 @@ class EnrollmentProcessor: NSObject, Processor, FaceTecFaceScanProcessorDelegate
 
         let session = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: OperationQueue.main)
         latestNetworkRequest = session.dataTask(with: request as URLRequest, completionHandler: { data, response, error in
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode < 200 || httpResponse.statusCode >= 299 {
+                    print("Exception raised while attempting HTTPS call. Status code: \(httpResponse.statusCode)");
+                    ReactNativeCapfaceSdk.emitter.sendEvent(withName: "onCloseModal", body: false);
+                    faceScanResultCallback.onFaceScanResultCancel()
+                    return
+                }
+            }
+
+            if let error = error {
+                print("Exception raised while attempting HTTPS call.")
+                ReactNativeCapfaceSdk.emitter.sendEvent(withName: "onCloseModal", body: false);
+                faceScanResultCallback.onFaceScanResultCancel()
+                return
+            }
 
             guard let data = data else {
                 ReactNativeCapfaceSdk.emitter.sendEvent(withName: "onCloseModal", body: false);

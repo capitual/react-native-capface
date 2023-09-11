@@ -175,7 +175,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
   },
 });
-
 ```
 
 <hr/>
@@ -259,13 +258,13 @@ This method must be used to **set** the **theme** of the Capface SDK screen.
 
 Here must be passed to initialize the Capface SDK! Case the parameters isn't provided the Capface SDK goes to be not initialized.
 
-| `CapfaceSdk.Params` | type     | Required |
-| ------------------- | -------- | -------- |
-| `device`            | `string` | ✅       |
-| `url`               | `string` | ✅       |
-| `key`               | `string` | ✅       |
-| `productionKey`     | `string` | ✅       |
-| `isDeveloperMode`   | `boolean`| ❌       |
+| `CapfaceSdk.Params` | type      | Required |
+| ------------------- | --------- | -------- |
+| `device`            | `string`  | ✅       |
+| `url`               | `string`  | ✅       |
+| `key`               | `string`  | ✅       |
+| `productionKey`     | `string`  | ✅       |
+| `isDeveloperMode`   | `boolean` | ❌       |
 
 ### `CapfaceSdk.Headers`
 
@@ -434,7 +433,7 @@ This interface represents the all scan messages during to CapfaceSDK flow. It in
 | `FaceTecDifferentStatus`        | When session status is different completed successfully.                             | ❌  | ✅      |
 | `FaceTecLivenessWasntProcessed` | When the image user sent to the processors cannot be processed due to inconsistency. | ❌  | ✅      |
 | `FaceTecScanWasntProcessed`     | When the image ID sent to the processors cannot be processed due to inconsistency.   | ❌  | ✅      |
-| `NoParametersProvided`     | When parameters is not provided.   | ❌  | ✅      |
+| `NoParametersProvided`          | When parameters is not provided.                                                     | ❌  | ✅      |
 
 <hr/>
 
@@ -536,9 +535,9 @@ export default function App() {
 
 <hr/>
 
-## Limitations and Features
+## Limitations, Features or Camera Problems
 
-See the [native implementation](./NATIVE_IMPLEMENTATION.md) to learn more about the limitations and features that will need improving in the CapfaceSdk.
+See the [native implementation](./NATIVE_IMPLEMENTATION.md) to learn more about the limitations and features that will need improving in the `react-native-capface-sdk`.
 
 <hr/>
 
