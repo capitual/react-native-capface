@@ -748,7 +748,7 @@ export declare namespace CapfaceSdk {
     /**
      * @description Option to select production or developement mode for initialize CapfaceSDK.
      */
-    isDeveloperMode: string;
+    isDeveloperMode?: boolean;
   }
 
   /**

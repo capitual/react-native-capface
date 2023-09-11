@@ -88,7 +88,7 @@ public class Config {
         defaultCustomization.frameCustomization.backgroundColor = CapThemeUtils.handleColor("frameBackgroundColor");
         defaultCustomization.frameCustomization.borderColor = CapThemeUtils.handleColor("frameBorderColor");
 
-        defaultCustomization.overlayCustomization.brandingImage = CapThemeUtils.handleImage("logoImage", defaultImage: "FaceTec_your_app_logo");
+        defaultCustomization.overlayCustomization.brandingImage = CapThemeUtils.handleImage("logoImage", defaultImage: "facetec_your_app_logo");
         defaultCustomization.overlayCustomization.backgroundColor = CapThemeUtils.handleColor("overlayBackgroundColor");
 
         defaultCustomization.guidanceCustomization.backgroundColors = CapThemeUtils.handleSimpleLinearGradient("guidanceBackgroundColorsIos");
@@ -109,7 +109,7 @@ public class Config {
         defaultCustomization.feedbackCustomization.backgroundColor = CapThemeUtils.handleCAGradient("feedbackBackgroundColorsIos");
         defaultCustomization.feedbackCustomization.textColor = CapThemeUtils.handleColor("feedbackTextColor");
 
-        defaultCustomization.cancelButtonCustomization.customImage = CapThemeUtils.handleImage("cancelImage", defaultImage: "FaceTec_cancel");
+        defaultCustomization.cancelButtonCustomization.customImage = CapThemeUtils.handleImage("cancelImage", defaultImage: "facetec_cancel");
         defaultCustomization.cancelButtonCustomization.location = CapThemeUtils.handleButtonLocation("cancelButtonLocation");
 
         defaultCustomization.resultScreenCustomization.backgroundColors = CapThemeUtils.handleSimpleLinearGradient("resultScreenBackgroundColorsIos");

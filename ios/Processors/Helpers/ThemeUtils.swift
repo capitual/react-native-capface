@@ -10,7 +10,7 @@ import Foundation
 import FaceTecSDK
 
 public class ThemeUtils {
-    private func themeAndKeyIsntExists(_ key: String) -> Bool {
+    private func themeAndKeyDoesNotExists(_ key: String) -> Bool {
         return Config.Theme == nil || Config.Theme?[key] == nil;
     }
     
@@ -117,7 +117,7 @@ public class ThemeUtils {
     
     public func handleBorderRadius(_ key: String) -> Int32 {
         let defaultBorderRadius: Int32 = 10;
-        if (self.themeAndKeyIsntExists(key)) {
+        if (self.themeAndKeyDoesNotExists(key)) {
             return defaultBorderRadius;
         }
         
@@ -127,14 +127,14 @@ public class ThemeUtils {
     
     public func handleColor(_ key: String) -> UIColor {
         let defaultColor = UIColor(hexString: "#ffffff");
-        if (self.themeAndKeyIsntExists(key)) {
+        if (self.themeAndKeyDoesNotExists(key)) {
             return defaultColor;
         }
         return self.parseUIColor(key, defaultColor: defaultColor);
     }
     
     public func handleColor(_ key: String, defaultColor: String) -> UIColor {
-        if (self.themeAndKeyIsntExists(key)) {
+        if (self.themeAndKeyDoesNotExists(key)) {
             return UIColor(hexString: defaultColor);
         }
         return self.parseUIColor(key, defaultColor: UIColor(hexString: defaultColor));
@@ -143,7 +143,7 @@ public class ThemeUtils {
     public func handleSimpleLinearGradient(_ key: String) -> [UIColor] {
         let color = UIColor(hexString: "#ffffff");
         let defaultColors = [color, color];
-        if (self.themeAndKeyIsntExists(key)) {
+        if (self.themeAndKeyDoesNotExists(key)) {
             return defaultColors;
         }
         let hexColors = Config.Theme?[key] as? [String?] ?? [];
@@ -162,7 +162,7 @@ public class ThemeUtils {
         caGradient.startPoint = CGPoint.init(x: 0, y: 0);
         caGradient.endPoint = CGPoint.init(x: 1, y: 0);
         
-        if (self.themeAndKeyIsntExists(key)) {
+        if (self.themeAndKeyDoesNotExists(key)) {
             return caGradient;
         }
         
@@ -174,7 +174,7 @@ public class ThemeUtils {
     }
     
     public func handleMessage(_ key: String, child: String, defaultMessage: String) -> String {
-        if (self.themeAndKeyIsntExists(key)) {
+        if (self.themeAndKeyDoesNotExists(key)) {
             return defaultMessage;
         }
         let rootObject = Config.Theme?[key] as? NSDictionary;
@@ -182,7 +182,7 @@ public class ThemeUtils {
     }
     
     public func handleImage(_ key: String, defaultImage: String) -> UIImage? {
-        if (self.themeAndKeyIsntExists(key)) {
+        if (self.themeAndKeyDoesNotExists(key)) {
             return UIImage(named: defaultImage);
         }
         
@@ -190,12 +190,13 @@ public class ThemeUtils {
         if (imageName.isEmpty) {
             return UIImage(named: defaultImage);
         }
+
         return UIImage(named: imageName);
     }
     
     public func handleButtonLocation(_ key: String) -> FaceTecCancelButtonLocation {
         let defaultLocation = FaceTecCancelButtonLocation.topRight;
-        if (self.themeAndKeyIsntExists(key)) {
+        if (self.themeAndKeyDoesNotExists(key)) {
             return defaultLocation;
         }
         let buttonLocation = (Config.Theme?[key] as? String) ?? "";
@@ -225,7 +226,7 @@ public class ThemeUtils {
             defaultStatusBar = UIStatusBarStyle.darkContent;
         }
         
-        if (self.themeAndKeyIsntExists(key)) {
+        if (self.themeAndKeyDoesNotExists(key)) {
             return defaultStatusBar;
         }
         let statusBarColor = (Config.Theme?[key] as? String) ?? "";
