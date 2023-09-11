@@ -115,6 +115,24 @@ class CapFaceViewController: UIViewController, URLSessionDelegate {
         let session = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: OperationQueue.main)
 
         let task = session.dataTask(with: request as URLRequest, completionHandler: { data, response, error in
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode < 200 || httpResponse.statusCode >= 299 {
+                    print("Exception raised while attempting HTTPS call. Status code: \(httpResponse.statusCode)");
+                    if self.processorRejecter != nil {
+                        self.processorRejecter("Exception raised while attempting HTTPS call.", "HTTPSError", nil);
+                    }
+                    return
+                }
+            }
+
+            if let error = error {
+                print("Exception raised while attempting HTTPS call.")
+                if self.processorRejecter != nil {
+                    self.processorRejecter("Exception raised while attempting HTTPS call.", "HTTPSError", nil);
+                }
+                return
+            }
+
             guard let data = data else {
                 print("Exception raised while attempting HTTPS call.")
                 if self.processorRejecter != nil {
