@@ -94,6 +94,7 @@ public class EnrollmentProcessor extends Processor implements FaceTecFaceScanPro
                 "successMessage", "Liveness\nConfirmed");
             success = faceScanResultCallback.proceedToNextStep(scanResultBlob);
             if (success) {
+              capFaceModule.sendEvent("onCloseModal", false);
               capFaceModule.processorPromise.resolve(true);
             }
           } else {

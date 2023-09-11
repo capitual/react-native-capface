@@ -309,6 +309,7 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
 
             success = idScanResultCallback.proceedToNextStep(scanResultBlob);
             if (success) {
+              capFaceModule.sendEvent("onCloseModal", false);
               capFaceModule.processorPromise.resolve(true);
             }
           } else {

@@ -94,6 +94,7 @@ public class AuthenticateProcessor extends Processor implements FaceTecFaceScanP
                 .handleMessage(principalKey, "successMessage", "Authenticated");
             success = faceScanResultCallback.proceedToNextStep(scanResultBlob);
             if (success) {
+              capFaceModule.sendEvent("onCloseModal", false);
               capFaceModule.processorPromise.resolve(true);
             }
           } else {
