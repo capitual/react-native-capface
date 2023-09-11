@@ -279,8 +279,8 @@ This is a list of theme properties that can be used to styling. Note, we recomme
 
 | `CapfaceSdk.Theme`                             | type                                                                                                                          | iOS | Android | Required | Default                                                                                                 |
 | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | --- | ------- | -------- | ------------------------------------------------------------------------------------------------------- |
-| `logoImage`                                    | `string`                                                                                                                      | ✅  | ✅      | ❌       | `faceTec_your_app_logo.png`                                                                             |
-| `cancelImage`                                  | `string`                                                                                                                      | ✅  | ✅      | ❌       | `faceTec_cancel.png`                                                                                    |
+| `logoImage`                                    | `string`                                                                                                                      | ✅  | ✅      | ❌       | `facetec_your_app_logo.png`                                                                             |
+| `cancelImage`                                  | `string`                                                                                                                      | ✅  | ✅      | ❌       | `facetec_cancel.png`                                                                                    |
 | `cancelButtonLocation`                         | [`CapfaceSdk.ButtonLocation`](#capfacesdkbuttonlocation)                                                                      | ✅  | ✅      | ❌       | `TOP_RIGHT`                                                                                             |
 | `defaultStatusBarColorIos`                     | [`CapfaceSdk.StatusBarColor`](#capfacesdkstatusbarcolor-ios-only)                                                             | ✅  | ❌      | ❌       | `DARK_CONTENT`                                                                                          |
 | `frameCornerRadius`                            | `number`                                                                                                                      | ✅  | ✅      | ❌       | `10` (iOS) and `20` (Android)                                                                           |
@@ -453,11 +453,11 @@ This is a list of event types that can be used on `addListener`.
 
 ## How to add images in CapfaceSDK module?
 
-The `logoImage` and `cancelImage` properties represents your logo and icon of the button cancel. Does not possible to remove them from the module. Default are [Capitual](https://www.capitual.com/) images and `.png` format. In `Android` you can find the image's full name in lower case and in `iOS` the image's full name, but, with a difference of the first letter to be in the upper case.
+The `logoImage` and `cancelImage` properties represents your logo and icon of the button cancel. Does not possible to remove them from the module. Default are [Capitual](https://www.capitual.com/) images and `.png` format. By default in `Android` the logo image is shown, but on `iOS` it isn't shown, It's necessary to add manually.
 
 ### How to add images in Android?
 
-To add your images in `Android`, you must go to your project's `android/src/main/res/drawable` directory. Inside the `drawable` folder, you must put your images and done!
+To add your images in `Android`, you must go to your project's `android/src/main/res/drawable` directory. If in your project `drawable` folder doesn't exist, it create one. Inside the `drawable` folder, you must put your images and done!
 
 ### How to add images in iOS?
 
