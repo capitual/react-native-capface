@@ -1,6 +1,6 @@
 package com.capitual.processors;
 
-import com.capitual.processors.KeyFaceProcessor;
+import androidx.annotation.NonNull;
 
 import com.facebook.react.bridge.ReadableMap;
 
@@ -25,7 +25,7 @@ public class FaceConfig {
     return this.hasProperty(key) ? this.config.get(key).toString() : null;
   }
 
-  private boolean isWhichFlow(KeyFaceProcessor keyFlow, String key) {
+  public boolean isWhichFlow(@NonNull KeyFaceProcessor keyFlow, String key) {
     return keyFlow.toString().equalsIgnoreCase(key);
   }
 
@@ -55,6 +55,7 @@ public class FaceConfig {
       if (this.hasProperty("successMessage")) {
         return this.getValue("successMessage");
       }
+      return defaultMessage;
     }
     return null;
   }

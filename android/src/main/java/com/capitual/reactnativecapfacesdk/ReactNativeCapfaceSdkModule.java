@@ -219,6 +219,9 @@ public class ReactNativeCapfaceSdkModule extends ReactContextBaseJavaModule {
         resetLatestResults();
         isSessionPreparingToLaunch = false;
         final FaceConfig faceConfig = new FaceConfig(config);
+        if (faceConfig.isWhichFlow(KeyFaceProcessor.enrollMessage, faceConfig.getKey())) {
+          setLatestExternalDatabaseRefID("android_app_" + randomUUID());
+        }
         latestProcessor = new FaceProcessor(sessionToken, reactContext.getCurrentActivity(),
             ReactNativeCapfaceSdkModule.this, faceConfig);
       }

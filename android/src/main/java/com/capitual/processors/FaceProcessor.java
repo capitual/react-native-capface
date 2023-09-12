@@ -16,7 +16,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.Map;
 
-import com.capitual.processors.FaceConfig;
 import com.capitual.processors.helpers.ThemeUtils;
 import com.capitual.reactnativecapfacesdk.ReactNativeCapfaceSdkModule;
 import com.facetec.sdk.*;
