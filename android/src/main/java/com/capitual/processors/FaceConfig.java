@@ -25,13 +25,17 @@ public class FaceConfig {
     return this.hasProperty(key) ? this.config.get(key).toString() : null;
   }
 
+  private boolean isWhichFlow(KeyFaceProcessor keyFlow, String key) {
+    return keyFlow.toString().equalsIgnoreCase(key);
+  }
+
   public String getKey() {
     if (this.hasProperty("key")) {
       final String key = this.getValue("key");
-      final boolean isAutheticate = key.equals(KeyFaceProcessor.authenticateMessage);
-      final boolean isEnroll = key.equals(KeyFaceProcessor.enrollMessage);
-      final boolean isLiveness = key.equals(KeyFaceProcessor.livenessMessage);
-      final boolean isValidKey = isAutheticate || isEnroll || isLiveness;
+      final boolean isAuthenticate = this.isWhichFlow(KeyFaceProcessor.authenticateMessage, key);
+      final boolean isEnroll = this.isWhichFlow(KeyFaceProcessor.enrollMessage, key);
+      final boolean isLiveness = this.isWhichFlow(KeyFaceProcessor.livenessMessage, key);
+      final boolean isValidKey = isAuthenticate || isEnroll || isLiveness;
       if (isValidKey) {
         return key;
       }
@@ -46,8 +50,8 @@ public class FaceConfig {
   public String getSuccessMessage() {
     final String key = this.getKey();
     if (key != null) {
-      final boolean isAutheticate = key.equals(KeyFaceProcessor.authenticateMessage);
-      final String defaultMessage = isAutheticate ? "Authenticated" : "Liveness\nConfirmed";
+      final boolean isAuthenticate = this.isWhichFlow(KeyFaceProcessor.authenticateMessage, key);
+      final String defaultMessage = isAuthenticate ? "Authenticated" : "Liveness\nConfirmed";
       if (this.hasProperty("successMessage")) {
         return this.getValue("successMessage");
       }
@@ -58,12 +62,12 @@ public class FaceConfig {
   public boolean getHasExternalDatabaseRefID() {
     final String key = this.getKey();
     if (key != null) {
-      final boolean isLiveness = key.equals(KeyFaceProcessor.livenessMessage);
+      final boolean isLiveness = this.isWhichFlow(KeyFaceProcessor.livenessMessage, key);
       if (isLiveness) {
         return false;
       }
       if (this.hasProperty("hasExternalDatabaseRefID")) {
-        return this.getValue("hasExternalDatabaseRefID").equals("true");
+        return this.getValue("hasExternalDatabaseRefID").equalsIgnoreCase("true");
       }
     }
     return false;
