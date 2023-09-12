@@ -740,7 +740,10 @@ export declare namespace CapfaceSdk {
     productionKey: string;
 
     /**
-     * @description Option to select production or developement mode for initialize CapfaceSDK.
+     * @description Option to select production or developement mode for
+     * initialize CapfaceSDK.
+     *
+     * @default false
      */
     isDeveloperMode?: boolean;
   }
@@ -830,24 +833,42 @@ export declare namespace CapfaceSdk {
 
     /**
      * @description The endpoint to will be used to make requests. It's optional.
+     *
+     * @description To the `authenticate` method.
+     * @default "/match-3d-3d"
+     *
+     * @description To the `enroll` method.
+     * @default "/enrollment-3d"
+     *
+     * @description To the `liveness` method.
+     * @default "/liveness-3d"
      */
     endpoint?: string | null;
 
     /**
      * @description The success message to will be used to show to user on the
      * flow end. It's optional.
+     *
+     * @default "Liveness Confirmed"
+     *
+     * @description Exception to `authenticate` method.
+     * @default "Autheticated"
      */
     successMessage?: string | null;
 
     /**
      * @description The upload message to will be used to show to user on loading
-     * flow. It's optional.
+     * flow. It's optional. Only iOS.
+     *
+     * @default "Still Uploading..."
      */
     uploadMessageIos?: string | null;
 
     /**
      * @description The parameters to will be used to sent data by headers.
      * It's optional.
+     *
+     * @default null
      */
     parameters?: Object | null;
   }

@@ -22,7 +22,7 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facetec.sdk.*;
 
 public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanProcessor, FaceTecIDScanProcessor {
-  private final String principalKey = "photoIdMatchMessage";
+  private final String key = "photoIdMatchMessage";
   private final String latestExternalDatabaseRefID;
   private final ReadableMap data;
   private final ReactNativeCapfaceSdkModule capFaceModule;
@@ -38,73 +38,73 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
 
     FaceTecCustomization.setIDScanUploadMessageOverrides(
         // Upload of ID front-side has started.
-        capThemeUtils.handleMessage(principalKey, "frontSideUploadStarted", "Uploading\nEncrypted\nID Scan"),
+        capThemeUtils.handleMessage(key, "frontSideUploadStarted", "Uploading\nEncrypted\nID Scan"),
         // Upload of ID front-side is still uploading to Server after an extended period
         // of time.
-        capThemeUtils.handleMessage(principalKey, "frontSideStillUploading",
+        capThemeUtils.handleMessage(key, "frontSideStillUploading",
             "Still Uploading...\nSlow Connection"),
         // Upload of ID front-side to the Server is complete.
-        capThemeUtils.handleMessage(principalKey, "frontSideUploadCompleteAwaitingResponse",
+        capThemeUtils.handleMessage(key, "frontSideUploadCompleteAwaitingResponse",
             "Upload Complete"),
         // Upload of ID front-side is complete and we are waiting for the Server to
         // finish processing and respond.
-        capThemeUtils.handleMessage(principalKey, "frontSideUploadCompleteAwaitingProcessing",
+        capThemeUtils.handleMessage(key, "frontSideUploadCompleteAwaitingProcessing",
             "Processing ID Scan"),
         // Upload of ID back-side has started.
-        capThemeUtils.handleMessage(principalKey, "backSideUploadStarted",
+        capThemeUtils.handleMessage(key, "backSideUploadStarted",
             "Uploading\nEncrypted\nBack of ID"),
         // Upload of ID back-side is still uploading to Server after an extended period
         // of time.
-        capThemeUtils.handleMessage(principalKey, "backSideStillUploading",
+        capThemeUtils.handleMessage(key, "backSideStillUploading",
             "Still Uploading...\nSlow Connection"),
         // Upload of ID back-side to Server is complete.
-        capThemeUtils.handleMessage(principalKey, "backSideUploadCompleteAwaitingResponse",
+        capThemeUtils.handleMessage(key, "backSideUploadCompleteAwaitingResponse",
             "Upload Complete"),
         // Upload of ID back-side is complete and we are waiting for the Server to
         // finish processing and respond.
-        capThemeUtils.handleMessage(principalKey, "backSideUploadCompleteAwaitingProcessing",
+        capThemeUtils.handleMessage(key, "backSideUploadCompleteAwaitingProcessing",
             "Processing Back of ID"),
         // Upload of User Confirmed Info has started.
-        capThemeUtils.handleMessage(principalKey, "userConfirmedInfoUploadStarted",
+        capThemeUtils.handleMessage(key, "userConfirmedInfoUploadStarted",
             "Uploading\nYour Confirmed Info"),
         // Upload of User Confirmed Info is still uploading to Server after an extended
         // period of time.
-        capThemeUtils.handleMessage(principalKey, "userConfirmedInfoStillUploading",
+        capThemeUtils.handleMessage(key, "userConfirmedInfoStillUploading",
             "Still Uploading...\nSlow Connection"),
         // Upload of User Confirmed Info to the Server is complete.
-        capThemeUtils.handleMessage(principalKey, "userConfirmedInfoUploadCompleteAwaitingResponse",
+        capThemeUtils.handleMessage(key, "userConfirmedInfoUploadCompleteAwaitingResponse",
             "Upload Complete"),
         // Upload of User Confirmed Info is complete and we are waiting for the Server
         // to finish processing and respond.
-        capThemeUtils.handleMessage(principalKey, "userConfirmedInfoUploadCompleteAwaitingProcessing",
+        capThemeUtils.handleMessage(key, "userConfirmedInfoUploadCompleteAwaitingProcessing",
             "Processing"),
         // Upload of NFC Details has started.
-        capThemeUtils.handleMessage(principalKey, "nfcUploadStarted",
+        capThemeUtils.handleMessage(key, "nfcUploadStarted",
             "Uploading Encrypted\nNFC Details"),
         // Upload of NFC Details is still uploading to Server after an extended period
         // of time.
-        capThemeUtils.handleMessage(principalKey, "nfcStillUploading",
+        capThemeUtils.handleMessage(key, "nfcStillUploading",
             "Still Uploading...\nSlow Connection"),
         // Upload of NFC Details to the Server is complete.
-        capThemeUtils.handleMessage(principalKey, "nfcUploadCompleteAwaitingResponse",
+        capThemeUtils.handleMessage(key, "nfcUploadCompleteAwaitingResponse",
             "Upload Complete"),
         // Upload of NFC Details is complete and we are waiting for the Server to finish
         // processing and respond.
-        capThemeUtils.handleMessage(principalKey, "nfcUploadCompleteAwaitingProcessing",
+        capThemeUtils.handleMessage(key, "nfcUploadCompleteAwaitingProcessing",
             "Processing\nNFC Details"),
         // Upload of ID Details has started.
-        capThemeUtils.handleMessage(principalKey, "skippedNFCUploadStarted",
+        capThemeUtils.handleMessage(key, "skippedNFCUploadStarted",
             "Uploading Encrypted\nID Details"),
         // Upload of ID Details is still uploading to Server after an extended period of
         // time.
-        capThemeUtils.handleMessage(principalKey, "skippedNFCStillUploading",
+        capThemeUtils.handleMessage(key, "skippedNFCStillUploading",
             "Still Uploading...\nSlow Connection"),
         // Upload of ID Details to the Server is complete.
-        capThemeUtils.handleMessage(principalKey, "skippedNFCUploadCompleteAwaitingResponse",
+        capThemeUtils.handleMessage(key, "skippedNFCUploadCompleteAwaitingResponse",
             "Upload Complete"),
         // Upload of ID Details is complete and we are waiting for the Server to finish
         // processing and respond.
-        capThemeUtils.handleMessage(principalKey, "skippedNFCUploadCompleteAwaitingProcessing",
+        capThemeUtils.handleMessage(key, "skippedNFCUploadCompleteAwaitingProcessing",
             "Processing\nID Details"));
 
     capFaceModule.sendEvent("onCloseModal", true);
@@ -167,7 +167,7 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
 
           if (wasProcessed) {
             FaceTecCustomization.overrideResultScreenSuccessMessage = capThemeUtils.handleMessage(
-                principalKey, "successMessage",
+                key, "successMessage",
                 "Liveness\nConfirmed");
             faceScanWasSuccessful = faceScanResultCallback.proceedToNextStep(scanResultBlob);
           } else {
@@ -259,52 +259,52 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
           if (wasProcessed) {
             FaceTecCustomization.setIDScanResultScreenMessageOverrides(
                 // Successful scan of ID front-side (ID Types with no back-side).
-                capThemeUtils.handleMessage(principalKey, "successFrontSide",
+                capThemeUtils.handleMessage(key, "successFrontSide",
                     "ID Scan Complete"),
                 // Successful scan of ID front-side (ID Types that have a back-side).
-                capThemeUtils.handleMessage(principalKey, "successFrontSideBackNext",
+                capThemeUtils.handleMessage(key, "successFrontSideBackNext",
                     "Front of ID\nScanned"),
                 // Successful scan of ID front-side (ID Types that do have NFC but do not have a
                 // back-side).
-                capThemeUtils.handleMessage(principalKey, "successFrontSideNFCNext",
+                capThemeUtils.handleMessage(key, "successFrontSideNFCNext",
                     "Front of ID\nScanned"),
                 // Successful scan of the ID back-side (ID Types that do not have NFC).
-                capThemeUtils.handleMessage(principalKey, "successBackSide",
+                capThemeUtils.handleMessage(key, "successBackSide",
                     "ID Scan Complete"),
                 // Successful scan of the ID back-side (ID Types that do have NFC).
-                capThemeUtils.handleMessage(principalKey, "successBackSideNFCNext",
+                capThemeUtils.handleMessage(key, "successBackSideNFCNext",
                     "Back of ID\nScanned"),
                 // Successful scan of a Passport that does not have NFC.
-                capThemeUtils.handleMessage(principalKey, "successPassport",
+                capThemeUtils.handleMessage(key, "successPassport",
                     "Passport Scan Complete"),
                 // Successful scan of a Passport that does have NFC.
-                capThemeUtils.handleMessage(principalKey, "successPassportNFCNext",
+                capThemeUtils.handleMessage(key, "successPassportNFCNext",
                     "Passport Scanned"),
                 // Successful upload of final IDScan containing User-Confirmed ID Text.
-                capThemeUtils.handleMessage(principalKey, "successUserConfirmation",
+                capThemeUtils.handleMessage(key, "successUserConfirmation",
                     "Photo ID Scan\nComplete"),
                 // Successful upload of the scanned NFC chip information.
-                capThemeUtils.handleMessage(principalKey, "successNFC",
+                capThemeUtils.handleMessage(key, "successNFC",
                     "ID Scan Complete"),
                 // Case where a Retry is needed because the Face on the Photo ID did not Match
                 // the User's Face highly enough.
-                capThemeUtils.handleMessage(principalKey, "retryFaceDidNotMatch",
+                capThemeUtils.handleMessage(key, "retryFaceDidNotMatch",
                     "Face Didn't Match\nHighly Enough"),
                 // Case where a Retry is needed because a Full ID was not detected with high
                 // enough confidence.
-                capThemeUtils.handleMessage(principalKey, "retryIDNotFullyVisible",
+                capThemeUtils.handleMessage(key, "retryIDNotFullyVisible",
                     "ID Document\nNot Fully Visible"),
                 // Case where a Retry is needed because the OCR did not produce good enough
                 // results and the User should Retry with a better capture.
-                capThemeUtils.handleMessage(principalKey, "retryOCRResultsNotGoodEnough",
+                capThemeUtils.handleMessage(key, "retryOCRResultsNotGoodEnough",
                     "ID Text Not Legible"),
                 // Case where there is likely no OCR Template installed for the document the
                 // User is attempting to scan.
-                capThemeUtils.handleMessage(principalKey, "retryIDTypeNotSupported",
+                capThemeUtils.handleMessage(key, "retryIDTypeNotSupported",
                     "ID Type Mismatch\nPlease Try Again"),
                 // Case where NFC Scan was skipped due to the user's interaction or an
                 // unexpected error.
-                capThemeUtils.handleMessage(principalKey, "skipOrErrorNFC",
+                capThemeUtils.handleMessage(key, "skipOrErrorNFC",
                     "ID Details\nUploaded"));
 
             success = idScanResultCallback.proceedToNextStep(scanResultBlob);
