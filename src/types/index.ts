@@ -678,12 +678,6 @@ export declare namespace CapfaceSdk {
 
     /**
      * @description An object with all messages to will be used the during the
-     * photo ID scan flow.
-     */
-    photoIdScanMessage?: DefaultScanMessage;
-
-    /**
-     * @description An object with all messages to will be used the during the
      * photo ID match flow.
      */
     photoIdMatchMessage?: DefaultScanMessage & DefaultMessage;
