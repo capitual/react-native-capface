@@ -14,12 +14,12 @@ class AuthenticateProcessor: NSObject, Processor, FaceTecFaceScanProcessorDelega
     var success = false
     var data: NSDictionary!
     var latestNetworkRequest: URLSessionTask!
-    var fromViewController: FaceTecViewController!
+    var fromViewController: CapFaceViewController!
     var faceScanResultCallback: FaceTecFaceScanResultCallback!
     private let principalKey = "authenticateMessage";
-    private let FaceThemeUtils: ThemeUtils! = ThemeUtils();
+    private let CapThemeUtils: ThemeUtils! = ThemeUtils();
 
-    init(sessionToken: String, fromViewController: FaceTecViewController, data: NSDictionary) {
+    init(sessionToken: String, fromViewController: CapFaceViewController, data: NSDictionary) {
         self.fromViewController = fromViewController
         self.data = data
         super.init()
@@ -60,6 +60,21 @@ class AuthenticateProcessor: NSObject, Processor, FaceTecFaceScanProcessorDelega
 
         let session = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: OperationQueue.main)
         latestNetworkRequest = session.dataTask(with: request as URLRequest, completionHandler: { data, response, error in
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode < 200 || httpResponse.statusCode >= 299 {
+                    print("Exception raised while attempting HTTPS call. Status code: \(httpResponse.statusCode)");
+                    faceScanResultCallback.onFaceScanResultCancel()
+                    ReactNativeCapfaceSdk.emitter.sendEvent(withName: "onCloseModal", body: false);
+                    return
+                }
+            }
+
+            if let error = error {
+                print("Exception raised while attempting HTTPS call.")
+                faceScanResultCallback.onFaceScanResultCancel()
+                ReactNativeCapfaceSdk.emitter.sendEvent(withName: "onCloseModal", body: false);
+                return
+            }
 
             guard let data = data else {
                 faceScanResultCallback.onFaceScanResultCancel()
@@ -81,7 +96,7 @@ class AuthenticateProcessor: NSObject, Processor, FaceTecFaceScanProcessorDelega
             }
 
             if wasProcessed == true {
-                let message = self.FaceThemeUtils.handleMessage(self.principalKey, child: "successMessage", defaultMessage: "Authenticated");
+                let message = self.CapThemeUtils.handleMessage(self.principalKey, child: "successMessage", defaultMessage: "Authenticated");
                 FaceTecCustomization.setOverrideResultScreenSuccessMessage(message);
 
                 self.success = faceScanResultCallback.onFaceScanGoToNextStep(scanResultBlob: scanResultBlob)
@@ -97,7 +112,7 @@ class AuthenticateProcessor: NSObject, Processor, FaceTecFaceScanProcessorDelega
         DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
             if self.latestNetworkRequest.state == .completed { return }
 
-            let message = self.FaceThemeUtils.handleMessage(self.principalKey, child: "uploadMessageIos", defaultMessage: "Still Uploading...");
+            let message = self.CapThemeUtils.handleMessage(self.principalKey, child: "uploadMessageIos", defaultMessage: "Still Uploading...");
             let uploadMessage:NSMutableAttributedString = NSMutableAttributedString.init(string: message);
             faceScanResultCallback.onFaceScanUploadMessageOverride(uploadMessageOverride: uploadMessage);
         }

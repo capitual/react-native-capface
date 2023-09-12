@@ -533,9 +533,9 @@ export default function App() {
 
 <hr/>
 
-## Limitations and Features
+## Limitations, Features or Camera Problems
 
-See the [native implementation](./NATIVE_IMPLEMENTATION.md) to learn more about the limitations and features that will need improving in the CapfaceSdk.
+See the [native implementation](./NATIVE_IMPLEMENTATION.md) to learn more about the limitations and features that will need improving in the `react-native-capface-sdk`.
 
 <hr/>
 
