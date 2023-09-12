@@ -46,7 +46,7 @@ public class FaceProcessor extends Processor implements FaceTecFaceScanProcessor
       NetworkingHelpers.cancelPendingRequests();
       faceScanResultCallback.cancel();
       capFaceModule.sendEvent("onCloseModal", false);
-      capFaceModule.processorPromise.reject("The session status has not been completed!", "FaceTecDifferentStatus");
+      capFaceModule.processorPromise.reject("The session status has not been completed!", "CapFaceInvalidSession");
       return;
     }
 
@@ -103,13 +103,14 @@ public class FaceProcessor extends Processor implements FaceTecFaceScanProcessor
                 .handleMessage(key, "successMessage", message);
             success = faceScanResultCallback.proceedToNextStep(scanResultBlob);
             if (success) {
+              capFaceModule.sendEvent("onCloseModal", false);
               capFaceModule.processorPromise.resolve(true);
             }
           } else {
             faceScanResultCallback.cancel();
             capFaceModule.sendEvent("onCloseModal", false);
-            capFaceModule.processorPromise.reject("FaceTec SDK wasn't have to values processed!",
-                "FaceTecWasntProcessed");
+            capFaceModule.processorPromise.reject("CapFace SDK values were not processed!",
+                "CapFaceValuesWereNotProcessed");
           }
         } catch (JSONException e) {
           e.printStackTrace();
