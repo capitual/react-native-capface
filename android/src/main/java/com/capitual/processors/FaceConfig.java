@@ -18,7 +18,7 @@ public class FaceConfig {
       return false;
     }
 
-    return this.config.isEmpty() || this.config.containsKey(key);
+    return !this.config.isEmpty() || this.config.containsKey(key);
   }
 
   private String getValue(String key) {
