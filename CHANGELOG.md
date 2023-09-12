@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/capitual/react-native-capface/compare/v1.0.3...v1.0.4) (2023-09-12)
+
+
+### Bug Fixes
+
+* error messages ios ([#5](https://github.com/capitual/react-native-capface/issues/5)) ([6103d1c](https://github.com/capitual/react-native-capface/commit/6103d1c0e82749c01fb78658366a1f338ce341ed))
+
 ## [1.0.3](https://github.com/capitual/react-native-capface/compare/v1.0.2...v1.0.3) (2023-09-12)
 
 
