@@ -799,6 +799,55 @@ export declare namespace CapfaceSdk {
   }
 
   /**
+   * @type
+   *
+   * @description This is the type of face match.
+   */
+  type MatchType = 'enroll' | 'liveness' | 'authenticate';
+
+  /**
+   * @type
+   *
+   * @description This is the type of face key.
+   */
+  type MatchKey = 'enrollMessage' | 'livenessMessage' | 'authenticateMessage';
+
+  /**
+   * @interface MatchConfig
+   *
+   * @description There are all configurations from face match.
+   */
+  interface MatchConfig {
+    /**
+     * @description The key to will be used to like identificator of the face match.
+     */
+    key: MatchKey;
+
+    /**
+     * @description If the face match has external database reference ID.
+     * It's optional.
+     */
+    hasExternalDatabaseRefID: boolean;
+
+    /**
+     * @description The endpoint to will be used to make requests. It's optional.
+     */
+    endpoint?: string | null;
+
+    /**
+     * @description The success message to will be used to show to user on the
+     * flow end. It's optional.
+     */
+    successMessage?: string | null;
+
+    /**
+     * @description The parameters to will be used to sent data by headers.
+     * It's optional.
+     */
+    parameters?: Object | null;
+  }
+
+  /**
    * @interface Methods
    *
    * @description This is the available methods in Capface SDK.
@@ -858,6 +907,31 @@ export declare namespace CapfaceSdk {
      * @throws If authenticate was a unsuccessful or occurred some interference.
      */
     handleAuthenticateUser(data?: Object): Promise<boolean>;
+
+    /**
+     * @description This method is called to make enrollment, authenticate and
+     * liveness available.
+     *
+     * @description This method makes a 3D reading of the user's face. But, you
+     * must use to **subscribe** user in Capface SDK or in your server.
+     *
+     * @description This method makes a 3D reading of the user's face. But, you
+     * must use to **authenticate** user in Capface SDK or in your server.
+     *
+     * @description This method makes a 3D reading of the user's face.
+     *
+     * @param {Omit<CapfaceSdk.MatchConfig, 'key' | 'hasExternalDatabaseRefID'>|undefined} data -
+     * The object with data to be will send by headers on the requests. The data
+     * is optional.
+     *
+     * @return {Promise<boolean>} Represents if flow was a successful.
+     * @throws If was a unsuccessful or occurred some interference.
+     */
+    handleFaceUser(
+      data?:
+        | Omit<CapfaceSdk.MatchConfig, 'key' | 'hasExternalDatabaseRefID'>
+        | undefined
+    ): Promise<boolean>;
 
     /**
      * @description This method must be used to **set** the **theme** of the

@@ -309,6 +309,35 @@ public class ReactNativeCapfaceSdkModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void handleFaceUser(ReadableMap config, Promise promise) {
+    setProcessorPromise(promise);
+    if (!isInitialized) {
+      Log.d("Capitual - SDK", "FaceTecSDK doesn't initialized!");
+      this.processorPromise.reject("FaceTecSDK doesn't initialized!", "FaceTecDoenstInitialized");
+      return;
+    }
+
+    if (config == null) {
+      Log.d("Capitual - SDK", "No config provided!");
+      this.processorPromise.reject("No configurations provided!", "NoConfigurationsProvided");
+      return;
+    }
+
+    isSessionPreparingToLaunch = true;
+
+    getSessionToken(new SessionTokenCallback() {
+      @Override
+      public void onSessionTokenReceived(String sessionToken) {
+        resetLatestResults();
+        isSessionPreparingToLaunch = false;
+        final FaceConfig faceConfig = new FaceConfig(config);
+        latestProcessor = new FaceProcessor(sessionToken, reactContext.getCurrentActivity(),
+            ReactNativeCapfaceSdkModule.this, faceConfig);
+      }
+    });
+  }
+
+  @ReactMethod
   public void handleTheme(ReadableMap options) {
     ThemeHelpers.setAppTheme(options);
   }

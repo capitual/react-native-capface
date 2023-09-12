@@ -54,7 +54,8 @@ import {
   ScrollView,
   NativeEventEmitter,
 } from 'react-native';
-import ReactNativeCapfaceSdk, {
+import {
+  ReactNativeCapfaceSdk,
   authenticate,
   enroll,
   initialize,

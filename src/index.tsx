@@ -1,3 +1,4 @@
+import { NATIVE_CONSTANTS } from './constants';
 import { CapfaceSdk, ReactNativeCapfaceSdk } from './types';
 
 /**
@@ -75,6 +76,39 @@ export async function enroll(data?: Object): Promise<boolean> {
  */
 export async function authenticate(data?: Object): Promise<boolean> {
   return await ReactNativeCapfaceSdk.handleAuthenticateUser(data)
+    .then((successful: boolean) => successful)
+    .catch((error: Error) => {
+      throw new Error(error.message);
+    });
+}
+
+/**
+ * @description This method is called to make enrollment, authenticate and
+ * liveness available.
+ *
+ * @description This method makes a 3D reading of the user's face. But, you
+ * must use to **subscribe** user in Capface SDK or in your server.
+ *
+ * @description This method makes a 3D reading of the user's face. But, you
+ * must use to **authenticate** user in Capface SDK or in your server.
+ *
+ * @description This method makes a 3D reading of the user's face.
+ *
+ * @param {CapfaceSdk.MatchType} type - The type of flow to be called.
+ * @param {Omit<CapfaceSdk.MatchConfig, 'key' | 'hasExternalDatabaseRefID'>|undefined} data -
+ * The object with data to be will send by headers on the requests. The data is
+ * optional.
+ *
+ * @return {Promise<boolean>} Represents if flow was a successful.
+ * @throws If was a unsuccessful or occurred some interference.
+ */
+export async function faceMatch(
+  type: CapfaceSdk.MatchType,
+  data?: Omit<CapfaceSdk.MatchConfig, 'key' | 'hasExternalDatabaseRefID'>
+): Promise<boolean> {
+  return await ReactNativeCapfaceSdk.handleFaceUser(
+    NATIVE_CONSTANTS(data)[type]
+  )
     .then((successful: boolean) => successful)
     .catch((error: Error) => {
       throw new Error(error.message);
