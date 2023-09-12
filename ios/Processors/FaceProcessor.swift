@@ -16,15 +16,15 @@ class FaceProcessor: NSObject, Processor, FaceTecFaceScanProcessorDelegate, URLS
     var latestNetworkRequest: URLSessionTask!
     var fromViewController: CapFaceViewController!
     var faceScanResultCallback: FaceTecFaceScanResultCallback!
+    private let key: String!
     private let faceConfig: FaceConfig!
-    private let principalKey: String!
     private let CapThemeUtils: ThemeUtils! = ThemeUtils();
 
     init(sessionToken: String, fromViewController: CapFaceViewController, config: NSDictionary) {
         self.fromViewController = fromViewController
         self.config = config
         self.faceConfig = FaceConfig(config: config)
-        self.principalKey = faceConfig.getKey()
+        self.key = faceConfig.getKey()
         super.init()
 
         ReactNativeCapfaceSdk.emitter.sendEvent(withName: "onCloseModal", body: true);
@@ -59,15 +59,15 @@ class FaceProcessor: NSObject, Processor, FaceTecFaceScanProcessorDelegate, URLS
 
         var request: URLRequest
 
-        switch principalKey {
-        case "enrollMessage":
-            request = Config.makeRequest(url: "/enrollment-3d", httpMethod: "POST")
-        case "authenticateMessage":
-            request = Config.makeRequest(url: "/match-3d-3d", httpMethod: "POST")
-        case "livenessMessage":
-            request = Config.makeRequest(url: "/liveness-3d", httpMethod: "POST")
-        default:
-            request = Config.makeRequest(url: "/enrollment-3d", httpMethod: "POST")
+        switch key {
+            case "enrollMessage":
+                request = Config.makeRequest(url: "/enrollment-3d", httpMethod: "POST")
+            case "authenticateMessage":
+                request = Config.makeRequest(url: "/match-3d-3d", httpMethod: "POST")
+            case "livenessMessage":
+                request = Config.makeRequest(url: "/liveness-3d", httpMethod: "POST")
+            default:
+                request = Config.makeRequest(url: "/enrollment-3d", httpMethod: "POST")
         }
 
         request.httpBody = try! JSONSerialization.data(withJSONObject: parameters, options: JSONSerialization.WritingOptions(rawValue: 0))
@@ -110,7 +110,7 @@ class FaceProcessor: NSObject, Processor, FaceTecFaceScanProcessorDelegate, URLS
             }
 
             if wasProcessed == true {
-                let message = self.CapThemeUtils.handleMessage(self.principalKey, child: "successMessage", defaultMessage: "Liveness\nConfirmed");
+                let message = self.CapThemeUtils.handleMessage(self.key, child: "successMessage", defaultMessage: "Liveness\nConfirmed");
                 FaceTecCustomization.setOverrideResultScreenSuccessMessage(message);
 
                 self.success = faceScanResultCallback.onFaceScanGoToNextStep(scanResultBlob: scanResultBlob);
@@ -126,7 +126,7 @@ class FaceProcessor: NSObject, Processor, FaceTecFaceScanProcessorDelegate, URLS
         DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
             if self.latestNetworkRequest.state == .completed { return }
 
-            let message = self.CapThemeUtils.handleMessage(self.principalKey, child: "uploadMessageIos", defaultMessage: "Still Uploading...");
+            let message = self.CapThemeUtils.handleMessage(self.key, child: "uploadMessageIos", defaultMessage: "Still Uploading...");
             let uploadMessage: NSMutableAttributedString = NSMutableAttributedString.init(string: message);
             faceScanResultCallback.onFaceScanUploadMessageOverride(uploadMessageOverride: uploadMessage);
         }

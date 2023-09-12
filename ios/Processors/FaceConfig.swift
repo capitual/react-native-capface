@@ -9,7 +9,7 @@
 import Foundation
 
 public class FaceConfig {
-    private let config: NSDictionary
+    private var config: NSDictionary = NSDictionary()
 
     init(config: NSDictionary) {
         self.config = config
@@ -27,11 +27,15 @@ public class FaceConfig {
         return self.hasProperty(key: key) ? "\(self.config[key]!)" : nil
     }
 
+    func isWhichFlow(_ keyFlow: KeyFaceProcessor, key: String) -> Bool {
+        return key == keyFlow.rawValue
+    }
+
     func getKey() -> String? {
         if let key = self.getValue(key: "key") {
-            let isAuthenticate = key == KeyFaceProcessor.authenticateMessage.rawValue
-            let isEnroll = key == KeyFaceProcessor.enrollMessage.rawValue
-            let isLiveness = key == KeyFaceProcessor.livenessMessage.rawValue
+            let isAuthenticate = self.isWhichFlow(KeyFaceProcessor.authenticateMessage, key)
+            let isEnroll = self.isWhichFlow(KeyFaceProcessor.enrollMessage, key)
+            let isLiveness = self.isWhichFlow(KeyFaceProcessor.livenessMessage, key)
             let isValidKey = isAuthenticate || isEnroll || isLiveness
             if isValidKey {
                 return key
@@ -46,18 +50,19 @@ public class FaceConfig {
 
     func getSuccessMessage() -> String? {
         if let key = self.getKey() {
-            let isAuthenticate = key == KeyFaceProcessor.authenticateMessage.rawValue
+            let isAuthenticate = self.isWhichFlow(KeyFaceProcessor.authenticateMessage, key)
             let defaultMessage = isAuthenticate ? "Authenticated" : "Liveness\nConfirmed"
             if self.hasProperty(key: "successMessage") {
                 return self.getValue(key: "successMessage")
             }
+            return defaultMessage
         }
         return nil
     }
 
     func getHasExternalDatabaseRefID() -> Bool {
         if let key = self.getKey() {
-            let isLiveness = key == KeyFaceProcessor.livenessMessage.rawValue
+            let isLiveness = self.isWhichFlow(KeyFaceProcessor.livenessMessage, key)
             if isLiveness {
                 return false
             }
