@@ -1,6 +1,6 @@
 {
   "name": "@capitual/react-native-capface-sdk",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A Capface sdk adapter to react native.  📱",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -57,7 +57,6 @@
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
     "@evilmartians/lefthook": "^1.2.2",
-    "@react-native/eslint-config": "^0.72.2",
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/commit-analyzer": "10.0.1",
     "@semantic-release/git": "10.0.1",
@@ -108,7 +107,7 @@
   "eslintConfig": {
     "root": true,
     "extends": [
-      "@react-native/eslint-config",
+      "@react-native-community",
       "prettier"
     ],
     "rules": {
@@ -119,15 +118,15 @@
           "singleQuote": true,
           "tabWidth": 2,
           "trailingComma": "es5",
-          "useTabs": false
+          "useTabs": false,
+          "endOfLine": "auto"
         }
       ]
     }
   },
   "eslintIgnore": [
     "node_modules/",
-    "lib/",
-    "example/"
+    "lib/"
   ],
   "prettier": {
     "quoteProps": "consistent",

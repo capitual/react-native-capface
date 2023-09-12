@@ -120,7 +120,7 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
       NetworkingHelpers.cancelPendingRequests();
       faceScanResultCallback.cancel();
       capFaceModule.sendEvent("onCloseModal", false);
-      capFaceModule.processorPromise.reject("Status is not session completed successfully!", "FaceTecDifferentStatus");
+      capFaceModule.processorPromise.reject("The session status has not been completed!", "CapFaceInvalidSession");
       return;
     }
 
@@ -173,8 +173,8 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
           } else {
             faceScanResultCallback.cancel();
             capFaceModule.sendEvent("onCloseModal", false);
-            capFaceModule.processorPromise.reject("FaceTec SDK wasn't have to liveness values processed!",
-                "FaceTecLivenessWasntProcessed");
+            capFaceModule.processorPromise.reject("CapFace SDK wasn't have to liveness values processed!",
+                "CapFaceLivenessWasntProcessed");
           }
         } catch (JSONException e) {
           e.printStackTrace();
@@ -204,7 +204,7 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
       NetworkingHelpers.cancelPendingRequests();
       idScanResultCallback.cancel();
       capFaceModule.sendEvent("onCloseModal", false);
-      capFaceModule.processorPromise.reject("Status is not success!", "FaceTecDifferentStatus");
+      capFaceModule.processorPromise.reject("The scan status has not been completed!", "CapFaceInvalidSession");
       return;
     }
 
@@ -309,13 +309,14 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
 
             success = idScanResultCallback.proceedToNextStep(scanResultBlob);
             if (success) {
+              capFaceModule.sendEvent("onCloseModal", false);
               capFaceModule.processorPromise.resolve(true);
             }
           } else {
             idScanResultCallback.cancel();
             capFaceModule.sendEvent("onCloseModal", false);
-            capFaceModule.processorPromise.reject("FaceTec SDK wasn't have to scan values processed!",
-                "FaceTecScanWasntProcessed");
+            capFaceModule.processorPromise.reject("CapFace SDK wasn't have to scan values processed!",
+                "CapFaceScanWasntProcessed");
           }
         } catch (JSONException e) {
           e.printStackTrace();
