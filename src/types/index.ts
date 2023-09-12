@@ -841,6 +841,12 @@ export declare namespace CapfaceSdk {
     successMessage?: string | null;
 
     /**
+     * @description The upload message to will be used to show to user on loading
+     * flow. It's optional.
+     */
+    uploadMessageIos?: string | null;
+
+    /**
      * @description The parameters to will be used to sent data by headers.
      * It's optional.
      */
