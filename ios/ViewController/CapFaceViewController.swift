@@ -22,32 +22,13 @@ class CapFaceViewController: UIViewController, URLSessionDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-
-    func onLivenessCheck(_ data: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+    
+    func onFaceUser(_ config: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         setProcessorPromise(resolve, rejecter: reject);
 
         getSessionToken() { sessionToken in
             self.resetLatestResults()
-            self.latestProcessor = LivenessCheckProcessor(sessionToken: sessionToken, fromViewController: self, data: data)
-        }
-    }
-
-    func onEnrollUser(_ data: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        setProcessorPromise(resolve, rejecter: reject);
-
-        getSessionToken() { sessionToken in
-            self.resetLatestResults()
-            self.latestExternalDatabaseRefID = "ios_capitual_app_" + UUID().uuidString
-            self.latestProcessor = EnrollmentProcessor(sessionToken: sessionToken, fromViewController: self, data: data)
-        }
-    }
-
-    func onAuthenticateUser(_ data: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        setProcessorPromise(resolve, rejecter: reject);
-
-        getSessionToken() { sessionToken in
-            self.resetLatestResults()
-            self.latestProcessor = AuthenticateProcessor(sessionToken: sessionToken, fromViewController: self, data: data)
+            self.latestProcessor = FaceProcessor(sessionToken: sessionToken, fromViewController: self, config: config)
         }
     }
 

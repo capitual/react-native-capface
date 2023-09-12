@@ -18,6 +18,9 @@
 		CEBC6EB02AA66FF300A76DE0 /* PhotoIDScanProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC6EAA2AA66FF300A76DE0 /* PhotoIDScanProcessor.swift */; };
 		CEBC6EB12AA66FF300A76DE0 /* AuthenticateProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBC6EAB2AA66FF300A76DE0 /* AuthenticateProcessor.swift */; };
 		CEE455C32AA6869C0063FD54 /* ThemeUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE455C22AA6869C0063FD54 /* ThemeUtils.swift */; };
+		CEE7AF452AB09DDF00E90A50 /* FaceConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7AF442AB09DDF00E90A50 /* FaceConfig.swift */; };
+		CEE7AF472AB09E7000E90A50 /* FaceProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7AF462AB09E7000E90A50 /* FaceProcessor.swift */; };
+		CEE7AF492AB09FBD00E90A50 /* KeyFaceProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7AF482AB09FBD00E90A50 /* KeyFaceProcessor.swift */; };
 		CEFB5DC12AA8C04300A33DAB /* FaceTecSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEFB5DC02AA8C04300A33DAB /* FaceTecSDK.framework */; };
 		F4FF95D7245B92E800C19C63 /* ReactNativeCapfaceSdk.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF95D6245B92E800C19C63 /* ReactNativeCapfaceSdk.swift */; };
 /* End PBXBuildFile section */
@@ -37,7 +40,6 @@
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libReactNativeCapfaceSdk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libReactNativeCapfaceSdk.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3E7B5891CC2AC0600A0062D /* ReactNativeCapfaceSdk.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReactNativeCapfaceSdk.mm; sourceTree = "<group>"; };
-		CE5E1A0E2AAF67B9005BC6DF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CEBC6E912AA66F3900A76DE0 /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		CEBC6E942AA66F4900A76DE0 /* FaceTecViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FaceTecViewController.swift; sourceTree = "<group>"; };
 		CEBC6E972AA66F5800A76DE0 /* FaceTecUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FaceTecUtilities.swift; sourceTree = "<group>"; };
@@ -49,6 +51,9 @@
 		CEBC6EAA2AA66FF300A76DE0 /* PhotoIDScanProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoIDScanProcessor.swift; sourceTree = "<group>"; };
 		CEBC6EAB2AA66FF300A76DE0 /* AuthenticateProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticateProcessor.swift; sourceTree = "<group>"; };
 		CEE455C22AA6869C0063FD54 /* ThemeUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeUtils.swift; sourceTree = "<group>"; };
+		CEE7AF442AB09DDF00E90A50 /* FaceConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceConfig.swift; sourceTree = "<group>"; };
+		CEE7AF462AB09E7000E90A50 /* FaceProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceProcessor.swift; sourceTree = "<group>"; };
+		CEE7AF482AB09FBD00E90A50 /* KeyFaceProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyFaceProcessor.swift; sourceTree = "<group>"; };
 		CEFB5DC02AA8C04300A33DAB /* FaceTecSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FaceTecSDK.framework; sourceTree = "<group>"; };
 		F4FF95D5245B92E700C19C63 /* ReactNativeCapfaceSdk-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ReactNativeCapfaceSdk-Bridging-Header.h"; sourceTree = "<group>"; };
 		F4FF95D6245B92E800C19C63 /* ReactNativeCapfaceSdk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactNativeCapfaceSdk.swift; sourceTree = "<group>"; };
@@ -77,7 +82,6 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-				CE5E1A0D2AAF43F0005BC6DF /* SupportingFiles */,
 				CEF929EB2AA6836600777D78 /* Frameworks */,
 				CEBC6EA22AA66FC900A76DE0 /* Processors */,
 				CEBC6E962AA66F4E00A76DE0 /* Utilities */,
@@ -88,14 +92,6 @@
 				F4FF95D5245B92E700C19C63 /* ReactNativeCapfaceSdk-Bridging-Header.h */,
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
-			sourceTree = "<group>";
-		};
-		CE5E1A0D2AAF43F0005BC6DF /* SupportingFiles */ = {
-			isa = PBXGroup;
-			children = (
-				CE5E1A0E2AAF67B9005BC6DF /* Assets.xcassets */,
-			);
-			path = SupportingFiles;
 			sourceTree = "<group>";
 		};
 		CEBC6E932AA66F4000A76DE0 /* ViewController */ = {
@@ -124,6 +120,9 @@
 				CEBC6EA92AA66FF300A76DE0 /* PhotoIDMatchProcessor.swift */,
 				CEBC6EAA2AA66FF300A76DE0 /* PhotoIDScanProcessor.swift */,
 				CEBC6EA72AA66FF300A76DE0 /* ProcesingDelegate.swift */,
+				CEE7AF442AB09DDF00E90A50 /* FaceConfig.swift */,
+				CEE7AF462AB09E7000E90A50 /* FaceProcessor.swift */,
+				CEE7AF482AB09FBD00E90A50 /* KeyFaceProcessor.swift */,
 			);
 			path = Processors;
 			sourceTree = "<group>";
@@ -203,11 +202,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEBC6E982AA66F5800A76DE0 /* FaceTecUtilities.swift in Sources */,
+				CEE7AF452AB09DDF00E90A50 /* FaceConfig.swift in Sources */,
 				CEBC6E952AA66F4900A76DE0 /* FaceTecViewController.swift in Sources */,
 				F4FF95D7245B92E800C19C63 /* ReactNativeCapfaceSdk.swift in Sources */,
 				CEE455C32AA6869C0063FD54 /* ThemeUtils.swift in Sources */,
 				CEBC6EAD2AA66FF300A76DE0 /* ProcesingDelegate.swift in Sources */,
 				CEBC6EA52AA66FDD00A76DE0 /* ThemeHelpers.swift in Sources */,
+				CEE7AF492AB09FBD00E90A50 /* KeyFaceProcessor.swift in Sources */,
+				CEE7AF472AB09E7000E90A50 /* FaceProcessor.swift in Sources */,
 				CEBC6EAF2AA66FF300A76DE0 /* PhotoIDMatchProcessor.swift in Sources */,
 				CEBC6EB12AA66FF300A76DE0 /* AuthenticateProcessor.swift in Sources */,
 				CEBC6EB02AA66FF300A76DE0 /* PhotoIDScanProcessor.swift in Sources */,
