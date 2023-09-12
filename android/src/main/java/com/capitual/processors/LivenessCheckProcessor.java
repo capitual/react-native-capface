@@ -44,7 +44,7 @@ public class LivenessCheckProcessor extends Processor implements FaceTecFaceScan
       NetworkingHelpers.cancelPendingRequests();
       faceScanResultCallback.cancel();
       capFaceModule.sendEvent("onCloseModal", false);
-      capFaceModule.processorPromise.reject("Status is not session completed successfully!", "FaceTecDifferentStatus");
+      capFaceModule.processorPromise.reject("The session status has not been completed!", "CapFaceInvalidSession");
       return;
     }
 
@@ -92,13 +92,14 @@ public class LivenessCheckProcessor extends Processor implements FaceTecFaceScan
                 "successMessage", "Liveness\nConfirmed");
             success = faceScanResultCallback.proceedToNextStep(scanResultBlob);
             if (success) {
+              capFaceModule.sendEvent("onCloseModal", false);
               capFaceModule.processorPromise.resolve(true);
             }
           } else {
             faceScanResultCallback.cancel();
             capFaceModule.sendEvent("onCloseModal", false);
-            capFaceModule.processorPromise.reject("FaceTec SDK wasn't have to values processed!",
-                "FaceTecWasntProcessed");
+            capFaceModule.processorPromise.reject("CapFace SDK values were not processed!",
+                "CapFaceValuesWereNotProcessed");
           }
         } catch (JSONException e) {
           e.printStackTrace();

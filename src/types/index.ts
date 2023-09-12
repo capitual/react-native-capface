@@ -759,25 +759,20 @@ export declare namespace CapfaceSdk {
   enum Errors {
     /**
      * @description When some processors method is runned, but CapfaceSDK
-     * **wasn't initialized**.
+     * **has not been initialized!**.
      */
-    CapfaceDoenstInitialized = 'CapfaceDoenstInitialized',
+    CapFaceHasNotBeenInitialized = 'CapFaceHasNotBeenInitialized',
 
     /**
      * @description When the image sent to the processors cannot be processed
      * due to inconsistency.
      */
-    CapfaceWasntProcessed = 'CapfaceWasntProcessed',
+    CapFaceValuesWereNotProcessed = 'CapFaceValuesWereNotProcessed',
 
     /**
      * @description When exists some network error.
      */
     HTTPSError = 'HTTPSError',
-
-    /**
-     * @description When parameters is not provided.
-     */
-    NoParametersProvided = 'NoParametersProvided',
 
     /**
      * @description When exists some problem in getting data in request of
@@ -786,10 +781,9 @@ export declare namespace CapfaceSdk {
     JSONError = 'JSONError',
 
     /**
-     * @description When session status is different completed successfully.
-     * Only Android.
+     * @description When session status is invalid. Only Android.
      */
-    CapfaceDifferentStatus = 'CapfaceDifferentStatus',
+    CapFaceInvalidSession = 'CapFaceInvalidSession',
 
     /**
      * @description When the image user sent to the processors cannot be
@@ -811,16 +805,69 @@ export declare namespace CapfaceSdk {
    */
   interface Methods {
     /**
-     * @description ....
+     * @description This is the **principal** method to be called, he must be
+     * **called first** to initialize the Capface SDK. If he doens't be called
+     * the other methods **don't works!**
+     *
+     * @param {CapfaceSdk.Params} params - Initialization SDK parameters.
+     * @param {CapfaceSdk.Headers} headers - Headers your requests, to each
+     * request it's sent. The headers is optional.
+     * @param {Function} callback - Callback function to be called after with
+     * the response of the successfully. The callback is optional.
+     *
+     * @return {Promise<boolean>} Represents if initialization was a successful.
      */
     initializeSdk(
       params: Params,
       headers?: Headers,
       callback?: Function
     ): Promise<boolean>;
+
+    /**
+     * @description This method make to read from face and documents for user,
+     * after comparate face and face documents from user to check veracity.
+     *
+     * @param {Object|undefined} data - The object with data to be will send on
+     * photo ID match. The data is optional.
+     *
+     * @return {Promise<boolean>} Represents if photo match was a successful.
+     * @throws If photo ID match was a unsuccessful or occurred some interference.
+     */
     handlePhotoIDMatch(data?: Object): Promise<boolean>;
+
+    /**
+     * @description This method makes a 3D reading of the user's face. But, you
+     * must use to **subscribe** user in Capface SDK or in your server.
+     *
+     * @param {Object|undefined} data - The object with data to be will send on
+     * enrollment. The data is optional.
+     *
+     * @return {Promise<boolean>} Represents if enrollment was a successful.
+     * @throws If enrollment was a unsuccessful or occurred some interference.
+     */
     handleEnrollUser(data?: Object): Promise<boolean>;
+
+    /**
+     * @description This method makes a 3D reading of the user's face. But, you
+     * must use to **authenticate** user in Capface SDK or in your server.
+     *
+     * @param {Object|undefined} data - The object with data to be will send on
+     * authentication. The data is optional.
+     *
+     * @return {Promise<boolean>} Represents if authentication was a successful.
+     * @throws If authenticate was a unsuccessful or occurred some interference.
+     */
     handleAuthenticateUser(data?: Object): Promise<boolean>;
+
+    /**
+     * @description This method must be used to **set** the **theme** of the
+     * Capface SDK screen.
+     *
+     * @param {CapfaceSdk.Theme|undefined} options - The object theme options.
+     * All options are optional.
+     *
+     * @return {void}
+     */
     handleTheme(options?: Theme): void;
   }
 }

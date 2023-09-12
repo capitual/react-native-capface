@@ -1,12 +1,3 @@
 <resources>
-  <string name="app_name" translatable="false">FaceTec SDK</string>
-  <string name="enroll_simple">Enroll User</string>
-  <string name="auth_simple">Authenticate User</string>
-  <string name="liveness_check">3D Liveness Check</string>
-  <string name="identity_check">Match Face to ID</string>
-  <string name="identity_scan_only">Scan &amp; OCR ID</string>
-  <string name="session_review">View Session Result</string>
-  <string name="audit_trail">View Audit Trail</string>
-  <string name="design_showcase">Design Showcase</string>
-  <string name="transition_loading_text">Network Connection Slow…</string>
+  <string name="app_name" translatable="false">CapFace SDK Example</string>
 </resources>

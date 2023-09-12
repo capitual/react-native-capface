@@ -138,7 +138,6 @@ export default function App() {
         <TouchableOpacity style={styles.button} onPress={onPressPhotoMatch}>
           <Text style={styles.text}>Open Photo Match</Text>
         </TouchableOpacity>
-
         <TouchableOpacity style={styles.button} onPress={onPressEnroll}>
           <Text style={styles.text}>Open Enroll</Text>
         </TouchableOpacity>
@@ -175,7 +174,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
   },
 });
-
 ```
 
 <hr/>
@@ -259,13 +257,13 @@ This method must be used to **set** the **theme** of the Capface SDK screen.
 
 Here must be passed to initialize the Capface SDK! Case the parameters isn't provided the Capface SDK goes to be not initialized.
 
-| `CapfaceSdk.Params` | type     | Required |
-| ------------------- | -------- | -------- |
-| `device`            | `string` | ✅       |
-| `url`               | `string` | ✅       |
-| `key`               | `string` | ✅       |
-| `productionKey`     | `string` | ✅       |
-| `isDeveloperMode`   | `boolean`| ❌       |
+| `CapfaceSdk.Params` | type      | Required |
+| ------------------- | --------- | -------- |
+| `device`            | `string`  | ✅       |
+| `url`               | `string`  | ✅       |
+| `key`               | `string`  | ✅       |
+| `productionKey`     | `string`  | ✅       |
+| `isDeveloperMode`   | `boolean` | ❌       |
 
 ### `CapfaceSdk.Headers`
 
@@ -281,8 +279,8 @@ This is a list of theme properties that can be used to styling. Note, we recomme
 
 | `CapfaceSdk.Theme`                             | type                                                                                                                          | iOS | Android | Required | Default                                                                                                 |
 | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | --- | ------- | -------- | ------------------------------------------------------------------------------------------------------- |
-| `logoImage`                                    | `string`                                                                                                                      | ✅  | ✅      | ❌       | `faceTec_your_app_logo.png`                                                                             |
-| `cancelImage`                                  | `string`                                                                                                                      | ✅  | ✅      | ❌       | `faceTec_cancel.png`                                                                                    |
+| `logoImage`                                    | `string`                                                                                                                      | ✅  | ✅      | ❌       | `facetec_your_app_logo.png`                                                                             |
+| `cancelImage`                                  | `string`                                                                                                                      | ✅  | ✅      | ❌       | `facetec_cancel.png`                                                                                    |
 | `cancelButtonLocation`                         | [`CapfaceSdk.ButtonLocation`](#capfacesdkbuttonlocation)                                                                      | ✅  | ✅      | ❌       | `TOP_RIGHT`                                                                                             |
 | `defaultStatusBarColorIos`                     | [`CapfaceSdk.StatusBarColor`](#capfacesdkstatusbarcolor-ios-only)                                                             | ✅  | ❌      | ❌       | `DARK_CONTENT`                                                                                          |
 | `frameCornerRadius`                            | `number`                                                                                                                      | ✅  | ✅      | ❌       | `10` (iOS) and `20` (Android)                                                                           |
@@ -427,14 +425,13 @@ This interface represents the all scan messages during to CapfaceSDK flow. It in
 
 | `CapfaceSdk.Errors`             | Description                                                                          | iOS | Android |
 | ------------------------------- | ------------------------------------------------------------------------------------ | --- | ------- |
-| `FaceTecDoenstInitialized`      | When some processors method is runned, but CapfaceSDK **wasn't initialized**.        | ✅  | ✅      |
-| `FaceTecWasntProcessed`         | When the image sent to the processors cannot be processed due to inconsistency.      | ✅  | ✅      |
+| `CapFaceHasNotBeenInitialized`  | When some processors method is runned, but CapfaceSDK **has not been initialized**.  | ✅  | ✅      |
+| `CapFaceValuesWereNotProcessed` | When the image sent to the processors cannot be processed due to inconsistency.      | ✅  | ✅      |
 | `HTTPSError`                    | When exists some network error.                                                      | ✅  | ✅      |
 | `JSONError`                     | When exists some problem in getting data in request of **base URL** information.     | ❌  | ✅      |
-| `FaceTecDifferentStatus`        | When session status is different completed successfully.                             | ❌  | ✅      |
-| `FaceTecLivenessWasntProcessed` | When the image user sent to the processors cannot be processed due to inconsistency. | ❌  | ✅      |
-| `FaceTecScanWasntProcessed`     | When the image ID sent to the processors cannot be processed due to inconsistency.   | ❌  | ✅      |
-| `NoParametersProvided`     | When parameters is not provided.   | ❌  | ✅      |
+| `CapFaceInvalidSession`         | When session status is invalid.                                                      | ❌  | ✅      |
+| `CapFaceLivenessWasntProcessed` | When the image user sent to the processors cannot be processed due to inconsistency. | ❌  | ✅      |
+| `CapFaceScanWasntProcessed`     | When the image ID sent to the processors cannot be processed due to inconsistency.   | ❌  | ✅      |
 
 <hr/>
 
@@ -456,11 +453,11 @@ This is a list of event types that can be used on `addListener`.
 
 ## How to add images in CapfaceSDK module?
 
-The `logoImage` and `cancelImage` properties represents your logo and icon of the button cancel. Does not possible to remove them from the module. Default are [Capitual](https://www.capitual.com/) images and `.png` format. In `Android` you can find the image's full name in lower case and in `iOS` the image's full name, but, with a difference of the first letter to be in the upper case.
+The `logoImage` and `cancelImage` properties represents your logo and icon of the button cancel. Does not possible to remove them from the module. Default are [Capitual](https://www.capitual.com/) images and `.png` format. By default in `Android` the logo image is shown, but on `iOS` it isn't shown, It's necessary to add manually.
 
 ### How to add images in Android?
 
-To add your images in `Android`, you must go to your project's `android/src/main/res/drawable` directory. Inside the `drawable` folder, you must put your images and done!
+To add your images in `Android`, you must go to your project's `android/src/main/res/drawable` directory. If in your project `drawable` folder doesn't exist, it create one. Inside the `drawable` folder, you must put your images and done!
 
 ### How to add images in iOS?
 
