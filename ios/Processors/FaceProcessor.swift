@@ -12,7 +12,6 @@ import FaceTecSDK
 
 class FaceProcessor: NSObject, Processor, FaceTecFaceScanProcessorDelegate, URLSessionTaskDelegate {
     var success = false
-    var config: NSDictionary!
     var latestNetworkRequest: URLSessionTask!
     var fromViewController: CapFaceViewController!
     var faceScanResultCallback: FaceTecFaceScanResultCallback!
@@ -22,7 +21,6 @@ class FaceProcessor: NSObject, Processor, FaceTecFaceScanProcessorDelegate, URLS
 
     init(sessionToken: String, fromViewController: CapFaceViewController, config: NSDictionary) {
         self.fromViewController = fromViewController
-        self.config = config
         self.faceConfig = FaceConfig(config: config)
         self.key = faceConfig.getKey()
         super.init()
@@ -50,26 +48,21 @@ class FaceProcessor: NSObject, Processor, FaceTecFaceScanProcessorDelegate, URLS
         }
 
         var parameters: [String : Any] = [:]
-        if (self.config != nil) {
-            parameters["data"] = self.config
+        let extraParameters = self.faceConfig.getParameters()
+        if (extraParameters != nil) {
+            parameters["data"] = extraParameters
         }
         parameters["faceScan"] = sessionResult.faceScanBase64
         parameters["auditTrailImage"] = sessionResult.auditTrailCompressedBase64![0]
         parameters["lowQualityAuditTrailImage"] = sessionResult.lowQualityAuditTrailCompressedBase64![0]
-
-        var request: URLRequest
-
-        switch key {
-            case "enrollMessage":
-                request = Config.makeRequest(url: "/enrollment-3d", httpMethod: "POST")
-            case "authenticateMessage":
-                request = Config.makeRequest(url: "/match-3d-3d", httpMethod: "POST")
-            case "livenessMessage":
-                request = Config.makeRequest(url: "/liveness-3d", httpMethod: "POST")
-            default:
-                request = Config.makeRequest(url: "/enrollment-3d", httpMethod: "POST")
+        
+        let hasExternalDatabaseRefID = self.faceConfig.getHasExternalDatabaseRefID()
+        if (hasExternalDatabaseRefID) {
+            parameters["externalDatabaseRefID"] = fromViewController.getLatestExternalDatabaseRefID()
         }
 
+        let endpoint = self.faceConfig.getEndpoint()
+        var request = Config.makeRequest(url: endpoint ?? "", httpMethod: "POST")
         request.httpBody = try! JSONSerialization.data(withJSONObject: parameters, options: JSONSerialization.WritingOptions(rawValue: 0))
 
         let session = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: OperationQueue.main)
@@ -110,7 +103,8 @@ class FaceProcessor: NSObject, Processor, FaceTecFaceScanProcessorDelegate, URLS
             }
 
             if wasProcessed == true {
-                let message = self.CapThemeUtils.handleMessage(self.key, child: "successMessage", defaultMessage: "Liveness\nConfirmed");
+                let successMessage = self.faceConfig.getSuccessMessage()
+                let message = self.CapThemeUtils.handleMessage(self.key, child: "successMessage", defaultMessage: successMessage ?? "");
                 FaceTecCustomization.setOverrideResultScreenSuccessMessage(message);
 
                 self.success = faceScanResultCallback.onFaceScanGoToNextStep(scanResultBlob: scanResultBlob);
@@ -126,9 +120,10 @@ class FaceProcessor: NSObject, Processor, FaceTecFaceScanProcessorDelegate, URLS
         DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
             if self.latestNetworkRequest.state == .completed { return }
 
-            let message = self.CapThemeUtils.handleMessage(self.key, child: "uploadMessageIos", defaultMessage: "Still Uploading...");
-            let uploadMessage: NSMutableAttributedString = NSMutableAttributedString.init(string: message);
-            faceScanResultCallback.onFaceScanUploadMessageOverride(uploadMessageOverride: uploadMessage);
+            let uploadMessage = self.faceConfig.getUploadMessage()
+            let message = self.CapThemeUtils.handleMessage(self.key, child: "uploadMessageIos", defaultMessage: uploadMessage);
+            let uploadMessageOverride: NSMutableAttributedString = NSMutableAttributedString.init(string: message);
+            faceScanResultCallback.onFaceScanUploadMessageOverride(uploadMessageOverride: uploadMessageOverride);
         }
     }
 

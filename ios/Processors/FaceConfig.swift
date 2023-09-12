@@ -33,9 +33,9 @@ public class FaceConfig {
 
     func getKey() -> String? {
         if let key = self.getValue(key: "key") {
-            let isAuthenticate = self.isWhichFlow(KeyFaceProcessor.authenticateMessage, key)
-            let isEnroll = self.isWhichFlow(KeyFaceProcessor.enrollMessage, key)
-            let isLiveness = self.isWhichFlow(KeyFaceProcessor.livenessMessage, key)
+            let isAuthenticate = self.isWhichFlow(KeyFaceProcessor.authenticateMessage, key: key)
+            let isEnroll = self.isWhichFlow(KeyFaceProcessor.enrollMessage, key: key)
+            let isLiveness = self.isWhichFlow(KeyFaceProcessor.livenessMessage, key: key)
             let isValidKey = isAuthenticate || isEnroll || isLiveness
             if isValidKey {
                 return key
@@ -50,7 +50,7 @@ public class FaceConfig {
 
     func getSuccessMessage() -> String? {
         if let key = self.getKey() {
-            let isAuthenticate = self.isWhichFlow(KeyFaceProcessor.authenticateMessage, key)
+            let isAuthenticate = self.isWhichFlow(KeyFaceProcessor.authenticateMessage, key: key)
             let defaultMessage = isAuthenticate ? "Authenticated" : "Liveness\nConfirmed"
             if self.hasProperty(key: "successMessage") {
                 return self.getValue(key: "successMessage")
@@ -59,10 +59,20 @@ public class FaceConfig {
         }
         return nil
     }
+    
+    func getUploadMessage() -> String {
+        let defaultMessage = "Still Uploading..."
+        if let key = self.getKey() {
+            if self.hasProperty(key: "uploadMessageIos") {
+                return self.getValue(key: "uploadMessageIos") ?? defaultMessage
+            }
+        }
+        return defaultMessage
+    }
 
     func getHasExternalDatabaseRefID() -> Bool {
         if let key = self.getKey() {
-            let isLiveness = self.isWhichFlow(KeyFaceProcessor.livenessMessage, key)
+            let isLiveness = self.isWhichFlow(KeyFaceProcessor.livenessMessage, key: key)
             if isLiveness {
                 return false
             }
