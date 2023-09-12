@@ -1,6 +1,6 @@
 {
   "name": "@capitual/react-native-capface-sdk",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A Capface sdk adapter to react native.  📱",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
