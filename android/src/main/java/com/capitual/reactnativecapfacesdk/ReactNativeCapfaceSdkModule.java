@@ -197,11 +197,17 @@ public class ReactNativeCapfaceSdkModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void handleLivenessCheck(ReadableMap data, Promise promise) {
+  public void handleFaceUser(ReadableMap config, Promise promise) {
     setProcessorPromise(promise);
     if (!isInitialized) {
       Log.d("Capitual - SDK", "CapFace SDK has not been initialized!");
       this.processorPromise.reject("CapFace SDK has not been initialized!", "CapFaceHasNotBeenInitialized");
+      return;
+    }
+
+    if (config == null) {
+      Log.d("Capitual - SDK", "No configurations provided!");
+      this.processorPromise.reject("No configurations provided!", "NoConfigurationsProvided");
       return;
     }
 
@@ -212,53 +218,9 @@ public class ReactNativeCapfaceSdkModule extends ReactContextBaseJavaModule {
       public void onSessionTokenReceived(String sessionToken) {
         resetLatestResults();
         isSessionPreparingToLaunch = false;
-        latestProcessor = new LivenessCheckProcessor(sessionToken, reactContext.getCurrentActivity(),
-            ReactNativeCapfaceSdkModule.this, data);
-      }
-    });
-  }
-
-  @ReactMethod
-  public void handleEnrollUser(ReadableMap data, Promise promise) {
-    setProcessorPromise(promise);
-    if (!isInitialized) {
-      Log.d("Capitual - SDK", "CapFace SDK has not been initialized!");
-      this.processorPromise.reject("CapFace SDK has not been initialized!", "CapFaceHasNotBeenInitialized");
-      return;
-    }
-
-    isSessionPreparingToLaunch = true;
-
-    getSessionToken(new SessionTokenCallback() {
-      @Override
-      public void onSessionTokenReceived(String sessionToken) {
-        resetLatestResults();
-        isSessionPreparingToLaunch = false;
-        setLatestExternalDatabaseRefID("android_capitual_app_" + randomUUID());
-        latestProcessor = new EnrollmentProcessor(sessionToken, reactContext.getCurrentActivity(),
-            ReactNativeCapfaceSdkModule.this, data);
-      }
-    });
-  }
-
-  @ReactMethod
-  public void handleAuthenticateUser(ReadableMap data, Promise promise) {
-    setProcessorPromise(promise);
-    if (!isInitialized) {
-      Log.d("Capitual - SDK", "CapFace SDK has not been initialized!");
-      this.processorPromise.reject("CapFace SDK has not been initialized!", "CapFaceHasNotBeenInitialized");
-      return;
-    }
-
-    isSessionPreparingToLaunch = true;
-
-    getSessionToken(new SessionTokenCallback() {
-      @Override
-      public void onSessionTokenReceived(String sessionToken) {
-        resetLatestResults();
-        isSessionPreparingToLaunch = false;
-        latestProcessor = new AuthenticateProcessor(sessionToken, reactContext.getCurrentActivity(),
-            ReactNativeCapfaceSdkModule.this, data);
+        final FaceConfig faceConfig = new FaceConfig(config);
+        latestProcessor = new FaceProcessor(sessionToken, reactContext.getCurrentActivity(),
+            ReactNativeCapfaceSdkModule.this, faceConfig);
       }
     });
   }
@@ -304,35 +266,6 @@ public class ReactNativeCapfaceSdkModule extends ReactContextBaseJavaModule {
         isSessionPreparingToLaunch = false;
         latestProcessor = new PhotoIDScanProcessor(sessionToken, reactContext.getCurrentActivity(),
             ReactNativeCapfaceSdkModule.this, data);
-      }
-    });
-  }
-
-  @ReactMethod
-  public void handleFaceUser(ReadableMap config, Promise promise) {
-    setProcessorPromise(promise);
-    if (!isInitialized) {
-      Log.d("Capitual - SDK", "FaceTecSDK doesn't initialized!");
-      this.processorPromise.reject("FaceTecSDK doesn't initialized!", "FaceTecDoenstInitialized");
-      return;
-    }
-
-    if (config == null) {
-      Log.d("Capitual - SDK", "No config provided!");
-      this.processorPromise.reject("No configurations provided!", "NoConfigurationsProvided");
-      return;
-    }
-
-    isSessionPreparingToLaunch = true;
-
-    getSessionToken(new SessionTokenCallback() {
-      @Override
-      public void onSessionTokenReceived(String sessionToken) {
-        resetLatestResults();
-        isSessionPreparingToLaunch = false;
-        final FaceConfig faceConfig = new FaceConfig(config);
-        latestProcessor = new FaceProcessor(sessionToken, reactContext.getCurrentActivity(),
-            ReactNativeCapfaceSdkModule.this, faceConfig);
       }
     });
   }

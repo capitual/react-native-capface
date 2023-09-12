@@ -6,8 +6,7 @@ Capface sdk adapter to react native. 📱
 - [Usage](#usage)
 - [API](#api)
   - [`initialize(init: CapfaceSdk.Initialize)`](#initializeinit-capfacesdkinitialize)
-  - [`enroll(data?: Object)`](#enrolldata-capfacesdkdata)
-  - [`authenticate(data?: Object)`](#authenticatedata-capfacesdkdata)
+  - [`faceMatch(type: CapfaceSdk.MatchType, data?: CapfaceSdk.MatchData)`](#facematchtype-capfacesdkmatchtype-data-capfacesdkmatchdata)
   - [`photoMatch(data?: Object)`](#photomatchdata-capfacesdkdata)
   - [`setTheme(options?: CapfaceSdk.Theme)`](#setthemeoptions-capfacesdktheme)
 - [Types](#types)
@@ -21,6 +20,8 @@ Capface sdk adapter to react native. 📱
   - [`CapfaceSdk.DefaultMessage`](#capfacesdkdefaultmessage)
   - [`CapfaceSdk.DefaultScanMessage`](#capfacesdkdefaultscanmessage)
   - [`CapfaceSdk.Errors`](#capfacesdkerrors)
+  - [`CapfaceSdk.MatchType`](#capfacesdkmatchtype)
+  - [`CapfaceSdk.MatchData`](#capfacesdkmatchdata)
 - [Native Events](#native-events)
   - [`Event Types`](#event-types)
 - [How to add images in CapfaceSDK module?](#how-to-add-images-in-capfacesdk-module)
@@ -55,10 +56,10 @@ import {
   NativeEventEmitter,
 } from 'react-native';
 import {
+  CapfaceSdk,
   ReactNativeCapfaceSdk,
-  authenticate,
-  enroll,
   initialize,
+  faceMatch,
   photoMatch,
 } from '@capitual/react-native-capface-sdk';
 
@@ -109,18 +110,12 @@ export default function App() {
     }
   };
 
-  const onPressEnroll = async () => {
+  const onPressFaceMatch = async (
+    type: CapfaceSdk.MatchType,
+    data?: CapfaceSdk.MatchData
+  ) => {
     try {
-      const isSuccess = await enroll();
-      console.log(isSuccess);
-    } catch (error: any) {
-      console.error(error.message);
-    }
-  };
-
-  const onPressAuthenticate = async () => {
-    try {
-      const isSuccess = await authenticate();
+      const isSuccess = await faceMatch(type, data);
       console.log(isSuccess);
     } catch (error: any) {
       console.error(error.message);
@@ -130,20 +125,31 @@ export default function App() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.content}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={async () => await init()}
-        >
+        <TouchableOpacity style={styles.button} onPress={init}>
           <Text style={styles.text}>Init Capface Module</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={onPressPhotoMatch}>
           <Text style={styles.text}>Open Photo Match</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={onPressEnroll}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={async () => await onPressFaceMatch('enroll')}
+        >
           <Text style={styles.text}>Open Enroll</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={onPressAuthenticate}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={async () =>
+            await onPressFaceMatch('authenticate', { id: '123456' })
+          }
+        >
           <Text style={styles.text}>Open Authenticate</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={async () => await onPressFaceMatch('liveness')}
+        >
+          <Text style={styles.text}>Open Liveness</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -181,13 +187,12 @@ const styles = StyleSheet.create({
 
 ## API
 
-| Methods                                                                           | Return Type        | iOS | Android |
-| --------------------------------------------------------------------------------- | ------------------ | --- | ------- |
-| [`initialize(init: CapfaceSdk.Initialize)`](#initializeinit-capfacesdkinitialize) | `Promise<boolean>` | ✅  | ✅      |
-| [`enroll(data?: Object)`](#enrolldata-capfacesdkdata)                             | `Promise<boolean>` | ✅  | ✅      |
-| [`authenticate(data?: Object)`](#authenticatedata-capfacesdkdata)                 | `Promise<boolean>` | ✅  | ✅      |
-| [`photoMatch(data?: Object)`](#photomatchdata-capfacesdkdata)                     | `Promise<boolean>` | ✅  | ✅      |
-| [`setTheme(options?: CapfaceSdk.Theme)`](#setthemeoptions-capfacesdktheme)        | `void`             | ✅  | ✅      |
+| Methods                                                                                                                            | Return Type        | iOS | Android |
+| ---------------------------------------------------------------------------------------------------------------------------------- | ------------------ | --- | ------- |
+| [`initialize(init: CapfaceSdk.Initialize)`](#initializeinit-capfacesdkinitialize)                                                  | `Promise<boolean>` | ✅  | ✅      |
+| [`faceMatch(type: CapfaceSdk.MatchType, data?: CapfaceSdk.MatchData`](#facematchtype-capfacesdkmatchtype-data-capfacesdkmatchdata) | `Promise<boolean>` | ✅  | ✅      |
+| [`photoMatch(data?: Object)`](#photomatchdata-capfacesdkdata)                                                                      | `Promise<boolean>` | ✅  | ✅      |
+| [`setTheme(options?: CapfaceSdk.Theme)`](#setthemeoptions-capfacesdktheme)                                                         | `void`             | ✅  | ✅      |
 
 ### `initialize(init: CapfaceSdk.Initialize)`
 
@@ -198,29 +203,18 @@ This is the **principal** method to be called, he must be **called first** to in
 | `params`                | [`CapfaceSdk.Params`](#capfacesdkparams)   | ✅       | -           |
 | `headers`               | [`CapfaceSdk.Headers`](#capfacesdkheaders) | ❌       | `undefined` |
 
-### `enroll(data?: Object)`
+### `faceMatch(type: CapfaceSdk.MatchType, data?: CapfaceSdk.MatchData)`
 
-This method makes a 3D reading of the user's face. But, you must use to **subscribe** user in Capface SDK or in your server.
+This method is called to make enrollment, authenticate and liveness available. The type is required and it must provided to select which flow you are interested.
 
-| `Object` | type     | Required | Default     |
-| -------- | -------- | -------- | ----------- |
-| `data`   | `Object` | ❌       | `undefined` |
+- **Enrollment**: This method makes a 3D reading of the user's face. But, you must use to **subscribe** user in Capface SDK or in your server.
+- **Authenticate**: This method makes a 3D reading of the user's face. But, you must use to **authenticate** user in Capface SDK or in your server.
+- **Liveness**: This method makes a 3D reading of the user's face.
 
-### `authenticate(data?: Object)`
-
-This method makes a 3D reading of the user's face. But, you must use to **authenticate** user in Capface SDK or in your server.
-
-| `Object` | type     | Required | Default     |
-| -------- | -------- | -------- | ----------- |
-| `data`   | `Object` | ❌       | `undefined` |
-
-### `photoScan(data?: Object)`
-
-This method make to read from documents for user.
-
-| `Object` | type     | Required | Default     |
-| -------- | -------- | -------- | ----------- |
-| `data`   | `Object` | ❌       | `undefined` |
+| `Object` | type                                           | Required | Default     |
+| -------- | ---------------------------------------------- | -------- | ----------- |
+| `type`   | [`CapfaceSdk.MatchType`](#capfacesdkmatchtype) | ✅       | -           |
+| `data`   | [`CapfaceSdk.MatchData`](#capfacesdkmatchdata) | ❌       | `undefined` |
 
 ### `photoMatch(data?: Object)`
 
@@ -252,7 +246,9 @@ This method must be used to **set** the **theme** of the Capface SDK screen.
 | [`CapfaceSdk.FeedbackBackgroundColor`](#capfacesdkfeedbackbackgroundcolor-ios-only) | ✅  | ❌      |
 | [`CapfaceSdk.Point`](#capfacesdkpoint-ios-only)                                     | ✅  | ❌      |
 | [`CapfaceSdk.DefaultMessage`](#capfacesdkdefaultmessage)                            | ✅  | ✅      |
-| [`CapfaceSdk.DefaultScanMessage`](#capfacesdkdefaultscanmessage)                    | ✅  | ✅      |
+| [`CapfaceSdk.Errors`](#capfacesdkerrors)                                            | ✅  | ✅      |
+| [`CapfaceSdk.MatchType`](#capfacesdkdefaultscanmessage)                             | ✅  | ✅      |
+| [`CapfaceSdk.MatchData`](#capfacesdkdefaultscanmessage)                             | ✅  | ✅      |
 
 ### `CapfaceSdk.Params`
 
@@ -424,15 +420,39 @@ This interface represents the all scan messages during to CapfaceSDK flow. It in
 
 ### `CapfaceSdk.Errors`
 
-| `CapfaceSdk.Errors`             | Description                                                                          | iOS | Android |
-| ------------------------------- | ------------------------------------------------------------------------------------ | --- | ------- |
-| `CapFaceHasNotBeenInitialized`  | When some processors method is runned, but CapfaceSDK **has not been initialized**.  | ✅  | ✅      |
-| `CapFaceValuesWereNotProcessed` | When the image sent to the processors cannot be processed due to inconsistency.      | ✅  | ✅      |
-| `HTTPSError`                    | When exists some network error.                                                      | ✅  | ✅      |
-| `JSONError`                     | When exists some problem in getting data in request of **base URL** information.     | ❌  | ✅      |
-| `CapFaceInvalidSession`         | When session status is invalid.                                                      | ❌  | ✅      |
-| `CapFaceLivenessWasntProcessed` | When the image user sent to the processors cannot be processed due to inconsistency. | ❌  | ✅      |
-| `CapFaceScanWasntProcessed`     | When the image ID sent to the processors cannot be processed due to inconsistency.   | ❌  | ✅      |
+This enum represents all errors that are encountered on the CapFace SDK.
+
+| `CapfaceSdk.Errors`             | Description                                                                                                          | iOS | Android |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------------- | --- | ------- |
+| `CapFaceHasNotBeenInitialized`  | When some processors method is runned, but CapfaceSDK **has not been initialized**.                                  | ✅  | ✅      |
+| `CapFaceValuesWereNotProcessed` | When the image sent to the processors cannot be processed due to inconsistency.                                      | ✅  | ✅      |
+| `HTTPSError`                    | When exists some network error.                                                                                      | ✅  | ✅      |
+| `NoConfigurationsProvided`      | When the configurations [`faceMatch`](#facematchtype-capfacesdkmatchtype-data-capfacesdkmatchdata) doesn't provided. | ✅  | ✅      |
+| `JSONError`                     | When exists some problem in getting data in request of **base URL** information.                                     | ❌  | ✅      |
+| `CapFaceInvalidSession`         | When session status is invalid.                                                                                      | ❌  | ✅      |
+| `CapFaceLivenessWasntProcessed` | When the image user sent to the processors cannot be processed due to inconsistency.                                 | ❌  | ✅      |
+| `CapFaceScanWasntProcessed`     | When the image ID sent to the processors cannot be processed due to inconsistency.                                   | ❌  | ✅      |
+
+### `CapfaceSdk.MatchType`
+
+This enum represents all the possible types of flow that can be used on the [`faceMatch`](#facematchtype-capfacesdkmatchtype-data-capfacesdkmatchdata) method.
+
+| `CapfaceSdk.MatchType` | Description                              | iOS | Android |
+| ---------------------- | ---------------------------------------- | --- | ------- |
+| `authenticate`         | When you want to make authenticate flow. | ✅  | ✅      |
+| `enroll`               | When you want to make enroll flow.       | ✅  | ✅      |
+| `liveness`             | When you want to make liveness flow.     | ✅  | ✅      |
+
+### `CapfaceSdk.MatchData`
+
+The object with properties that will be sent to native modules to make the requests, change text labels and sent parameters via headers.
+
+| `CapfaceSdk.MatchData` | type               | iOS | Android | Required | Default                                                                                 |
+| ---------------------- | ------------------ | --- | ------- | -------- | --------------------------------------------------------------------------------------- |
+| `endpoint`             | `string` or `null` | ✅  | ✅      | ❌       | `Authenticated` (authenticate) or `Liveness\nConfirmed` (enroll and liveness)           |
+| `parameters`           | `string` or `null` | ✅  | ✅      | ❌       | `null`                                                                                  |
+| `successMessage`       | `string` or `null` | ✅  | ✅      | ❌       | `/match-3d-3d` (authenticate) or `/enrollment-3d` (enroll) or `/liveness-3d` (liveness) |
+| `uploadMessageIos`     | `string` or `null` | ✅  | ✅      | ❌       | `Still Uploading...`                                                                    |
 
 <hr/>
 
@@ -473,7 +493,7 @@ import React, { useEffect } from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 import {
   initialize,
-  enroll,
+  faceMatch,
   setTheme,
 } from '@capitual/react-native-capface-sdk';
 
@@ -516,7 +536,7 @@ export default function App() {
         }}
         onPress={async () => {
           try {
-            const isSuccess = await enroll();
+            const isSuccess = await faceMatch('enroll');
             console.log(isSuccess);
           } catch (error: any) {
             console.error(error);

@@ -29,6 +29,36 @@ export function initialize({
 }
 
 /**
+ * @description This method is called to make enrollment, authenticate and
+ * liveness available. The **enrollment method** makes a 3D reading of the
+ * user's face. But, you must use to **subscribe** user in Capface SDK or in
+ * your server. The **authenticate method** makes a 3D reading of the user's
+ * face. But, you must use to **authenticate** user in Capface SDK or in
+ * your server. Finally, the **liveness** method makes a 3D reading of the
+ * user's face.
+ *
+ * @param {CapfaceSdk.MatchType} type - The type of flow to be called.
+ * @param {CapfaceSdk.MatchData|undefined} data - The object with properties
+ * that will be sent to native modules to make the requests, change text labels
+ * and sent parameters via headers.
+ *
+ * @return {Promise<boolean>} Represents if flow was a successful.
+ * @throws If was a unsuccessful or occurred some interference.
+ */
+export async function faceMatch(
+  type: CapfaceSdk.MatchType,
+  data?: CapfaceSdk.MatchData
+): Promise<boolean> {
+  return await ReactNativeCapfaceSdk.handleFaceUser(
+    NATIVE_CONSTANTS(data)[type]
+  )
+    .then((successful: boolean) => successful)
+    .catch((error: Error) => {
+      throw new Error(error.message);
+    });
+}
+
+/**
  * @description This method make to read from face and documents for user,
  * after comparate face and face documents from user to check veracity.
  *
@@ -40,75 +70,6 @@ export function initialize({
  */
 export async function photoMatch(data?: Object): Promise<boolean> {
   return await ReactNativeCapfaceSdk.handlePhotoIDMatch(data)
-    .then((successful: boolean) => successful)
-    .catch((error: Error) => {
-      throw new Error(error.message);
-    });
-}
-
-/**
- * @description This method makes a 3D reading of the user's face. But, you must
- * use to **subscribe** user in Capface SDK or in your server.
- *
- * @param {Object|undefined} data - The object with data to be will send on
- * enrollment. The data is optional.
- *
- * @return {Promise<boolean>} Represents if enrollment was a successful.
- * @throws If enrollment was a unsuccessful or occurred some interference.
- */
-export async function enroll(data?: Object): Promise<boolean> {
-  return await ReactNativeCapfaceSdk.handleEnrollUser(data)
-    .then((successful: boolean) => successful)
-    .catch((error: Error) => {
-      throw new Error(error.message);
-    });
-}
-
-/**
- * @description This method makes a 3D reading of the user's face. But, you must
- * use to **authenticate** user in Capface SDK or in your server.
- *
- * @param {Object|undefined} data - The object with data to be will send on
- * authentication. The data is optional.
- *
- * @return {Promise<boolean>} Represents if authentication was a successful.
- * @throws If authenticate was a unsuccessful or occurred some interference.
- */
-export async function authenticate(data?: Object): Promise<boolean> {
-  return await ReactNativeCapfaceSdk.handleAuthenticateUser(data)
-    .then((successful: boolean) => successful)
-    .catch((error: Error) => {
-      throw new Error(error.message);
-    });
-}
-
-/**
- * @description This method is called to make enrollment, authenticate and
- * liveness available.
- *
- * @description This method makes a 3D reading of the user's face. But, you
- * must use to **subscribe** user in Capface SDK or in your server.
- *
- * @description This method makes a 3D reading of the user's face. But, you
- * must use to **authenticate** user in Capface SDK or in your server.
- *
- * @description This method makes a 3D reading of the user's face.
- *
- * @param {CapfaceSdk.MatchType} type - The type of flow to be called.
- * @param {Omit<CapfaceSdk.MatchConfig, 'key' | 'hasExternalDatabaseRefID'>|undefined} data -
- * The object with data to be will send by headers on the requests. The data is
- * optional.
- *
- * @return {Promise<boolean>} Represents if flow was a successful.
- * @throws If was a unsuccessful or occurred some interference.
- */
-export async function faceMatch(
-  type: CapfaceSdk.MatchType,
-  data?: Omit<CapfaceSdk.MatchConfig, 'key' | 'hasExternalDatabaseRefID'>
-): Promise<boolean> {
-  return await ReactNativeCapfaceSdk.handleFaceUser(
-    NATIVE_CONSTANTS(data)[type]
-  )
     .then((successful: boolean) => successful)
     .catch((error: Error) => {
       throw new Error(error.message);

@@ -775,6 +775,11 @@ export declare namespace CapfaceSdk {
     HTTPSError = 'HTTPSError',
 
     /**
+     * @description When the configurations doesn't provided to **faceMatch**.
+     */
+    NoConfigurationsProvided = 'NoConfigurationsProvided',
+
+    /**
      * @description When exists some problem in getting data in request of
      * **base URL** information. Only Android.
      */
@@ -854,6 +859,14 @@ export declare namespace CapfaceSdk {
   }
 
   /**
+   * @type
+   *
+   * @description The object with properties that will be sent to native modules
+   * to make the requests, change text labels and sent parameters via headers.
+   */
+  type MatchData = Omit<MatchConfig, 'key' | 'hasExternalDatabaseRefID'>;
+
+  /**
    * @interface Methods
    *
    * @description This is the available methods in Capface SDK.
@@ -891,53 +904,21 @@ export declare namespace CapfaceSdk {
     handlePhotoIDMatch(data?: Object): Promise<boolean>;
 
     /**
-     * @description This method makes a 3D reading of the user's face. But, you
-     * must use to **subscribe** user in Capface SDK or in your server.
-     *
-     * @param {Object|undefined} data - The object with data to be will send on
-     * enrollment. The data is optional.
-     *
-     * @return {Promise<boolean>} Represents if enrollment was a successful.
-     * @throws If enrollment was a unsuccessful or occurred some interference.
-     */
-    handleEnrollUser(data?: Object): Promise<boolean>;
-
-    /**
-     * @description This method makes a 3D reading of the user's face. But, you
-     * must use to **authenticate** user in Capface SDK or in your server.
-     *
-     * @param {Object|undefined} data - The object with data to be will send on
-     * authentication. The data is optional.
-     *
-     * @return {Promise<boolean>} Represents if authentication was a successful.
-     * @throws If authenticate was a unsuccessful or occurred some interference.
-     */
-    handleAuthenticateUser(data?: Object): Promise<boolean>;
-
-    /**
      * @description This method is called to make enrollment, authenticate and
-     * liveness available.
+     * liveness available. The **enrollment method** makes a 3D reading of the
+     * user's face. But, you must use to **subscribe** user in Capface SDK or in
+     * your server. The **authenticate method** makes a 3D reading of the user's
+     * face. But, you must use to **authenticate** user in Capface SDK or in
+     * your server. Finally, the **liveness** method makes a 3D reading of the
+     * user's face.
      *
-     * @description This method makes a 3D reading of the user's face. But, you
-     * must use to **subscribe** user in Capface SDK or in your server.
-     *
-     * @description This method makes a 3D reading of the user's face. But, you
-     * must use to **authenticate** user in Capface SDK or in your server.
-     *
-     * @description This method makes a 3D reading of the user's face.
-     *
-     * @param {Omit<CapfaceSdk.MatchConfig, 'key' | 'hasExternalDatabaseRefID'>|undefined} data -
-     * The object with data to be will send by headers on the requests. The data
-     * is optional.
+     * @param {CapfaceSdk.MatchData|undefined} data - The object with data to
+     * be will send by headers on the requests. The data is optional.
      *
      * @return {Promise<boolean>} Represents if flow was a successful.
      * @throws If was a unsuccessful or occurred some interference.
      */
-    handleFaceUser(
-      data?:
-        | Omit<CapfaceSdk.MatchConfig, 'key' | 'hasExternalDatabaseRefID'>
-        | undefined
-    ): Promise<boolean>;
+    handleFaceUser(data?: CapfaceSdk.MatchData | undefined): Promise<boolean>;
 
     /**
      * @description This method must be used to **set** the **theme** of the
