@@ -37,7 +37,7 @@ class CapFaceViewController: UIViewController, URLSessionDelegate {
 
         getSessionToken() { sessionToken in
             self.resetLatestResults()
-            self.latestExternalDatabaseRefID = "ios_capitual_app_" + UUID().uuidString
+            self.latestExternalDatabaseRefID = "ios_app_" + UUID().uuidString
             self.latestProcessor = PhotoIDMatchProcessor(sessionToken: sessionToken, fromViewController: self, data: data)
         }
     }

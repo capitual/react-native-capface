@@ -244,7 +244,7 @@ public class ReactNativeCapfaceSdkModule extends ReactContextBaseJavaModule {
       public void onSessionTokenReceived(String sessionToken) {
         resetLatestResults();
         isSessionPreparingToLaunch = false;
-        setLatestExternalDatabaseRefID("android_capitual_app_" + randomUUID());
+        setLatestExternalDatabaseRefID("android_app_" + randomUUID());
         latestProcessor = new PhotoIDMatchProcessor(sessionToken, reactContext.getCurrentActivity(),
             ReactNativeCapfaceSdkModule.this, data);
       }
