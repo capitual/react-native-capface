@@ -439,19 +439,21 @@ This enum represents all the possible types of flow that can be used on the [`fa
 | `CapfaceSdk.MatchType` | Description                              | iOS | Android |
 | ---------------------- | ---------------------------------------- | --- | ------- |
 | `authenticate`         | When you want to make authenticate flow. | ✅  | ✅      |
-| `enroll`               | When you want to make enroll flow.       | ✅  | ✅      |
+| `enroll`               | When you want to make enrollment flow.   | ✅  | ✅      |
 | `liveness`             | When you want to make liveness flow.     | ✅  | ✅      |
+
+> The **authenticate flow** depends on to enrollment flow to **work** because the authenticate flow is done using an **UUID** that's was created by enrollment flow.
 
 ### `CapfaceSdk.MatchData`
 
 The object with properties that will be sent to native modules to make the requests, change text labels and sent parameters via headers.
 
-| `CapfaceSdk.MatchData` | type               | iOS | Android | Required | Default                                                                                 |
-| ---------------------- | ------------------ | --- | ------- | -------- | --------------------------------------------------------------------------------------- |
-| `endpoint`             | `string` or `null` | ✅  | ✅      | ❌       | `Authenticated` (authenticate) or `Liveness\nConfirmed` (enroll and liveness)           |
-| `parameters`           | `string` or `null` | ✅  | ✅      | ❌       | `null`                                                                                  |
-| `successMessage`       | `string` or `null` | ✅  | ✅      | ❌       | `/match-3d-3d` (authenticate) or `/enrollment-3d` (enroll) or `/liveness-3d` (liveness) |
-| `uploadMessageIos`     | `string` or `null` | ✅  | ✅      | ❌       | `Still Uploading...`                                                                    |
+| `CapfaceSdk.MatchData` | type               | iOS | Android | Required | Default                                                                                     |
+| ---------------------- | ------------------ | --- | ------- | -------- | ------------------------------------------------------------------------------------------- |
+| `endpoint`             | `string` or `null` | ✅  | ✅      | ❌       | `Authenticated` (authenticate) or `Liveness\nConfirmed` (enrollment and liveness)           |
+| `parameters`           | `string` or `null` | ✅  | ✅      | ❌       | `null`                                                                                      |
+| `successMessage`       | `string` or `null` | ✅  | ✅      | ❌       | `/match-3d-3d` (authenticate) or `/enrollment-3d` (enrollment) or `/liveness-3d` (liveness) |
+| `uploadMessageIos`     | `string` or `null` | ✅  | ✅      | ❌       | `Still Uploading...`                                                                        |
 
 <hr/>
 
