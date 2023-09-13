@@ -14,13 +14,13 @@ import okhttp3.Headers;
 import okhttp3.Request;
 
 public class Config {
+	private static final ThemeUtils CapThemeUtils = new ThemeUtils();
 	public static String DeviceKeyIdentifier;
 	public static String BaseURL;
 	public static String PublicFaceScanEncryptionKey;
 	public static String ProductionKeyText;
 	public static ReadableMap Theme;
 	public static ReadableMap RequestHeaders;
-	private static final ThemeUtils CapThemeUtils = new ThemeUtils();
 
 	private static Map<String, String> parseReadableMapToMap() {
 		Map<String, String> headers = new HashMap<String, String>();

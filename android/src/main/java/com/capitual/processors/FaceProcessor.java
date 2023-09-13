@@ -1,7 +1,6 @@
 package com.capitual.processors;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -21,11 +20,11 @@ import com.capitual.reactnativecapfacesdk.ReactNativeCapfaceSdkModule;
 import com.facetec.sdk.*;
 
 public class FaceProcessor extends Processor implements FaceTecFaceScanProcessor {
-  private boolean success = false;
   private final String key;
   private final ReactNativeCapfaceSdkModule capFaceModule;
   private final FaceConfig faceConfig;
   private final ThemeUtils capThemeUtils = new ThemeUtils();
+  private boolean success = false;
 
   public FaceProcessor(String sessionToken, Context context, ReactNativeCapfaceSdkModule capFaceModule,
       FaceConfig faceConfig) {
@@ -65,7 +64,6 @@ public class FaceProcessor extends Processor implements FaceTecFaceScanProcessor
       }
     } catch (JSONException e) {
       e.printStackTrace();
-      Log.d("Capitual - JSON", "Exception raised while attempting to create JSON payload for upload.");
       capFaceModule.sendEvent("onCloseModal", false);
       capFaceModule.processorPromise.reject("Exception raised while attempting to create JSON payload for upload.",
           "JSONError");
@@ -113,7 +111,6 @@ public class FaceProcessor extends Processor implements FaceTecFaceScanProcessor
           }
         } catch (JSONException e) {
           e.printStackTrace();
-          Log.d("Capitual - JSON", "Exception raised while attempting to parse JSON result.");
           faceScanResultCallback.cancel();
           capFaceModule.sendEvent("onCloseModal", false);
           capFaceModule.processorPromise.reject("Exception raised while attempting to parse JSON result.",
@@ -123,7 +120,6 @@ public class FaceProcessor extends Processor implements FaceTecFaceScanProcessor
 
       @Override
       public void onFailure(@NonNull Call call, IOException e) {
-        Log.d("Capitual - HTTPS", "Exception raised while attempting HTTPS call.");
         faceScanResultCallback.cancel();
         capFaceModule.sendEvent("onCloseModal", false);
         capFaceModule.processorPromise.reject("Exception raised while attempting HTTPS call.", "HTTPSError");

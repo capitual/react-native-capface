@@ -1,7 +1,6 @@
 package com.capitual.processors;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -28,11 +27,11 @@ import okhttp3.RequestBody;
 import com.capitual.processors.helpers.ThemeUtils;
 
 public class PhotoIDScanProcessor extends Processor implements FaceTecIDScanProcessor {
-	private boolean success = false;
 	private final String key = "photoIdScanMessage";
 	private final ReadableMap data;
 	private final ReactNativeCapfaceSdkModule capFaceModule;
 	private final ThemeUtils capThemeUtils = new ThemeUtils();
+	private boolean success = false;
 
 	public PhotoIDScanProcessor(String sessionToken, Context context, ReactNativeCapfaceSdkModule capFaceModule,
 			ReadableMap data) {
@@ -143,7 +142,6 @@ public class PhotoIDScanProcessor extends Processor implements FaceTecIDScanProc
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
-			Log.d("Capitual - JSON", "Exception raised while attempting to create JSON payload for upload.");
 			capFaceModule.sendEvent("onCloseModal", false);
 			capFaceModule.processorPromise.reject("Exception raised while attempting to create JSON payload for upload.",
 					"JSONError");
@@ -237,7 +235,6 @@ public class PhotoIDScanProcessor extends Processor implements FaceTecIDScanProc
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
-					Log.d("Capitual - JSON", "Exception raised while attempting to parse JSON result.");
 					idScanResultCallback.cancel();
 					capFaceModule.sendEvent("onCloseModal", false);
 					capFaceModule.processorPromise.reject("Exception raised while attempting to parse JSON result.",
@@ -247,7 +244,6 @@ public class PhotoIDScanProcessor extends Processor implements FaceTecIDScanProc
 
 			@Override
 			public void onFailure(@NonNull Call call, @NonNull IOException e) {
-				Log.d("Capitual - HTTPS", "Exception raised while attempting HTTPS call.");
 				idScanResultCallback.cancel();
 				capFaceModule.sendEvent("onCloseModal", false);
 				capFaceModule.processorPromise.reject("Exception raised while attempting HTTPS call.", "HTTPSError");

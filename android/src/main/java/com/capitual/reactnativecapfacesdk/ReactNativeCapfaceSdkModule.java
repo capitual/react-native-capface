@@ -10,8 +10,6 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.module.annotations.ReactModule;
 
-import android.util.Log;
-
 import com.facebook.react.bridge.ReadableMap;
 
 import org.json.JSONException;
@@ -32,8 +30,9 @@ import com.facetec.sdk.*;
 
 @ReactModule(name = ReactNativeCapfaceSdkModule.NAME)
 public class ReactNativeCapfaceSdkModule extends ReactContextBaseJavaModule {
-  public static final String NAME = "ReactNativeCapfaceSdk";
   private static final ThemeUtils capThemeUtils = new ThemeUtils();
+  public static final String NAME = "ReactNativeCapfaceSdk";
+  private final String initializationMessage = "CapFace SDK has not been initialized!";
   private final ReactApplicationContext reactContext;
   private boolean isInitialized = false;
   private boolean isSessionPreparingToLaunch = false;
@@ -62,6 +61,10 @@ public class ReactNativeCapfaceSdkModule extends ReactContextBaseJavaModule {
     return false;
   }
 
+  private String generateUUID() {
+    return "android_app_" + randomUUID();
+  }
+
   private String getKeyValue(@NonNull Map object, String key) {
     if (object.containsKey(key)) {
       return object.get(key).toString();
@@ -76,8 +79,8 @@ public class ReactNativeCapfaceSdkModule extends ReactContextBaseJavaModule {
       Config.setKey(getKeyValue(params, "key"));
       Config.setProductionKeyText(getKeyValue(params, "productionKey"));
       Config.setHeaders(headers);
-    } catch (Exception error) {
-      Log.d("Capitual - SDK", "CapFace SDK Configuration doesn't exists!");
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 
@@ -86,7 +89,6 @@ public class ReactNativeCapfaceSdkModule extends ReactContextBaseJavaModule {
     if (params == null) {
       isInitialized = false;
       callback.invoke(false);
-      Log.d("Capitual - SDK", "No parameters provided!");
       return;
     }
 
@@ -103,7 +105,6 @@ public class ReactNativeCapfaceSdkModule extends ReactContextBaseJavaModule {
     } else {
       isInitialized = false;
       callback.invoke(false);
-      Log.d("Capitual - SDK", "CapFace SDK doesn't initialized!");
     }
 
     this.handleTheme(Config.Theme);
@@ -124,7 +125,6 @@ public class ReactNativeCapfaceSdkModule extends ReactContextBaseJavaModule {
       @Override
       public void onFailure(Call call, IOException e) {
         e.printStackTrace();
-        Log.d("Capitual - HTTPS", "Exception raised while attempting HTTPS call.");
         if (processorPromise != null) {
           processorPromise.reject("Exception raised while attempting HTTPS call.", "HTTPSError");
         }
@@ -148,7 +148,6 @@ public class ReactNativeCapfaceSdkModule extends ReactContextBaseJavaModule {
           }
         } catch (JSONException e) {
           e.printStackTrace();
-          Log.d("Capitual - JSON", "Exception raised while attempting to parse JSON result.");
           if (processorPromise != null) {
             processorPromise.reject("Exception raised while attempting to parse JSON result.", "JSONError");
           }
@@ -200,13 +199,11 @@ public class ReactNativeCapfaceSdkModule extends ReactContextBaseJavaModule {
   public void handleFaceUser(ReadableMap config, Promise promise) {
     setProcessorPromise(promise);
     if (!isInitialized) {
-      Log.d("Capitual - SDK", "CapFace SDK has not been initialized!");
-      this.processorPromise.reject("CapFace SDK has not been initialized!", "CapFaceHasNotBeenInitialized");
+      this.processorPromise.reject(this.initializationMessage, "CapFaceHasNotBeenInitialized");
       return;
     }
 
     if (config == null) {
-      Log.d("Capitual - SDK", "No configurations provided!");
       this.processorPromise.reject("No configurations provided!", "NoConfigurationsProvided");
       return;
     }
@@ -220,7 +217,7 @@ public class ReactNativeCapfaceSdkModule extends ReactContextBaseJavaModule {
         isSessionPreparingToLaunch = false;
         final FaceConfig faceConfig = new FaceConfig(config);
         if (faceConfig.isWhichFlow(KeyFaceProcessor.enrollMessage, faceConfig.getKey())) {
-          setLatestExternalDatabaseRefID("android_app_" + randomUUID());
+          setLatestExternalDatabaseRefID(generateUUID());
         }
         latestProcessor = new FaceProcessor(sessionToken, reactContext.getCurrentActivity(),
             ReactNativeCapfaceSdkModule.this, faceConfig);
@@ -232,8 +229,7 @@ public class ReactNativeCapfaceSdkModule extends ReactContextBaseJavaModule {
   public void handlePhotoIDMatch(ReadableMap data, Promise promise) {
     setProcessorPromise(promise);
     if (!isInitialized) {
-      Log.d("Capitual - SDK", "CapFace SDK has not been initialized!");
-      this.processorPromise.reject("CapFace SDK has not been initialized!", "CapFaceHasNotBeenInitialized");
+      this.processorPromise.reject(this.initializationMessage, "CapFaceHasNotBeenInitialized");
       return;
     }
 
@@ -244,7 +240,7 @@ public class ReactNativeCapfaceSdkModule extends ReactContextBaseJavaModule {
       public void onSessionTokenReceived(String sessionToken) {
         resetLatestResults();
         isSessionPreparingToLaunch = false;
-        setLatestExternalDatabaseRefID("android_app_" + randomUUID());
+        setLatestExternalDatabaseRefID(generateUUID());
         latestProcessor = new PhotoIDMatchProcessor(sessionToken, reactContext.getCurrentActivity(),
             ReactNativeCapfaceSdkModule.this, data);
       }
@@ -255,8 +251,7 @@ public class ReactNativeCapfaceSdkModule extends ReactContextBaseJavaModule {
   public void handlePhotoIDScan(ReadableMap data, Promise promise) {
     setProcessorPromise(promise);
     if (!isInitialized) {
-      Log.d("Capitual - SDK", "CapFace SDK has not been initialized!");
-      this.processorPromise.reject("CapFace SDK has not been initialized!", "CapFaceHasNotBeenInitialized");
+      this.processorPromise.reject(this.initializationMessage, "CapFaceHasNotBeenInitialized");
       return;
     }
 

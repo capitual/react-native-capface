@@ -1,7 +1,6 @@
 package com.capitual.processors;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -23,6 +22,8 @@ import com.facetec.sdk.*;
 
 public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanProcessor, FaceTecIDScanProcessor {
   private final String key = "photoIdMatchMessage";
+  private final String exceptionJsonMessage = "Exception raised while attempting to parse JSON result.";
+  private final String exceptionHttpMessage = "Exception raised while attempting HTTPS call.";
   private final String latestExternalDatabaseRefID;
   private final ReadableMap data;
   private final ReactNativeCapfaceSdkModule capFaceModule;
@@ -135,7 +136,6 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
       parameters.put("externalDatabaseRefID", this.latestExternalDatabaseRefID);
     } catch (JSONException e) {
       e.printStackTrace();
-      Log.d("Capitual - JSON", "Exception raised while attempting to create JSON payload for upload.");
       capFaceModule.sendEvent("onCloseModal", false);
       capFaceModule.processorPromise.reject("Exception raised while attempting to create JSON payload for upload.",
           "JSONError");
@@ -178,20 +178,17 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
           }
         } catch (JSONException e) {
           e.printStackTrace();
-          Log.d("Capitual - JSON", "Exception raised while attempting to parse JSON result.");
           faceScanResultCallback.cancel();
           capFaceModule.sendEvent("onCloseModal", false);
-          capFaceModule.processorPromise.reject("Exception raised while attempting to parse JSON result.",
-              "JSONError");
+          capFaceModule.processorPromise.reject(exceptionJsonMessage, "JSONError");
         }
       }
 
       @Override
       public void onFailure(@NonNull Call call, @NonNull IOException e) {
-        Log.d("Capitual - HTTPS", "Exception raised while attempting HTTPS call.");
         faceScanResultCallback.cancel();
         capFaceModule.sendEvent("onCloseModal", false);
-        capFaceModule.processorPromise.reject("Exception raised while attempting HTTPS call.", "HTTPSError");
+        capFaceModule.processorPromise.reject(exceptionHttpMessage, "HTTPSError");
       }
     });
   }
@@ -226,10 +223,8 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
       }
     } catch (JSONException e) {
       e.printStackTrace();
-      Log.d("Capitual - JSON", "Exception raised while attempting to create JSON payload for upload.");
       capFaceModule.sendEvent("onCloseModal", false);
-      capFaceModule.processorPromise.reject("Exception raised while attempting to parse JSON result.",
-          "JSONError");
+      capFaceModule.processorPromise.reject(this.exceptionJsonMessage, "JSONError");
     }
 
     okhttp3.Request request = new okhttp3.Request.Builder()
@@ -320,20 +315,17 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
           }
         } catch (JSONException e) {
           e.printStackTrace();
-          Log.d("Capitual - JSON", "Exception raised while attempting to parse JSON result.");
           idScanResultCallback.cancel();
           capFaceModule.sendEvent("onCloseModal", false);
-          capFaceModule.processorPromise.reject("Exception raised while attempting to parse JSON result.",
-              "JSONError");
+          capFaceModule.processorPromise.reject(exceptionJsonMessage, "JSONError");
         }
       }
 
       @Override
       public void onFailure(@NonNull Call call, @NonNull IOException e) {
-        Log.d("Capitual - HTTPS", "Exception raised while attempting HTTPS call.");
         idScanResultCallback.cancel();
         capFaceModule.sendEvent("onCloseModal", false);
-        capFaceModule.processorPromise.reject("Exception raised while attempting HTTPS call.", "HTTPSError");
+        capFaceModule.processorPromise.reject(exceptionHttpMessage, "HTTPSError");
       }
     });
   }
