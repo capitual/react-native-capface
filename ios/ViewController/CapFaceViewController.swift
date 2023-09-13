@@ -28,6 +28,10 @@ class CapFaceViewController: UIViewController, URLSessionDelegate {
         return "ios_app_" + UUID().uuidString
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return FaceTecUtilities.DefaultStatusBarStyle
+    }
+    
     func onFaceUser(_ config: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         setProcessorPromise(resolve, rejecter: reject);
 
@@ -61,11 +65,11 @@ class CapFaceViewController: UIViewController, URLSessionDelegate {
     }
 
     func onComplete() {
-        UIApplication.shared.statusBarStyle = FaceTecUtilities.DefaultStatusBarStyle;
-
         if self.latestProcessor != nil {
             self.isSuccess = self.latestProcessor.isSuccess();
         }
+        
+        setNeedsStatusBarAppearanceUpdate()
 
         ReactNativeCapfaceSdk.emitter.sendEvent(withName: "onCloseModal", body: false);
 
