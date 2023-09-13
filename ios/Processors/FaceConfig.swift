@@ -77,7 +77,8 @@ public class FaceConfig {
                 return false
             }
             if let hasExternalDatabaseRefID = self.getValue(key: "hasExternalDatabaseRefID") {
-                return hasExternalDatabaseRefID == "true"
+                // Warning: This case the string "1" means true and "0" means false
+                return hasExternalDatabaseRefID == "1"
             }
         }
         return false

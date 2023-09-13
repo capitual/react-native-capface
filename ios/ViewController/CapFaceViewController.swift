@@ -11,6 +11,7 @@ import FaceTecSDK
 import LocalAuthentication
 
 class CapFaceViewController: UIViewController, URLSessionDelegate {
+    private let exceptionHttpMessage = "Exception raised while attempting HTTPS call."
     var isSuccess: Bool! = false
     var latestExternalDatabaseRefID: String = ""
     var latestSessionResult: FaceTecSessionResult!
@@ -22,13 +23,21 @@ class CapFaceViewController: UIViewController, URLSessionDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
+
+    private func generateUUID() -> String {
+        return "ios_app_" + UUID().uuidString
+    }
     
     func onFaceUser(_ config: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         setProcessorPromise(resolve, rejecter: reject);
 
         getSessionToken() { sessionToken in
             self.resetLatestResults()
-            self.latestProcessor = FaceProcessor(sessionToken: sessionToken, fromViewController: self, config: config)
+            let faceConfig = FaceConfig(config: config)
+            if (faceConfig.isWhichFlow(KeyFaceProcessor.enrollMessage, key: faceConfig.getKey() ?? "")) {
+                self.latestExternalDatabaseRefID = self.generateUUID()
+            }
+            self.latestProcessor = FaceProcessor(sessionToken: sessionToken, fromViewController: self, faceConfig: faceConfig)
         }
     }
 
@@ -37,7 +46,7 @@ class CapFaceViewController: UIViewController, URLSessionDelegate {
 
         getSessionToken() { sessionToken in
             self.resetLatestResults()
-            self.latestExternalDatabaseRefID = "ios_app_" + UUID().uuidString
+            self.latestExternalDatabaseRefID = self.generateUUID()
             self.latestProcessor = PhotoIDMatchProcessor(sessionToken: sessionToken, fromViewController: self, data: data)
         }
     }
@@ -98,26 +107,23 @@ class CapFaceViewController: UIViewController, URLSessionDelegate {
         let task = session.dataTask(with: request as URLRequest, completionHandler: { data, response, error in
             if let httpResponse = response as? HTTPURLResponse {
                 if httpResponse.statusCode < 200 || httpResponse.statusCode >= 299 {
-                    print("Exception raised while attempting HTTPS call. Status code: \(httpResponse.statusCode)");
                     if self.processorRejecter != nil {
-                        self.processorRejecter("Exception raised while attempting HTTPS call.", "HTTPSError", nil);
+                        self.processorRejecter("Exception raised while attempting to parse JSON result.", "JSONError", nil);
                     }
                     return
                 }
             }
 
             if let error = error {
-                print("Exception raised while attempting HTTPS call.")
                 if self.processorRejecter != nil {
-                    self.processorRejecter("Exception raised while attempting HTTPS call.", "HTTPSError", nil);
+                    self.processorRejecter(self.exceptionHttpMessage, "HTTPSError", nil);
                 }
                 return
             }
 
             guard let data = data else {
-                print("Exception raised while attempting HTTPS call.")
                 if self.processorRejecter != nil {
-                    self.processorRejecter("Exception raised while attempting HTTPS call.", "HTTPSError", nil);
+                    self.processorRejecter(self.exceptionHttpMessage, "HTTPSError", nil);
                 }
                 return
             }
@@ -127,9 +133,14 @@ class CapFaceViewController: UIViewController, URLSessionDelegate {
                     sessionTokenCallback(responseJSONObj["sessionToken"] as! String)
                     return
                 } else {
-                    print("Exception raised while attempting HTTPS call.")
+                    var errorMessage: String!
+                    if ((responseJSONObj["errorMessage"] as? String) != nil) {
+                        errorMessage = responseJSONObj["errorMessage"] as! String
+                    } else {
+                        errorMessage = "Response JSON is missing sessionToken."
+                    }
                     if self.processorRejecter != nil {
-                        self.processorRejecter("Exception raised while attempting HTTPS call.", "HTTPSError", nil);
+                        self.processorRejecter(errorMessage, "JSONError", nil);
                     }
                 }
             }

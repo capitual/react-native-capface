@@ -11,13 +11,13 @@ import Foundation
 import FaceTecSDK
 
 class PhotoIDScanProcessor: NSObject, Processor, FaceTecIDScanProcessorDelegate, URLSessionTaskDelegate {
+    private let key = "photoIdScanMessage";
+    private let CapThemeUtils: ThemeUtils! = ThemeUtils();
     var success = false
     var data: NSDictionary!
     var latestNetworkRequest: URLSessionTask!
     var fromViewController: CapFaceViewController!
     var idScanResultCallback: FaceTecIDScanResultCallback!
-    private let key = "photoIdScanMessage";
-    private let CapThemeUtils: ThemeUtils! = ThemeUtils();
 
     init(sessionToken: String, fromViewController: CapFaceViewController, data: NSDictionary) {
         self.fromViewController = fromViewController
@@ -88,7 +88,6 @@ class PhotoIDScanProcessor: NSObject, Processor, FaceTecIDScanProcessorDelegate,
         latestNetworkRequest = session.dataTask(with: request as URLRequest, completionHandler: { data, response, error in
             if let httpResponse = response as? HTTPURLResponse {
                 if httpResponse.statusCode < 200 || httpResponse.statusCode >= 299 {
-                    print("Exception raised while attempting HTTPS call. Status code: \(httpResponse.statusCode)");
                     ReactNativeCapfaceSdk.emitter.sendEvent(withName: "onCloseModal", body: false);
                     idScanResultCallback.onIDScanResultCancel()
                     return
@@ -96,7 +95,6 @@ class PhotoIDScanProcessor: NSObject, Processor, FaceTecIDScanProcessorDelegate,
             }
 
             if let error = error {
-                print("Exception raised while attempting HTTPS call.")
                 ReactNativeCapfaceSdk.emitter.sendEvent(withName: "onCloseModal", body: false);
                 idScanResultCallback.onIDScanResultCancel()
                 return

@@ -11,17 +11,17 @@ import Foundation
 import FaceTecSDK
 
 class FaceProcessor: NSObject, Processor, FaceTecFaceScanProcessorDelegate, URLSessionTaskDelegate {
+    private let key: String!
+    private let faceConfig: FaceConfig!
+    private let CapThemeUtils: ThemeUtils! = ThemeUtils();
     var success = false
     var latestNetworkRequest: URLSessionTask!
     var fromViewController: CapFaceViewController!
     var faceScanResultCallback: FaceTecFaceScanResultCallback!
-    private let key: String!
-    private let faceConfig: FaceConfig!
-    private let CapThemeUtils: ThemeUtils! = ThemeUtils();
 
-    init(sessionToken: String, fromViewController: CapFaceViewController, config: NSDictionary) {
+    init(sessionToken: String, fromViewController: CapFaceViewController, faceConfig: FaceConfig) {
         self.fromViewController = fromViewController
-        self.faceConfig = FaceConfig(config: config)
+        self.faceConfig = faceConfig
         self.key = faceConfig.getKey()
         super.init()
 
@@ -48,20 +48,20 @@ class FaceProcessor: NSObject, Processor, FaceTecFaceScanProcessorDelegate, URLS
         }
 
         var parameters: [String : Any] = [:]
-        let extraParameters = self.faceConfig.getParameters()
-        if (extraParameters != nil) {
+        let extraParameters: [String: Any]? = self.faceConfig.getParameters()
+        if extraParameters != nil {
             parameters["data"] = extraParameters
         }
         parameters["faceScan"] = sessionResult.faceScanBase64
         parameters["auditTrailImage"] = sessionResult.auditTrailCompressedBase64![0]
         parameters["lowQualityAuditTrailImage"] = sessionResult.lowQualityAuditTrailCompressedBase64![0]
         
-        let hasExternalDatabaseRefID = self.faceConfig.getHasExternalDatabaseRefID()
-        if (hasExternalDatabaseRefID) {
+        let hasExternalDatabaseRefID: Bool = self.faceConfig.getHasExternalDatabaseRefID()
+        if hasExternalDatabaseRefID {
             parameters["externalDatabaseRefID"] = fromViewController.getLatestExternalDatabaseRefID()
         }
 
-        let endpoint = self.faceConfig.getEndpoint()
+        let endpoint: String? = self.faceConfig.getEndpoint()
         var request = Config.makeRequest(url: endpoint ?? "", httpMethod: "POST")
         request.httpBody = try! JSONSerialization.data(withJSONObject: parameters, options: JSONSerialization.WritingOptions(rawValue: 0))
 
@@ -69,7 +69,6 @@ class FaceProcessor: NSObject, Processor, FaceTecFaceScanProcessorDelegate, URLS
         latestNetworkRequest = session.dataTask(with: request as URLRequest, completionHandler: { data, response, error in
             if let httpResponse = response as? HTTPURLResponse {
                 if httpResponse.statusCode < 200 || httpResponse.statusCode >= 299 {
-                    print("Exception raised while attempting HTTPS call. Status code: \(httpResponse.statusCode)");
                     ReactNativeCapfaceSdk.emitter.sendEvent(withName: "onCloseModal", body: false);
                     faceScanResultCallback.onFaceScanResultCancel()
                     return
@@ -77,7 +76,6 @@ class FaceProcessor: NSObject, Processor, FaceTecFaceScanProcessorDelegate, URLS
             }
 
             if let error = error {
-                print("Exception raised while attempting HTTPS call.")
                 ReactNativeCapfaceSdk.emitter.sendEvent(withName: "onCloseModal", body: false);
                 faceScanResultCallback.onFaceScanResultCancel()
                 return
@@ -103,7 +101,7 @@ class FaceProcessor: NSObject, Processor, FaceTecFaceScanProcessorDelegate, URLS
             }
 
             if wasProcessed == true {
-                let successMessage = self.faceConfig.getSuccessMessage()
+                let successMessage: String? = self.faceConfig.getSuccessMessage()
                 let message = self.CapThemeUtils.handleMessage(self.key, child: "successMessage", defaultMessage: successMessage ?? "");
                 FaceTecCustomization.setOverrideResultScreenSuccessMessage(message);
 
@@ -120,7 +118,7 @@ class FaceProcessor: NSObject, Processor, FaceTecFaceScanProcessorDelegate, URLS
         DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
             if self.latestNetworkRequest.state == .completed { return }
 
-            let uploadMessage = self.faceConfig.getUploadMessage()
+            let uploadMessage: String = self.faceConfig.getUploadMessage()
             let message = self.CapThemeUtils.handleMessage(self.key, child: "uploadMessageIos", defaultMessage: uploadMessage);
             let uploadMessageOverride: NSMutableAttributedString = NSMutableAttributedString.init(string: message);
             faceScanResultCallback.onFaceScanUploadMessageOverride(uploadMessageOverride: uploadMessageOverride);

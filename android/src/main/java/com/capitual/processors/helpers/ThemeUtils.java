@@ -37,7 +37,6 @@ public class ThemeUtils {
       final Boolean childIsntExists = !message.has(child) || message.isNull(child);
       return childIsntExists ? defaultMessage : message.getString(child);
     } catch (Exception error) {
-      Log.d("JSONError", "Some error occurred while parsing JSON!");
       return defaultMessage;
     }
   }

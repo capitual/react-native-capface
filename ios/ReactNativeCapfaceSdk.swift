@@ -13,6 +13,7 @@ import LocalAuthentication
 
 @objc(ReactNativeCapfaceSdk)
 class ReactNativeCapfaceSdk: RCTEventEmitter, URLSessionDelegate {
+    private let initializationMessage = "CapFace SDK has not been initialized!"
     public static var emitter: RCTEventEmitter!
     var capFaceViewController: CapFaceViewController!
     var isInitialized: Bool = false;
@@ -46,7 +47,6 @@ class ReactNativeCapfaceSdk: RCTEventEmitter, URLSessionDelegate {
             if params.count == 0 {
                 self.isInitialized = false;
                 callback([false]);
-                print("No parameters provided!");
                 return;
             }
             
@@ -60,7 +60,6 @@ class ReactNativeCapfaceSdk: RCTEventEmitter, URLSessionDelegate {
             } else {
                 self.isInitialized = false;
                 callback([false]);
-                print("CapFace SDK Configuration doesn't exists!");
             }
         }
     }
@@ -85,8 +84,7 @@ class ReactNativeCapfaceSdk: RCTEventEmitter, URLSessionDelegate {
         if self.isInitialized {
             self.capFaceViewController.onFaceUser(config, resolve: resolve, reject: reject);
         } else {
-            print("CapFace SDK has not been initialized!");
-            return reject("CapFace SDK has not been initialized!", "CapFaceHasNotBeenInitialized", nil);
+            return reject(self.initializationMessage, "CapFaceHasNotBeenInitialized", nil);
         }
     }
     
@@ -94,8 +92,7 @@ class ReactNativeCapfaceSdk: RCTEventEmitter, URLSessionDelegate {
         if self.isInitialized {
             self.capFaceViewController.onPhotoIDMatch(data, resolve: resolve, reject: reject);
         } else {
-            print("CapFace SDK has not been initialized!");
-            return reject("CapFace SDK has not been initialized!", "CapFaceHasNotBeenInitialized", nil);
+            return reject(self.initializationMessage, "CapFaceHasNotBeenInitialized", nil);
         }
     }
     
@@ -103,8 +100,7 @@ class ReactNativeCapfaceSdk: RCTEventEmitter, URLSessionDelegate {
         if self.isInitialized {
             self.capFaceViewController.onPhotoIDScan(data, resolve: resolve, reject: reject);
         } else {
-            print("CapFace SDK has not been initialized!");
-            return reject("CapFace SDK has not been initialized!", "CapFaceHasNotBeenInitialized", nil);
+            return reject(self.initializationMessage, "CapFaceHasNotBeenInitialized", nil);
         }
     }
     
