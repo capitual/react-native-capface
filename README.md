@@ -426,8 +426,8 @@ This enum represents all errors that are encountered on the CapFace SDK.
 | `CapFaceHasNotBeenInitialized`  | When some processors method is runned, but CapfaceSDK **has not been initialized**.                                  | ✅  | ✅      |
 | `CapFaceValuesWereNotProcessed` | When the image sent to the processors cannot be processed due to inconsistency.                                      | ✅  | ✅      |
 | `HTTPSError`                    | When exists some network error.                                                                                      | ✅  | ✅      |
-| `NoConfigurationsProvided`      | When the configurations [`faceMatch`](#facematchtype-capfacesdkmatchtype-data-capfacesdkmatchdata) doesn't provided. | ✅  | ✅      |
-| `JSONError`                     | When exists some problem in getting data in request of **base URL** information.                                     | ❌  | ✅      |
+| `JSONError`                     | When exists some problem in getting data in request of **base URL** information.                                     | ✅  | ✅      |
+| `NoConfigurationsProvided`      | When the configurations [`faceMatch`](#facematchtype-capfacesdkmatchtype-data-capfacesdkmatchdata) doesn't provided. | ❌  | ✅      |
 | `CapFaceInvalidSession`         | When session status is invalid.                                                                                      | ❌  | ✅      |
 | `CapFaceLivenessWasntProcessed` | When the image user sent to the processors cannot be processed due to inconsistency.                                 | ❌  | ✅      |
 | `CapFaceScanWasntProcessed`     | When the image ID sent to the processors cannot be processed due to inconsistency.                                   | ❌  | ✅      |
