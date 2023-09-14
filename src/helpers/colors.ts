@@ -42,8 +42,7 @@ export function rgbToHex(rgbColor: string): string | null {
 
   const byteNumbers =
     (1 << 24) | (redNumber << 16) | (greenNumber << 8) | blueNumber;
-  const hexCharacters = byteNumbers.toString(16).slice(1).toUpperCase();
-  const hexColor = `#${hexCharacters}`;
+  const hexColor = `#${byteNumbers.toString(16).slice(1).toUpperCase()}`;
 
   if (!isHexColor(hexColor)) return null;
   return hexColor;
@@ -78,13 +77,14 @@ export function rgbaToHex(rgbaColor: string): string | null {
     return null;
   }
 
-  const redNumericString = redNumber.toString(16);
-  const greenNumericString = greenNumber.toString(16);
-  const blueNumericString = blueNumber.toString(16);
-  const alphaNumericString = alphaNumber.toString(16).slice(1);
-
-  const hexColor =
-    `#${redNumericString}${greenNumericString}${blueNumericString}${alphaNumericString}`.toUpperCase();
+  const alphaNumericString = (((alpha as any) * 255) | (1 << 8))
+    .toString(16)
+    .slice(1);
+  const byteNumbers =
+    (1 << 24) | (redNumber << 16) | (greenNumber << 8) | blueNumber;
+  const hexColor = `#${byteNumbers
+    .toString(16)
+    .slice(1)}${alphaNumericString}`.toUpperCase();
 
   if (!isHexColor(hexColor)) return null;
   return hexColor;
