@@ -105,3 +105,50 @@ export function formatHexColor(hexColor: string): string | null {
   const [firstChar, secondChar, thirdChar] = hexColor.slice(1);
   return `#${firstChar}${firstChar}${secondChar}${secondChar}${thirdChar}${thirdChar}`.toUpperCase();
 }
+
+export function hslToHex(hslColor: string): string | null {
+  const LENGTH_OF_HSL_COLOR = 3;
+
+  const regexToRemoveCharacters = /[A-Z()\s%]/gi;
+  const hueSaturationAndLightnessNumbers = hslColor
+    .toLowerCase()
+    .replace(regexToRemoveCharacters, '')
+    .split(',');
+
+  if (hueSaturationAndLightnessNumbers.length !== LENGTH_OF_HSL_COLOR)
+    return null;
+
+  const [hue, saturation, lightness] = hueSaturationAndLightnessNumbers;
+  const allColorsExists = !!hue && !!saturation && !!lightness;
+  if (!allColorsExists) return null;
+
+  const hueNumber = parseInt(hue);
+  const saturationNumber = parseInt(saturation);
+  let lightnessNumber = parseInt(lightness);
+
+  if (
+    !isNumberBetween(hueNumber, 0, 360) ||
+    !isNumberBetween(saturationNumber, 0, 100) ||
+    !isNumberBetween(lightnessNumber, 0, 100)
+  ) {
+    return null;
+  }
+
+  lightnessNumber /= 100;
+  const alpha =
+    (saturationNumber * Math.min(lightnessNumber, 1 - lightnessNumber)) / 100;
+
+  const calculateHex = (bytes: number) => {
+    const hueValue = (bytes + hueNumber / 30) % 12;
+    const maxHueValue = Math.max(Math.min(hueValue - 3, 9 - hueValue, 1), -1);
+    const color = lightnessNumber - alpha * maxHueValue;
+    return Math.round(255 * color)
+      .toString(16)
+      .padStart(2, '0');
+  };
+
+  const hexColor = `#${calculateHex(0)}${calculateHex(8)}${calculateHex(4)}`;
+
+  if (!isHexColor(hexColor)) return null;
+  return hexColor;
+}
