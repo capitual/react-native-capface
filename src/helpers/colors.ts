@@ -17,14 +17,14 @@ export function rgbToHex(rgbColor: string): string | null {
   const LENGTH_OF_RGB_COLOR = 3;
 
   const regexToRemoveCharacters = /[A-Z()\s]/gi;
-  const redGreenAndBlueNumbers = rgbColor
+  const rgbValues = rgbColor
     .toLowerCase()
     .replace(regexToRemoveCharacters, '')
     .split(',');
 
-  if (redGreenAndBlueNumbers.length !== LENGTH_OF_RGB_COLOR) return null;
+  if (rgbValues.length !== LENGTH_OF_RGB_COLOR) return null;
 
-  const [red, green, blue] = redGreenAndBlueNumbers;
+  const [red, green, blue] = rgbValues;
   const allColorsExists = !!red && !!green && !!blue;
   if (!allColorsExists) return null;
 
@@ -52,21 +52,21 @@ export function rgbaToHex(rgbaColor: string): string | null {
   const LENGTH_OF_RGBA_COLOR = 4;
 
   const regexToRemoveCharacters = /[A-Z()\s]/gi;
-  const redGreenAndBlueNumbers = rgbaColor
+  const rgbaValues = rgbaColor
     .toLowerCase()
     .replace(regexToRemoveCharacters, '')
     .split(',');
 
-  if (redGreenAndBlueNumbers.length !== LENGTH_OF_RGBA_COLOR) return null;
+  if (rgbaValues.length !== LENGTH_OF_RGBA_COLOR) return null;
 
-  const [red, green, blue, alpha] = redGreenAndBlueNumbers;
+  const [red, green, blue, alpha] = rgbaValues;
   const allColorsExists = !!red && !!green && !!blue && !!alpha;
   if (!allColorsExists) return null;
 
   const redNumber = parseInt(red);
   const greenNumber = parseInt(green);
   const blueNumber = parseInt(blue);
-  const alphaNumber = parseInt(alpha);
+  const alphaNumber = Number.parseFloat(alpha);
 
   if (
     !isNumberBetween(redNumber, 0, 255) ||
@@ -110,15 +110,14 @@ export function hslToHex(hslColor: string): string | null {
   const LENGTH_OF_HSL_COLOR = 3;
 
   const regexToRemoveCharacters = /[A-Z()\s%]/gi;
-  const hueSaturationAndLightnessNumbers = hslColor
+  const hslValues = hslColor
     .toLowerCase()
     .replace(regexToRemoveCharacters, '')
     .split(',');
 
-  if (hueSaturationAndLightnessNumbers.length !== LENGTH_OF_HSL_COLOR)
-    return null;
+  if (hslValues.length !== LENGTH_OF_HSL_COLOR) return null;
 
-  const [hue, saturation, lightness] = hueSaturationAndLightnessNumbers;
+  const [hue, saturation, lightness] = hslValues;
   const allColorsExists = !!hue && !!saturation && !!lightness;
   if (!allColorsExists) return null;
 
@@ -135,13 +134,13 @@ export function hslToHex(hslColor: string): string | null {
   }
 
   lightnessNumber /= 100;
-  const alpha =
+  const brightness =
     (saturationNumber * Math.min(lightnessNumber, 1 - lightnessNumber)) / 100;
 
   const calculateHex = (bytes: number) => {
     const hueValue = (bytes + hueNumber / 30) % 12;
     const maxHueValue = Math.max(Math.min(hueValue - 3, 9 - hueValue, 1), -1);
-    const color = lightnessNumber - alpha * maxHueValue;
+    const color = lightnessNumber - brightness * maxHueValue;
     return Math.round(255 * color)
       .toString(16)
       .padStart(2, '0');
@@ -151,4 +150,54 @@ export function hslToHex(hslColor: string): string | null {
 
   if (!isHexColor(hexColor)) return null;
   return hexColor;
+}
+
+export function hslaToHex(hslaColor: string): string | null {
+  const LENGTH_OF_HSLA_COLOR = 4;
+
+  const regexToRemoveCharacters = /[A-Z()\s%]/gi;
+  const hslaValues = hslaColor
+    .toLowerCase()
+    .replace(regexToRemoveCharacters, '')
+    .split(',');
+
+  if (hslaValues.length !== LENGTH_OF_HSLA_COLOR) return null;
+
+  const [hue, saturation, lightness, alpha] = hslaValues;
+  const allColorsExists = !!hue && !!saturation && !!lightness && !!alpha;
+  if (!allColorsExists) return null;
+
+  const hueNumber = parseInt(hue);
+  const saturationNumber = parseInt(saturation);
+  let lightnessNumber = parseInt(lightness);
+  const alphaNumber = Number.parseFloat(alpha);
+
+  if (
+    !isNumberBetween(hueNumber, 0, 360) ||
+    !isNumberBetween(saturationNumber, 0, 100) ||
+    !isNumberBetween(lightnessNumber, 0, 100)
+  ) {
+    return null;
+  }
+
+  lightnessNumber /= 100;
+  const brightness =
+    (saturationNumber * Math.min(lightnessNumber, 1 - lightnessNumber)) / 100;
+
+  const calculateHex = (bytes: number) => {
+    const hueValue = (bytes + hueNumber / 30) % 12;
+    const maxHueValue = Math.max(Math.min(hueValue - 3, 9 - hueValue, 1), -1);
+    const color = lightnessNumber - brightness * maxHueValue;
+    return Math.round(255 * color)
+      .toString(16)
+      .padStart(2, '0');
+  };
+
+  const alphaValue = Math.round(alphaNumber * 255)
+    .toString(16)
+    .padStart(2, '0');
+  const hexColor = `#${calculateHex(0)}${calculateHex(8)}${calculateHex(4)}`;
+
+  if (!isHexColor(`${hexColor}${alphaValue}`)) return null;
+  return `${hexColor}${alphaValue}`;
 }
