@@ -146,10 +146,10 @@ export function hslToHex(hslColor: string): string | null {
       .padStart(2, '0');
   };
 
-  const hexColor = `#${calculateHex(0)}${calculateHex(8)}${calculateHex(4)}`;
+  const hexColor = '#' + calculateHex(0) + calculateHex(8) + calculateHex(4);
 
-  if (!isHexColor(hexColor)) return null;
-  return hexColor;
+  if (!isHexColor(hexColor.toUpperCase())) return null;
+  return hexColor.toUpperCase();
 }
 
 export function hslaToHex(hslaColor: string): string | null {
@@ -196,8 +196,10 @@ export function hslaToHex(hslaColor: string): string | null {
   const alphaValue = Math.round(alphaNumber * 255)
     .toString(16)
     .padStart(2, '0');
-  const hexColor = `#${calculateHex(0)}${calculateHex(8)}${calculateHex(4)}`;
+  const hexCharacters =
+    '#' + calculateHex(0) + calculateHex(8) + calculateHex(4);
+  const hexColor = `${hexCharacters}${alphaValue}`.toUpperCase();
 
-  if (!isHexColor(`${hexColor}${alphaValue}`)) return null;
-  return `${hexColor}${alphaValue}`;
+  if (!isHexColor(hexColor)) return null;
+  return hexColor;
 }
