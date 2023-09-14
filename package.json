@@ -111,6 +111,15 @@
       "prettier"
     ],
     "rules": {
+      "no-bitwise": [
+        "error",
+        {
+          "allow": [
+            "<<",
+            "|"
+          ]
+        }
+      ],
       "prettier/prettier": [
         "error",
         {
