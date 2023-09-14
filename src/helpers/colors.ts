@@ -1,8 +1,3 @@
-function parseInt(value?: string): number {
-  if (!value || Number.isNaN(value)) return -1;
-  return Number.parseInt(value, 10);
-}
-
 function isHexColor(hexColor: string): boolean {
   const regexToCheckIfHexColor = /^#(([0-9A-Fa-f]{2}){3,4}|[0-9A-Fa-f]{3})$/;
   return regexToCheckIfHexColor.test(hexColor);
@@ -13,35 +8,73 @@ function isNumberBetween(value: number, min: number, max: number): boolean {
   return value >= min && value <= max;
 }
 
-export function rgbToHex(rgbColor: string): string | null {
-  const LENGTH_OF_RGB_COLOR = 3;
+function calculateHslHex(
+  bytes: number,
+  hue: number,
+  lightness: number,
+  saturation: number
+): string {
+  const lightnessDivide = lightness / 100;
+  const brightness =
+    (saturation * Math.min(lightnessDivide, 1 - lightnessDivide)) / 100;
+  const hueValue = (bytes + hue / 30) % 12;
+  const maxHueValue = Math.max(Math.min(hueValue - 3, 9 - hueValue, 1), -1);
+  const color = lightnessDivide - brightness * maxHueValue;
+  return Math.round(255 * color)
+    .toString(16)
+    .padStart(2, '0');
+}
 
-  const regexToRemoveCharacters = /[A-Z()\s]/gi;
-  const rgbValues = rgbColor
+type ColorTableType = 'RGB' | 'RGBA' | 'HSL' | 'HSLA';
+
+function isBetweenLimits(type: ColorTableType, colors: number[]): boolean {
+  const hasAlpha = type === 'HSLA' || type === 'RGBA';
+  const isRgb = type === 'RGBA' || type === 'RGB';
+
+  const [firstColor, secondColor, thirdColor, alpha] = colors;
+  const isValid =
+    isNumberBetween(firstColor!, 0, isRgb ? 255 : 360) &&
+    isNumberBetween(secondColor!, 0, isRgb ? 255 : 100) &&
+    isNumberBetween(thirdColor!, 0, isRgb ? 255 : 100);
+
+  if (hasAlpha) return isValid && isNumberBetween(alpha!, 0, 1);
+  return isValid;
+}
+
+function getColorTable(type: ColorTableType, color: string): number[] | null {
+  const hasAlpha = type === 'HSLA' || type === 'RGBA';
+  const COLOR_LENGTH = hasAlpha ? 4 : 3;
+
+  const regexToRemoveCharacters = hasAlpha ? /[A-Z()\s%]/gi : /[A-Z()\s]/gi;
+  const tableValues = color
     .toLowerCase()
     .replace(regexToRemoveCharacters, '')
     .split(',');
 
-  if (rgbValues.length !== LENGTH_OF_RGB_COLOR) return null;
+  if (tableValues.length !== COLOR_LENGTH) return null;
 
-  const [red, green, blue] = rgbValues;
-  const allColorsExists = !!red && !!green && !!blue;
-  if (!allColorsExists) return null;
-
-  const redNumber = parseInt(red);
-  const greenNumber = parseInt(green);
-  const blueNumber = parseInt(blue);
-
-  if (
-    !isNumberBetween(redNumber, 0, 255) ||
-    !isNumberBetween(greenNumber, 0, 255) ||
-    !isNumberBetween(blueNumber, 0, 255)
-  ) {
-    return null;
+  const [firstColor, secondColor, thirdColor] = tableValues;
+  if (hasAlpha && tableValues.every((value) => !!value)) {
+    return tableValues.map((value, index) => {
+      if (index !== COLOR_LENGTH - 1) return Number.parseFloat(value);
+      return Number.parseInt(value, 10);
+    });
   }
 
-  const byteNumbers =
-    (1 << 24) | (redNumber << 16) | (greenNumber << 8) | blueNumber;
+  const hasEveryColors = !!firstColor && !!secondColor && !!thirdColor;
+  return hasEveryColors
+    ? tableValues.map((value) => Number.parseInt(value, 10))
+    : null;
+}
+
+export function rgbToHex(rgbColor: string): string | null {
+  const colorTable = getColorTable('RGB', rgbColor);
+  if (!colorTable) return null;
+
+  if (!isBetweenLimits('RGB', colorTable)) return null;
+  const [red, green, blue] = colorTable;
+
+  const byteNumbers = (1 << 24) | (red! << 16) | (green! << 8) | blue!;
   const hexColor = `#${byteNumbers.toString(16).slice(1).toUpperCase()}`;
 
   if (!isHexColor(hexColor)) return null;
@@ -49,39 +82,16 @@ export function rgbToHex(rgbColor: string): string | null {
 }
 
 export function rgbaToHex(rgbaColor: string): string | null {
-  const LENGTH_OF_RGBA_COLOR = 4;
+  const colorTable = getColorTable('RGBA', rgbaColor);
+  if (!colorTable) return null;
 
-  const regexToRemoveCharacters = /[A-Z()\s]/gi;
-  const rgbaValues = rgbaColor
-    .toLowerCase()
-    .replace(regexToRemoveCharacters, '')
-    .split(',');
+  if (!isBetweenLimits('RGBA', colorTable)) return null;
+  const [red, green, blue, alpha] = colorTable;
 
-  if (rgbaValues.length !== LENGTH_OF_RGBA_COLOR) return null;
-
-  const [red, green, blue, alpha] = rgbaValues;
-  const allColorsExists = !!red && !!green && !!blue && !!alpha;
-  if (!allColorsExists) return null;
-
-  const redNumber = parseInt(red);
-  const greenNumber = parseInt(green);
-  const blueNumber = parseInt(blue);
-  const alphaNumber = Number.parseFloat(alpha);
-
-  if (
-    !isNumberBetween(redNumber, 0, 255) ||
-    !isNumberBetween(greenNumber, 0, 255) ||
-    !isNumberBetween(blueNumber, 0, 255) ||
-    !isNumberBetween(alphaNumber, 0, 1)
-  ) {
-    return null;
-  }
-
-  const alphaNumericString = (((alpha as any) * 255) | (1 << 8))
+  const alphaNumericString = (((alpha! as any) * 255) | (1 << 8))
     .toString(16)
     .slice(1);
-  const byteNumbers =
-    (1 << 24) | (redNumber << 16) | (greenNumber << 8) | blueNumber;
+  const byteNumbers = (1 << 24) | (red! << 16) | (green! << 8) | blue!;
   const hexColor = `#${byteNumbers
     .toString(16)
     .slice(1)}${alphaNumericString}`.toUpperCase();
@@ -103,102 +113,47 @@ export function formatHexColor(hexColor: string): string | null {
   if (hexColor.length !== MIN_LENGTH_HEX_COLOR) return null;
 
   const [firstChar, secondChar, thirdChar] = hexColor.slice(1);
-  return `#${firstChar}${firstChar}${secondChar}${secondChar}${thirdChar}${thirdChar}`.toUpperCase();
+  const redHexColor = firstChar!.repeat(2);
+  const greenHexColor = secondChar!.repeat(2);
+  const blueHexColor = thirdChar!.repeat(2);
+
+  return `#${redHexColor}${greenHexColor}${blueHexColor}`.toUpperCase();
 }
 
 export function hslToHex(hslColor: string): string | null {
-  const LENGTH_OF_HSL_COLOR = 3;
+  const colorTable = getColorTable('HSL', hslColor);
+  if (!colorTable) return null;
 
-  const regexToRemoveCharacters = /[A-Z()\s%]/gi;
-  const hslValues = hslColor
-    .toLowerCase()
-    .replace(regexToRemoveCharacters, '')
-    .split(',');
+  if (!isBetweenLimits('HSL', colorTable)) return null;
+  const [hue, saturation, lightness] = colorTable;
 
-  if (hslValues.length !== LENGTH_OF_HSL_COLOR) return null;
+  const redHexColor = calculateHslHex(0, hue!, lightness!, saturation!);
+  const greenHexColor = calculateHslHex(8, hue!, lightness!, saturation!);
+  const blueHexColor = calculateHslHex(4, hue!, lightness!, saturation!);
 
-  const [hue, saturation, lightness] = hslValues;
-  const allColorsExists = !!hue && !!saturation && !!lightness;
-  if (!allColorsExists) return null;
+  const hexColor =
+    `#${redHexColor}${greenHexColor}${blueHexColor}`.toUpperCase();
 
-  const hueNumber = parseInt(hue);
-  const saturationNumber = parseInt(saturation);
-  let lightnessNumber = parseInt(lightness);
-
-  if (
-    !isNumberBetween(hueNumber, 0, 360) ||
-    !isNumberBetween(saturationNumber, 0, 100) ||
-    !isNumberBetween(lightnessNumber, 0, 100)
-  ) {
-    return null;
-  }
-
-  lightnessNumber /= 100;
-  const brightness =
-    (saturationNumber * Math.min(lightnessNumber, 1 - lightnessNumber)) / 100;
-
-  const calculateHex = (bytes: number) => {
-    const hueValue = (bytes + hueNumber / 30) % 12;
-    const maxHueValue = Math.max(Math.min(hueValue - 3, 9 - hueValue, 1), -1);
-    const color = lightnessNumber - brightness * maxHueValue;
-    return Math.round(255 * color)
-      .toString(16)
-      .padStart(2, '0');
-  };
-
-  const hexColor = '#' + calculateHex(0) + calculateHex(8) + calculateHex(4);
-
-  if (!isHexColor(hexColor.toUpperCase())) return null;
-  return hexColor.toUpperCase();
+  if (!isHexColor(hexColor)) return null;
+  return hexColor;
 }
 
 export function hslaToHex(hslaColor: string): string | null {
-  const LENGTH_OF_HSLA_COLOR = 4;
+  const colorTable = getColorTable('HSLA', hslaColor);
+  if (!colorTable) return null;
 
-  const regexToRemoveCharacters = /[A-Z()\s%]/gi;
-  const hslaValues = hslaColor
-    .toLowerCase()
-    .replace(regexToRemoveCharacters, '')
-    .split(',');
+  if (!isBetweenLimits('HSLA', colorTable)) return null;
+  const [hue, saturation, lightness, alpha] = colorTable;
 
-  if (hslaValues.length !== LENGTH_OF_HSLA_COLOR) return null;
-
-  const [hue, saturation, lightness, alpha] = hslaValues;
-  const allColorsExists = !!hue && !!saturation && !!lightness && !!alpha;
-  if (!allColorsExists) return null;
-
-  const hueNumber = parseInt(hue);
-  const saturationNumber = parseInt(saturation);
-  let lightnessNumber = parseInt(lightness);
-  const alphaNumber = Number.parseFloat(alpha);
-
-  if (
-    !isNumberBetween(hueNumber, 0, 360) ||
-    !isNumberBetween(saturationNumber, 0, 100) ||
-    !isNumberBetween(lightnessNumber, 0, 100)
-  ) {
-    return null;
-  }
-
-  lightnessNumber /= 100;
-  const brightness =
-    (saturationNumber * Math.min(lightnessNumber, 1 - lightnessNumber)) / 100;
-
-  const calculateHex = (bytes: number) => {
-    const hueValue = (bytes + hueNumber / 30) % 12;
-    const maxHueValue = Math.max(Math.min(hueValue - 3, 9 - hueValue, 1), -1);
-    const color = lightnessNumber - brightness * maxHueValue;
-    return Math.round(255 * color)
-      .toString(16)
-      .padStart(2, '0');
-  };
-
-  const alphaValue = Math.round(alphaNumber * 255)
+  const redHexColor = calculateHslHex(0, hue!, lightness!, saturation!);
+  const greenHexColor = calculateHslHex(8, hue!, lightness!, saturation!);
+  const blueHexColor = calculateHslHex(4, hue!, lightness!, saturation!);
+  const alphaValue = Math.round(alpha! * 255)
     .toString(16)
     .padStart(2, '0');
-  const hexCharacters =
-    '#' + calculateHex(0) + calculateHex(8) + calculateHex(4);
-  const hexColor = `${hexCharacters}${alphaValue}`.toUpperCase();
+
+  const hexColor =
+    `#${redHexColor}${greenHexColor}${blueHexColor}${alphaValue}`.toUpperCase();
 
   if (!isHexColor(hexColor)) return null;
   return hexColor;
