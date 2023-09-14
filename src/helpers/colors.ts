@@ -4,6 +4,11 @@ function parseFloat(value?: string): number {
   return Number.parseFloat(value);
 }
 
+function isHexColor(hexColor: string): boolean {
+  const regexToCheckIfHexColor = /^#(([0-9A-Fa-f]{2}){3,4}|[0-9A-Fa-f]{3})$/;
+  return regexToCheckIfHexColor.test(hexColor);
+}
+
 function isRgbNumber(numberColor: number): boolean {
   if (numberColor !== 0 && !numberColor) return false;
 
@@ -43,5 +48,24 @@ export function rgbToHexadecimal(rgbColor: string): string | null {
   const byteNumbers =
     (1 << 24) | (redNumber << 16) | (greenNumber << 8) | blueNumber;
 
-  return '#' + byteNumbers.toString(16).slice(1).toUpperCase();
+  const hexColor = '#' + byteNumbers.toString(16).slice(1).toUpperCase();
+
+  if (!isHexColor(hexColor)) return null;
+  return hexColor;
+}
+
+export function formatHexColor(hexColor: string): string | null {
+  if (!isHexColor(hexColor)) return null;
+  const MIN_LENGTH_HEX_COLOR = 4;
+  const MIDDLE_LENGTH_HEX_COLOR = 7;
+  const MAX_LENGTH_HEX_COLOR = 9;
+
+  const isMiddleHexColor = hexColor.length === MIDDLE_LENGTH_HEX_COLOR;
+  const isMaxHexColor = hexColor.length === MAX_LENGTH_HEX_COLOR;
+  if (isMiddleHexColor || isMaxHexColor) return hexColor;
+
+  if (hexColor.length !== MIN_LENGTH_HEX_COLOR) return null;
+
+  const [firstChar, secondChar, thirdChar] = hexColor.slice(1);
+  return `#${firstChar}${firstChar}${secondChar}${secondChar}${thirdChar}${thirdChar}`;
 }
