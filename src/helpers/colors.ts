@@ -123,9 +123,9 @@ function rgbaToHex(rgbaColor: string): string | null {
   if (!isBetweenLimits('RGBA', colorTable)) return null;
   const [red, green, blue, alpha] = colorTable;
 
-  const alphaNumeric = (((alpha! as any) * 255) | (1 << 8))
+  const alphaNumeric = Math.round(alpha! * 255)
     .toString(16)
-    .slice(1);
+    .padStart(2, '0');
   const byteNumbers = (1 << 24) | (red! << 16) | (green! << 8) | blue!;
   const hexColor = `#${byteNumbers
     .toString(16)
