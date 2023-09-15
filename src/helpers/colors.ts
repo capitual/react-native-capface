@@ -3,7 +3,7 @@ type ColorTableType = Exclude<ColorType, 'HEX'>;
 
 function isColor(type: ColorType, color: string): boolean {
   const regexsColors: Record<ColorType, RegExp> = {
-    HEX: /^#(([0-9A-Fa-f]{2}){3,4}|[0-9A-Fa-f]{3})$/,
+    HEX: /^#(([0-9A-Fa-f]{2}){3,4}|[0-9A-Fa-f]{3,4})$/,
     HSL: /[Hh][Ss][Ll][(](((([\d]{1,3}|[\d%]{2,4})[,]{0,1})[\s]*){3})[)]/gm,
     HSLA: /[Hh][Ss][Ll][Aa][(](((([\d]{1,3}|[\d%]{2,4}|[\d.]{1,3})[,]{0,1})[\s]*){4})[)]/gm,
     RGB: /[Rr][Gg][Bb][(](((([\d]{1,3})[,]{0,1})[\s]*){3})[)]/gm,
@@ -76,21 +76,27 @@ function getColorTable(type: ColorTableType, color: string): number[] | null {
 function formatHexColor(hexColor: string): string | null {
   if (!isColor('HEX', hexColor)) return null;
   const MIN_LENGTH_HEX_COLOR = 4;
-  const MIDDLE_LENGTH_HEX_COLOR = 7;
-  const MAX_LENGTH_HEX_COLOR = 9;
+  const MIN_LENGTH_HEX_ALPHA_COLOR = 5;
+  const MAX_LENGTH_HEX_COLOR = 7;
+  const MAX_LENGTH_HEX_ALPHA_COLOR = 9;
 
-  const isMiddleHexColor = hexColor.length === MIDDLE_LENGTH_HEX_COLOR;
-  const isMaxHexColor = hexColor.length === MAX_LENGTH_HEX_COLOR;
-  if (isMiddleHexColor || isMaxHexColor) return hexColor;
+  const isMiddleHexColor = hexColor.length === MAX_LENGTH_HEX_COLOR;
+  const isMaxHexAlphaColor = hexColor.length === MAX_LENGTH_HEX_ALPHA_COLOR;
+  if (isMiddleHexColor || isMaxHexAlphaColor) return hexColor;
 
-  if (hexColor.length !== MIN_LENGTH_HEX_COLOR) return null;
+  const isMinHexColor = hexColor.length !== MIN_LENGTH_HEX_COLOR;
+  const isMinHexAlphaColor = hexColor.length !== MIN_LENGTH_HEX_ALPHA_COLOR;
+  if (isMinHexColor && isMinHexAlphaColor) return null;
 
-  const [firstChar, secondChar, thirdChar] = hexColor.slice(1);
+  const [firstChar, secondChar, thirdChar, alpha] = hexColor.slice(1);
   const redHexColor = firstChar!.repeat(2);
   const greenHexColor = secondChar!.repeat(2);
   const blueHexColor = thirdChar!.repeat(2);
+  const alphaHexColor = alpha?.repeat(2);
 
-  const color = `#${redHexColor}${greenHexColor}${blueHexColor}`.toUpperCase();
+  const color = `#${redHexColor}${greenHexColor}${blueHexColor}${
+    alphaHexColor || ''
+  }`.toUpperCase();
 
   if (!isColor('HEX', color)) return null;
   return color;
