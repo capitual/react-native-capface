@@ -42,7 +42,6 @@ class ReactNativeCapfaceSdk: RCTEventEmitter, URLSessionDelegate {
     @objc func initializeSdk(_ params: NSDictionary, headers: NSDictionary, callback: @escaping RCTResponseSenderBlock) -> Void {
         DispatchQueue.main.async {
             self.capFaceViewController = CapFaceViewController();
-            self.handleTheme(Config.Theme);
             
             if params.count == 0 {
                 self.isInitialized = false;
@@ -61,6 +60,8 @@ class ReactNativeCapfaceSdk: RCTEventEmitter, URLSessionDelegate {
                 self.isInitialized = false;
                 callback([false]);
             }
+
+            self.handleTheme(Config.Theme);
         }
     }
     
