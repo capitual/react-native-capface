@@ -168,6 +168,15 @@ function hslaToHex(hslaColor: string): string | null {
   return hexColor;
 }
 
+/**
+ * @description Calculates a hexadecimal, RGB, RGBA, HSL or HSLA color from a
+ * hexadecimal color provided as a string.
+ *
+ * @param color - A color in hexadecimal, RGB, RGBA, HSL or HSLA format to be
+ * converted to a hexadecimal color string.
+ *
+ * @returns {string|null}
+ */
 export function convertToHexColor(color: string): string | null {
   if (isColor('HEX', color)) return formatHexColor(color);
   if (isColor('RGB', color)) return rgbToHex(color);
