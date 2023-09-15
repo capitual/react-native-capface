@@ -8,9 +8,8 @@ import {
   ScrollView,
   NativeEventEmitter,
 } from 'react-native';
-import {
-  ReactNativeCapfaceSdk,
-  CapfaceSdk,
+import CapfaceSdk, {
+  CapfaceSdkProps,
   initialize,
   faceMatch,
   photoMatch,
@@ -49,7 +48,7 @@ export default function App() {
     console.log(isInitialized);
   };
 
-  const emitter = new NativeEventEmitter(ReactNativeCapfaceSdk);
+  const emitter = new NativeEventEmitter(CapfaceSdk);
   emitter.addListener('onCloseModal', (event: boolean) =>
     console.log('onCloseModal', event)
   );
@@ -64,8 +63,8 @@ export default function App() {
   };
 
   const onPressFaceMatch = async (
-    type: CapfaceSdk.MatchType,
-    data?: CapfaceSdk.MatchData
+    type: CapfaceSdkProps.MatchType,
+    data?: CapfaceSdkProps.MatchData
   ) => {
     try {
       const isSuccess = await faceMatch(type, data);
