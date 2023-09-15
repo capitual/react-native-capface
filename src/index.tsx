@@ -4,7 +4,7 @@ import { NATIVE_CONSTANTS } from './constants';
 import { CapfaceSdkProps } from './types';
 
 import type { NativeModule } from 'react-native';
-import { convertToHexColor } from './helpers';
+import { convertThemePropsToHexColor } from './helpers';
 
 const LINKING_ERROR =
   `The package '@capitual/react-native-capface-sdk' doesn't seem to be linked. Make sure: \n\n` +
@@ -115,38 +115,7 @@ export async function photoMatch(data?: Object): Promise<boolean> {
  * @return {void}
  */
 export function setTheme(options?: CapfaceSdkProps.Theme): void {
-  if (options) {
-    if (options?.feedbackBackgroundColorsIos) {
-      if (Array.isArray(options.feedbackBackgroundColorsIos?.colors)) {
-        const colors = options.feedbackBackgroundColorsIos.colors.map(
-          (color) => convertToHexColor(color) || ''
-        );
-        const everyColorsExists = colors.every((color) => !!color);
-        options.feedbackBackgroundColorsIos.colors = everyColorsExists
-          ? colors
-          : undefined;
-      }
-    }
-
-    for (const property in options) {
-      const option = property as keyof CapfaceSdkProps.Theme;
-      if (typeof options[option] === 'string') {
-        const color = convertToHexColor(options[option] as string);
-        options = Object.assign(options, { [option]: color || undefined });
-      }
-      if (Array.isArray(options[option])) {
-        const hexColors: string[] = (options[option] as string[]).map(
-          (color) => convertToHexColor(color) || ''
-        );
-        const everyColorsExists = hexColors.every((color) => !!color);
-        options = Object.assign(options, {
-          [option]: everyColorsExists ? hexColors : undefined,
-        });
-      }
-    }
-  }
-
-  CapfaceSdk.handleTheme(options);
+  CapfaceSdk.handleTheme(convertThemePropsToHexColor(options));
 }
 
 export * from './types';
