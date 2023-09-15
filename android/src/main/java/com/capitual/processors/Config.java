@@ -42,7 +42,7 @@ public class Config {
 				.header("X-Device-Key", DeviceKeyIdentifier)
 				.header("X-User-Agent", FaceTecSDK.createFaceTecAPIUserAgentString(""));
 
-		if (!httpMethod.equals("GET")) {
+		if (!httpMethod.equalsIgnoreCase("GET")) {
 			buildHeader = buildHeader.header("Content-Type", "application/json");
 		}
 

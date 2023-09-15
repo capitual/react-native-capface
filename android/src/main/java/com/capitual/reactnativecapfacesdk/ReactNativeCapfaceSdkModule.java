@@ -56,7 +56,7 @@ public class ReactNativeCapfaceSdkModule extends ReactContextBaseJavaModule {
 
   private boolean isDeveloperMode(Map params) {
     if (params.containsKey("isDeveloperMode")) {
-      return params.get("isDeveloperMode").toString().equals("true");
+      return params.get("isDeveloperMode").toString().equalsIgnoreCase("true");
     }
     return false;
   }
