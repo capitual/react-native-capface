@@ -1,9 +1,9 @@
 import { convertToHexColor } from '.';
 
-const MAX_HEX_ALPHA_COLOR = '#00000000';
-const MAX_HEX_COLOR = '#000000';
-const MIN_HEX_ALPHA_COLOR = '#0000';
-const MIN_HEX_COLOR = '#000';
+const MAX_HEX_ALPHA_COLOR = '#00FFC8B3';
+const MAX_HEX_COLOR = '#00FFC8';
+const MIN_HEX_ALPHA_COLOR = '#0FCB';
+const MIN_HEX_COLOR = '#0FC';
 
 describe('Colors Helper', () => {
   describe('Ensure convertToHexColor function should', () => {
@@ -33,9 +33,9 @@ describe('Colors Helper', () => {
         const minHexAlphaCharacters = convertToHexColor(MIN_HEX_ALPHA_COLOR);
         const maxHexAlphaCharacters = convertToHexColor(MAX_HEX_ALPHA_COLOR);
 
+        expect(minHexCharacters).toBe('#00FFCC');
         expect(maxHexCharacters).toBe(MAX_HEX_COLOR);
-        expect(minHexCharacters).toBe(MAX_HEX_COLOR);
-        expect(minHexAlphaCharacters).toBe(MAX_HEX_ALPHA_COLOR);
+        expect(minHexAlphaCharacters).toBe('#00FFCCBB');
         expect(maxHexAlphaCharacters).toBe(MAX_HEX_ALPHA_COLOR);
       });
 
@@ -59,7 +59,7 @@ describe('Colors Helper', () => {
 
     describe('Works with RGB colors', () => {
       it('Should a return RGB color if a hexadecimal color is provided', () => {
-        const hexColor = convertToHexColor('rgb(0, 0, 0)');
+        const hexColor = convertToHexColor('rgb(0,255,200)');
         expect(hexColor).toBe(MAX_HEX_COLOR);
       });
 
@@ -90,7 +90,7 @@ describe('Colors Helper', () => {
 
     describe('Works with RGBA colors', () => {
       it('Should a return RGBA color if a hexadecimal color is provided', () => {
-        const hexColor = convertToHexColor('rgba(0, 0, 0, 0)');
+        const hexColor = convertToHexColor('rgba(0,255,200,0.7)');
         expect(hexColor).toBe(MAX_HEX_ALPHA_COLOR);
       });
 
@@ -122,10 +122,10 @@ describe('Colors Helper', () => {
 
     describe('Works with HSL colors', () => {
       it('Should a return HSL color if a hexadecimal color is provided', () => {
-        expect(convertToHexColor('hsl(0, 0, 0)')).toBe(MAX_HEX_COLOR);
-        expect(convertToHexColor('hsl(0, 0, 0%)')).toBe(MAX_HEX_COLOR);
-        expect(convertToHexColor('hsl(0, 0%, 0)')).toBe(MAX_HEX_COLOR);
-        expect(convertToHexColor('hsl(0, 0%, 0%)')).toBe(MAX_HEX_COLOR);
+        expect(convertToHexColor('hsl(167, 100, 50)')).toBe(MAX_HEX_COLOR);
+        expect(convertToHexColor('hsl(167, 100, 50%)')).toBe(MAX_HEX_COLOR);
+        expect(convertToHexColor('hsl(167, 100%, 50)')).toBe(MAX_HEX_COLOR);
+        expect(convertToHexColor('hsl(167, 100%, 50%)')).toBe(MAX_HEX_COLOR);
       });
 
       it('Should return null if an invalid HSL colors is provided', () => {
@@ -153,14 +153,16 @@ describe('Colors Helper', () => {
 
     describe('Works with HSLA colors', () => {
       it('Should a return HSLA color if a hexadecimal color is provided', () => {
-        expect(convertToHexColor('hsla(0, 0, 0, 0)')).toBe(MAX_HEX_ALPHA_COLOR);
-        expect(convertToHexColor('hsla(0, 0%, 0%, 0)')).toBe(
+        expect(convertToHexColor('hsla(167, 100, 50, 0.7)')).toBe(
           MAX_HEX_ALPHA_COLOR
         );
-        expect(convertToHexColor('hsla(0, 0, 0%, 0)')).toBe(
+        expect(convertToHexColor('hsla(167, 100%, 50%, 0.7)')).toBe(
           MAX_HEX_ALPHA_COLOR
         );
-        expect(convertToHexColor('hsla(0, 0%, 0, 0)')).toBe(
+        expect(convertToHexColor('hsla(167, 100, 50%, 0.7)')).toBe(
+          MAX_HEX_ALPHA_COLOR
+        );
+        expect(convertToHexColor('hsla(167, 100%, 50, 0.7)')).toBe(
           MAX_HEX_ALPHA_COLOR
         );
       });
