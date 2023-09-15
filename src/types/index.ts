@@ -1,17 +1,9 @@
-import { NativeModules, Platform } from 'react-native';
-
-const LINKING_ERROR =
-  `The package '@capitual/react-native-capface-sdk' doesn't seem to be linked. Make sure: \n\n` +
-  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
-  '- You rebuilt the app after installing the package\n' +
-  '- You are not using Expo Go\n';
-
 /**
  * @namespace
  *
  * @description The principal namespace of the Capface SDK.
  */
-export declare namespace CapfaceSdk {
+export declare namespace CapfaceSdkProps {
   /**
    * @type
    *
@@ -892,8 +884,8 @@ export declare namespace CapfaceSdk {
      * **called first** to initialize the Capface SDK. If he doens't be called
      * the other methods **don't works!**
      *
-     * @param {CapfaceSdk.Params} params - Initialization SDK parameters.
-     * @param {CapfaceSdk.Headers} headers - Headers your requests, to each
+     * @param {CapfaceSdkProps.Params} params - Initialization SDK parameters.
+     * @param {CapfaceSdkProps.Headers} headers - Headers your requests, to each
      * request it's sent. The headers is optional.
      * @param {Function} callback - Callback function to be called after with
      * the response of the successfully. The callback is optional.
@@ -927,19 +919,21 @@ export declare namespace CapfaceSdk {
      * your server. Finally, the **liveness** method makes a 3D reading of the
      * user's face.
      *
-     * @param {CapfaceSdk.MatchData|undefined} data - The object with data to
+     * @param {CapfaceSdkProps.MatchData|undefined} data - The object with data to
      * be will send by headers on the requests. The data is optional.
      *
      * @return {Promise<boolean>} Represents if flow was a successful.
      * @throws If was a unsuccessful or occurred some interference.
      */
-    handleFaceUser(data?: CapfaceSdk.MatchData | undefined): Promise<boolean>;
+    handleFaceUser(
+      data?: CapfaceSdkProps.MatchData | undefined
+    ): Promise<boolean>;
 
     /**
      * @description This method must be used to **set** the **theme** of the
      * Capface SDK screen.
      *
-     * @param {CapfaceSdk.Theme|undefined} options - The object theme options.
+     * @param {CapfaceSdkProps.Theme|undefined} options - The object theme options.
      * All options are optional.
      *
      * @return {void}
@@ -947,26 +941,3 @@ export declare namespace CapfaceSdk {
     handleTheme(options?: Theme): void;
   }
 }
-
-/**
- * @description Native module CapfaceSDK, it's recommended use it with event
- * types.
- *
- * @example
- * import { NativeEventEmitter } from 'react-native';
- * import ReactNativeCapfaceSdk from '@capitual/react-native-capface-sdk';
- *
- * const emitter = new NativeEventEmitter(ReactNativeCapfaceSdk);
- * emitter.addListener('onCloseModal', (event: boolean) => console.log('onCloseModal', event));
- */
-export const ReactNativeCapfaceSdk: CapfaceSdk.Methods =
-  NativeModules.ReactNativeCapfaceSdk
-    ? NativeModules.ReactNativeCapfaceSdk
-    : new Proxy(
-        {},
-        {
-          get() {
-            throw new Error(LINKING_ERROR);
-          },
-        }
-      );

@@ -1,8 +1,8 @@
-import type { CapfaceSdk } from '..';
+import type { CapfaceSdkProps } from '..';
 
 export const NATIVE_CONSTANTS = (
-  data?: CapfaceSdk.MatchData
-): Record<CapfaceSdk.MatchType, CapfaceSdk.MatchConfig> => ({
+  data?: CapfaceSdkProps.MatchData
+): Record<CapfaceSdkProps.MatchType, CapfaceSdkProps.MatchConfig> => ({
   authenticate: {
     key: 'authenticateMessage',
     hasExternalDatabaseRefID: true,

@@ -1,12 +1,46 @@
+import { NativeModules, Platform } from 'react-native';
+
 import { NATIVE_CONSTANTS } from './constants';
-import { CapfaceSdk, ReactNativeCapfaceSdk } from './types';
+import { CapfaceSdkProps } from './types';
+
+import type { NativeModule } from 'react-native';
+
+const LINKING_ERROR =
+  `The package '@capitual/react-native-capface-sdk' doesn't seem to be linked. Make sure: \n\n` +
+  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
+  '- You rebuilt the app after installing the package\n' +
+  '- You are not using Expo Go\n';
+
+/**
+ * @description Native module CapfaceSDK, it's recommended use it with event
+ * types.
+ *
+ * @example
+ * import { NativeEventEmitter } from 'react-native';
+ * import ReactNativeCapfaceSdk from '@capitual/react-native-capface-sdk';
+ *
+ * const emitter = new NativeEventEmitter(ReactNativeCapfaceSdk);
+ * emitter.addListener('onCloseModal', (event: boolean) => console.log('onCloseModal', event));
+ */
+const CapfaceSdk = NativeModules.ReactNativeCapfaceSdk
+  ? NativeModules.ReactNativeCapfaceSdk
+  : new Proxy(
+      {},
+      {
+        get() {
+          throw new Error(LINKING_ERROR);
+        },
+      }
+    );
+
+export default CapfaceSdk as NativeModule;
 
 /**
  * @description This is the **principal** method to be called, he must be
  * **called first** to initialize the Capface SDK. If he doens't be called the
  * other methods **don't works!**
  *
- * @param {CapfaceSdk.Initialize} initialize - Initialize the Capface SDK with
+ * @param {CapfaceSdkProps.Initialize} initialize - Initialize the Capface SDK with
  * especific parameters and an optional headers.
  *
  * @return {Promise<boolean>} Represents if Capface SDK initialized with
@@ -15,16 +49,12 @@ import { CapfaceSdk, ReactNativeCapfaceSdk } from './types';
 export function initialize({
   params,
   headers,
-}: CapfaceSdk.Initialize): Promise<boolean> {
+}: CapfaceSdkProps.Initialize): Promise<boolean> {
   return new Promise((resolve, reject) => {
-    ReactNativeCapfaceSdk.initializeSdk(
-      params,
-      headers,
-      (successful: boolean) => {
-        if (successful) resolve(true);
-        else reject(false);
-      }
-    );
+    CapfaceSdk.initializeSdk(params, headers, (successful: boolean) => {
+      if (successful) resolve(true);
+      else reject(false);
+    });
   });
 }
 
@@ -37,8 +67,8 @@ export function initialize({
  * your server. Finally, the **liveness** method makes a 3D reading of the
  * user's face.
  *
- * @param {CapfaceSdk.MatchType} type - The type of flow to be called.
- * @param {CapfaceSdk.MatchData|undefined} data - The object with properties
+ * @param {CapfaceSdkProps.MatchType} type - The type of flow to be called.
+ * @param {CapfaceSdkProps.MatchData|undefined} data - The object with properties
  * that will be sent to native modules to make the requests, change text labels
  * and sent parameters via headers.
  *
@@ -46,12 +76,10 @@ export function initialize({
  * @throws If was a unsuccessful or occurred some interference.
  */
 export async function faceMatch(
-  type: CapfaceSdk.MatchType,
-  data?: CapfaceSdk.MatchData
+  type: CapfaceSdkProps.MatchType,
+  data?: CapfaceSdkProps.MatchData
 ): Promise<boolean> {
-  return await ReactNativeCapfaceSdk.handleFaceUser(
-    NATIVE_CONSTANTS(data)[type]
-  )
+  return await CapfaceSdk.handleFaceUser(NATIVE_CONSTANTS(data)[type])
     .then((successful: boolean) => successful)
     .catch((error: Error) => {
       throw new Error(error.message);
@@ -69,7 +97,7 @@ export async function faceMatch(
  * @throws If photo ID match was a unsuccessful or occurred some interference.
  */
 export async function photoMatch(data?: Object): Promise<boolean> {
-  return await ReactNativeCapfaceSdk.handlePhotoIDMatch(data)
+  return await CapfaceSdk.handlePhotoIDMatch(data)
     .then((successful: boolean) => successful)
     .catch((error: Error) => {
       throw new Error(error.message);
@@ -80,13 +108,13 @@ export async function photoMatch(data?: Object): Promise<boolean> {
  * @description This method must be used to **set** the **theme** of the Capface
  * SDK screen.
  *
- * @param {CapfaceSdk.Theme|undefined} options - The object theme options. All
+ * @param {CapfaceSdkProps.Theme|undefined} options - The object theme options. All
  * options are optional.
  *
  * @return {void}
  */
-export function setTheme(options?: CapfaceSdk.Theme): void {
-  ReactNativeCapfaceSdk.handleTheme(options);
+export function setTheme(options?: CapfaceSdkProps.Theme): void {
+  CapfaceSdk.handleTheme(options);
 }
 
 export * from './types';
