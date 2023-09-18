@@ -8,11 +8,10 @@ import {
   ScrollView,
   NativeEventEmitter,
 } from 'react-native';
-import {
-  ReactNativeCapfaceSdk,
-  authenticate,
-  enroll,
+import CapfaceSdk, {
+  CapfaceSdkProps,
   initialize,
+  faceMatch,
   photoMatch,
 } from '@capitual/react-native-capface-sdk';
 
@@ -49,7 +48,7 @@ export default function App() {
     console.log(isInitialized);
   };
 
-  const emitter = new NativeEventEmitter(ReactNativeCapfaceSdk);
+  const emitter = new NativeEventEmitter(CapfaceSdk);
   emitter.addListener('onCloseModal', (event: boolean) =>
     console.log('onCloseModal', event)
   );
@@ -63,18 +62,12 @@ export default function App() {
     }
   };
 
-  const onPressEnroll = async () => {
+  const onPressFaceMatch = async (
+    type: CapfaceSdkProps.MatchType,
+    data?: CapfaceSdkProps.MatchData
+  ) => {
     try {
-      const isSuccess = await enroll();
-      console.log(isSuccess);
-    } catch (error: any) {
-      console.error(error.message);
-    }
-  };
-
-  const onPressAuthenticate = async () => {
-    try {
-      const isSuccess = await authenticate();
+      const isSuccess = await faceMatch(type, data);
       console.log(isSuccess);
     } catch (error: any) {
       console.error(error.message);
@@ -90,11 +83,23 @@ export default function App() {
         <TouchableOpacity style={styles.button} onPress={onPressPhotoMatch}>
           <Text style={styles.text}>Open Photo Match</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={onPressEnroll}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={async () => await onPressFaceMatch('enroll', {})}
+        >
           <Text style={styles.text}>Open Enroll</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={onPressAuthenticate}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={async () => await onPressFaceMatch('authenticate', {})}
+        >
           <Text style={styles.text}>Open Authenticate</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={async () => await onPressFaceMatch('liveness', {})}
+        >
+          <Text style={styles.text}>Open Liveness</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

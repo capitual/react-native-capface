@@ -19,7 +19,11 @@ public class ThemeUtils {
   }
 
   private int parseColor(String key, int defaultColor) {
-    final String color = Config.Theme.getString(key);
+    final int hasAlpha = 9;
+    String color = Config.Theme.getString(key);
+    if (color.length() == hasAlpha) {
+      color = "#" + color.substring(hasAlpha - 2) + color.substring(1, hasAlpha - 2);
+    }
     return color.isEmpty() ? defaultColor : Color.parseColor(color);
   }
 
@@ -37,7 +41,6 @@ public class ThemeUtils {
       final Boolean childIsntExists = !message.has(child) || message.isNull(child);
       return childIsntExists ? defaultMessage : message.getString(child);
     } catch (Exception error) {
-      Log.d("JSONError", "Some error occurred while parsing JSON!");
       return defaultMessage;
     }
   }

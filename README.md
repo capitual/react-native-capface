@@ -5,22 +5,23 @@ Capface sdk adapter to react native. 📱
 - [Installation](#installation)
 - [Usage](#usage)
 - [API](#api)
-  - [`initialize(init: CapfaceSdk.Initialize)`](#initializeinit-capfacesdkinitialize)
-  - [`enroll(data?: Object)`](#enrolldata-capfacesdkdata)
-  - [`authenticate(data?: Object)`](#authenticatedata-capfacesdkdata)
+  - [`initialize(init: CapfaceSdkProps.Initialize)`](#initializeinit-capfacesdkinitialize)
+  - [`faceMatch(type: CapfaceSdkProps.MatchType, data?: CapfaceSdkProps.MatchData)`](#facematchtype-capfacesdkmatchtype-data-capfacesdkmatchdata)
   - [`photoMatch(data?: Object)`](#photomatchdata-capfacesdkdata)
-  - [`setTheme(options?: CapfaceSdk.Theme)`](#setthemeoptions-capfacesdktheme)
+  - [`setTheme(options?: CapfaceSdkProps.Theme)`](#setthemeoptions-capfacesdktheme)
 - [Types](#types)
-  - [`CapfaceSdk.Params`](#capfacesdkparams)
-  - [`CapfaceSdk.Headers`](#capfacesdkheaders)
-  - [`CapfaceSdk.Theme`](#capfacesdktheme)
-  - [`CapfaceSdk.ButtonLocation`](#capfacesdkbuttonlocation)
-  - [`CapfaceSdk.StatusBarColor`](#capfacesdkstatusbarcolor-ios-only)
-  - [`CapfaceSdk.FeedbackBackgroundColor`](#capfacesdkfeedbackbackgroundcolor-ios-only)
-  - [`CapfaceSdk.Point`](#capfacesdkpoint-ios-only)
-  - [`CapfaceSdk.DefaultMessage`](#capfacesdkdefaultmessage)
-  - [`CapfaceSdk.DefaultScanMessage`](#capfacesdkdefaultscanmessage)
-  - [`CapfaceSdk.Errors`](#capfacesdkerrors)
+  - [`CapfaceSdkProps.Params`](#capfacesdkparams)
+  - [`CapfaceSdkProps.Headers`](#capfacesdkheaders)
+  - [`CapfaceSdkProps.Theme`](#capfacesdktheme)
+  - [`CapfaceSdkProps.ButtonLocation`](#capfacesdkbuttonlocation)
+  - [`CapfaceSdkProps.StatusBarColor`](#capfacesdkstatusbarcolor-ios-only)
+  - [`CapfaceSdkProps.FeedbackBackgroundColor`](#capfacesdkfeedbackbackgroundcolor-ios-only)
+  - [`CapfaceSdkProps.Point`](#capfacesdkpoint-ios-only)
+  - [`CapfaceSdkProps.DefaultMessage`](#capfacesdkdefaultmessage)
+  - [`CapfaceSdkProps.DefaultScanMessage`](#capfacesdkdefaultscanmessage)
+  - [`CapfaceSdkProps.Errors`](#capfacesdkerrors)
+  - [`CapfaceSdkProps.MatchType`](#capfacesdkmatchtype)
+  - [`CapfaceSdkProps.MatchData`](#capfacesdkmatchdata)
 - [Native Events](#native-events)
   - [`Event Types`](#event-types)
 - [How to add images in CapfaceSDK module?](#how-to-add-images-in-capfacesdk-module)
@@ -54,10 +55,10 @@ import {
   ScrollView,
   NativeEventEmitter,
 } from 'react-native';
-import ReactNativeCapfaceSdk, {
-  authenticate,
-  enroll,
+import CapfaceSdk, {
+  CapfaceSdkProps,
   initialize,
+  faceMatch,
   photoMatch,
 } from '@capitual/react-native-capface-sdk';
 
@@ -94,7 +95,7 @@ export default function App() {
     console.log(isInitialized);
   };
 
-  const emitter = new NativeEventEmitter(ReactNativeCapfaceSdk);
+  const emitter = new NativeEventEmitter(CapfaceSdk);
   emitter.addListener('onCloseModal', (event: boolean) =>
     console.log('onCloseModal', event)
   );
@@ -108,18 +109,12 @@ export default function App() {
     }
   };
 
-  const onPressEnroll = async () => {
+  const onPressFaceMatch = async (
+    type: CapfaceSdkProps.MatchType,
+    data?: CapfaceSdkProps.MatchData
+  ) => {
     try {
-      const isSuccess = await enroll();
-      console.log(isSuccess);
-    } catch (error: any) {
-      console.error(error.message);
-    }
-  };
-
-  const onPressAuthenticate = async () => {
-    try {
-      const isSuccess = await authenticate();
+      const isSuccess = await faceMatch(type, data);
       console.log(isSuccess);
     } catch (error: any) {
       console.error(error.message);
@@ -129,20 +124,31 @@ export default function App() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.content}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={async () => await init()}
-        >
+        <TouchableOpacity style={styles.button} onPress={init}>
           <Text style={styles.text}>Init Capface Module</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={onPressPhotoMatch}>
           <Text style={styles.text}>Open Photo Match</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={onPressEnroll}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={async () => await onPressFaceMatch('enroll')}
+        >
           <Text style={styles.text}>Open Enroll</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={onPressAuthenticate}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={async () =>
+            await onPressFaceMatch('authenticate', { id: '123456' })
+          }
+        >
           <Text style={styles.text}>Open Authenticate</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={async () => await onPressFaceMatch('liveness')}
+        >
+          <Text style={styles.text}>Open Liveness</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -180,46 +186,34 @@ const styles = StyleSheet.create({
 
 ## API
 
-| Methods                                                                           | Return Type        | iOS | Android |
-| --------------------------------------------------------------------------------- | ------------------ | --- | ------- |
-| [`initialize(init: CapfaceSdk.Initialize)`](#initializeinit-capfacesdkinitialize) | `Promise<boolean>` | ✅  | ✅      |
-| [`enroll(data?: Object)`](#enrolldata-capfacesdkdata)                             | `Promise<boolean>` | ✅  | ✅      |
-| [`authenticate(data?: Object)`](#authenticatedata-capfacesdkdata)                 | `Promise<boolean>` | ✅  | ✅      |
-| [`photoMatch(data?: Object)`](#photomatchdata-capfacesdkdata)                     | `Promise<boolean>` | ✅  | ✅      |
-| [`setTheme(options?: CapfaceSdk.Theme)`](#setthemeoptions-capfacesdktheme)        | `void`             | ✅  | ✅      |
+| Methods                                                                                                                                      | Return Type        | iOS | Android |
+| -------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | --- | ------- |
+| [`initialize(init: CapfaceSdkProps.Initialize)`](#initializeinit-capfacesdkinitialize)                                                       | `Promise<boolean>` | ✅  | ✅      |
+| [`faceMatch(type: CapfaceSdkProps.MatchType, data?: CapfaceSdkProps.MatchData`](#facematchtype-capfacesdkmatchtype-data-capfacesdkmatchdata) | `Promise<boolean>` | ✅  | ✅      |
+| [`photoMatch(data?: Object)`](#photomatchdata-capfacesdkdata)                                                                                | `Promise<boolean>` | ✅  | ✅      |
+| [`setTheme(options?: CapfaceSdkProps.Theme)`](#setthemeoptions-capfacesdktheme)                                                              | `void`             | ✅  | ✅      |
 
-### `initialize(init: CapfaceSdk.Initialize)`
+### `initialize(init: CapfaceSdkProps.Initialize)`
 
 This is the **principal** method to be called, he must be **called first** to initialize the Capface SDK. If he doens't be called the other methods **don't works!**
 
-| `CapfaceSdk.Initialize` | type                                       | Required | Default     |
-| ----------------------- | ------------------------------------------ | -------- | ----------- |
-| `params`                | [`CapfaceSdk.Params`](#capfacesdkparams)   | ✅       | -           |
-| `headers`               | [`CapfaceSdk.Headers`](#capfacesdkheaders) | ❌       | `undefined` |
+| `CapfaceSdkProps.Initialize` | type                                            | Required | Default     |
+| ---------------------------- | ----------------------------------------------- | -------- | ----------- |
+| `params`                     | [`CapfaceSdkProps.Params`](#capfacesdkparams)   | ✅       | -           |
+| `headers`                    | [`CapfaceSdkProps.Headers`](#capfacesdkheaders) | ❌       | `undefined` |
 
-### `enroll(data?: Object)`
+### `faceMatch(type: CapfaceSdkProps.MatchType, data?: CapfaceSdkProps.MatchData)`
 
-This method makes a 3D reading of the user's face. But, you must use to **subscribe** user in Capface SDK or in your server.
+This method is called to make enrollment, authenticate and liveness available. The type is required and it must provided to select which flow you are interested.
 
-| `Object` | type     | Required | Default     |
-| -------- | -------- | -------- | ----------- |
-| `data`   | `Object` | ❌       | `undefined` |
+- **Enrollment**: This method makes a 3D reading of the user's face. But, you must use to **subscribe** user in Capface SDK or in your server.
+- **Authenticate**: This method makes a 3D reading of the user's face. But, you must use to **authenticate** user in Capface SDK or in your server.
+- **Liveness**: This method makes a 3D reading of the user's face.
 
-### `authenticate(data?: Object)`
-
-This method makes a 3D reading of the user's face. But, you must use to **authenticate** user in Capface SDK or in your server.
-
-| `Object` | type     | Required | Default     |
-| -------- | -------- | -------- | ----------- |
-| `data`   | `Object` | ❌       | `undefined` |
-
-### `photoScan(data?: Object)`
-
-This method make to read from documents for user.
-
-| `Object` | type     | Required | Default     |
-| -------- | -------- | -------- | ----------- |
-| `data`   | `Object` | ❌       | `undefined` |
+| `Object` | type                                                | Required | Default     |
+| -------- | --------------------------------------------------- | -------- | ----------- |
+| `type`   | [`CapfaceSdkProps.MatchType`](#capfacesdkmatchtype) | ✅       | -           |
+| `data`   | [`CapfaceSdkProps.MatchData`](#capfacesdkmatchdata) | ❌       | `undefined` |
 
 ### `photoMatch(data?: Object)`
 
@@ -229,162 +223,164 @@ This method make to read from face and documents for user, after comparate face 
 | -------- | -------- | -------- | ----------- |
 | `data`   | `Object` | ❌       | `undefined` |
 
-### `setTheme(options?: CapfaceSdk.Theme)`
+### `setTheme(options?: CapfaceSdkProps.Theme)`
 
 This method must be used to **set** the **theme** of the Capface SDK screen.
 
-| `CapfaceSdk.Theme` | type                                   | Required | Default     |
-| ------------------ | -------------------------------------- | -------- | ----------- |
-| `options`          | [`CapfaceSdk.Theme`](#capfacesdktheme) | ❌       | `undefined` |
+| `CapfaceSdkProps.Theme` | type                                        | Required | Default     |
+| ----------------------- | ------------------------------------------- | -------- | ----------- |
+| `options`               | [`CapfaceSdkProps.Theme`](#capfacesdktheme) | ❌       | `undefined` |
 
 <hr/>
 
 ## Types
 
-| `CapfaceSdk` - Types                                                                | iOS | Android |
-| ----------------------------------------------------------------------------------- | --- | ------- |
-| [`CapfaceSdk.Params`](#capfacesdkparams)                                            | ✅  | ✅      |
-| [`CapfaceSdk.Headers`](#capfacesdkheaders)                                          | ✅  | ✅      |
-| [`CapfaceSdk.Theme`](#capfacesdktheme)                                              | ✅  | ✅      |
-| [`CapfaceSdk.ButtonLocation`](#capfacesdkbuttonlocation)                            | ✅  | ✅      |
-| [`CapfaceSdk.StatusBarColor`](#capfacesdkstatusbarcolor-ios-only)                   | ✅  | ❌      |
-| [`CapfaceSdk.FeedbackBackgroundColor`](#capfacesdkfeedbackbackgroundcolor-ios-only) | ✅  | ❌      |
-| [`CapfaceSdk.Point`](#capfacesdkpoint-ios-only)                                     | ✅  | ❌      |
-| [`CapfaceSdk.DefaultMessage`](#capfacesdkdefaultmessage)                            | ✅  | ✅      |
-| [`CapfaceSdk.DefaultScanMessage`](#capfacesdkdefaultscanmessage)                    | ✅  | ✅      |
+| `CapfaceSdkProps` - Types                                                                | iOS | Android |
+| ---------------------------------------------------------------------------------------- | --- | ------- |
+| [`CapfaceSdkProps.Params`](#capfacesdkparams)                                            | ✅  | ✅      |
+| [`CapfaceSdkProps.Headers`](#capfacesdkheaders)                                          | ✅  | ✅      |
+| [`CapfaceSdkProps.Theme`](#capfacesdktheme)                                              | ✅  | ✅      |
+| [`CapfaceSdkProps.ButtonLocation`](#capfacesdkbuttonlocation)                            | ✅  | ✅      |
+| [`CapfaceSdkProps.StatusBarColor`](#capfacesdkstatusbarcolor-ios-only)                   | ✅  | ❌      |
+| [`CapfaceSdkProps.FeedbackBackgroundColor`](#capfacesdkfeedbackbackgroundcolor-ios-only) | ✅  | ❌      |
+| [`CapfaceSdkProps.Point`](#capfacesdkpoint-ios-only)                                     | ✅  | ❌      |
+| [`CapfaceSdkProps.DefaultMessage`](#capfacesdkdefaultmessage)                            | ✅  | ✅      |
+| [`CapfaceSdkProps.Errors`](#capfacesdkerrors)                                            | ✅  | ✅      |
+| [`CapfaceSdkProps.MatchType`](#capfacesdkdefaultscanmessage)                             | ✅  | ✅      |
+| [`CapfaceSdkProps.MatchData`](#capfacesdkdefaultscanmessage)                             | ✅  | ✅      |
 
-### `CapfaceSdk.Params`
+### `CapfaceSdkProps.Params`
 
 Here must be passed to initialize the Capface SDK! Case the parameters isn't provided the Capface SDK goes to be not initialized.
 
-| `CapfaceSdk.Params` | type      | Required |
-| ------------------- | --------- | -------- |
-| `device`            | `string`  | ✅       |
-| `url`               | `string`  | ✅       |
-| `key`               | `string`  | ✅       |
-| `productionKey`     | `string`  | ✅       |
-| `isDeveloperMode`   | `boolean` | ❌       |
+| `CapfaceSdkProps.Params` | type      | Required |
+| ------------------------ | --------- | -------- |
+| `device`                 | `string`  | ✅       |
+| `url`                    | `string`  | ✅       |
+| `key`                    | `string`  | ✅       |
+| `productionKey`          | `string`  | ✅       |
+| `isDeveloperMode`        | `boolean` | ❌       |
 
-### `CapfaceSdk.Headers`
+### `CapfaceSdkProps.Headers`
 
 Here you can add your headers to send request when some method is called. Only values from type **string**, **null** or **undefined** are accepts!
 
-| `CapfaceSdk.Headers` | type                            | Required | Default     |
-| -------------------- | ------------------------------- | -------- | ----------- |
-| `[key: string]`      | `string`, `null` or `undefined` | ❌       | `undefined` |
+| `CapfaceSdkProps.Headers` | type                            | Required | Default     |
+| ------------------------- | ------------------------------- | -------- | ----------- |
+| `[key: string]`           | `string`, `null` or `undefined` | ❌       | `undefined` |
 
-### `CapfaceSdk.Theme`
+### `CapfaceSdkProps.Theme`
 
-This is a list of theme properties that can be used to styling. Note, we recommend that you use **only** hexadecimal values to colors, between six and eight characters, because still we don't supported others color type.
+This is a list of theme properties that can be used to styling. We recommend that you use hexadecimal values for colors. RGB, RGBA, HSL and HSLA colors are also supported.
 
-| `CapfaceSdk.Theme`                             | type                                                                                                                          | iOS | Android | Required | Default                                                                                                 |
-| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | --- | ------- | -------- | ------------------------------------------------------------------------------------------------------- |
-| `logoImage`                                    | `string`                                                                                                                      | ✅  | ✅      | ❌       | `facetec_your_app_logo.png`                                                                             |
-| `cancelImage`                                  | `string`                                                                                                                      | ✅  | ✅      | ❌       | `facetec_cancel.png`                                                                                    |
-| `cancelButtonLocation`                         | [`CapfaceSdk.ButtonLocation`](#capfacesdkbuttonlocation)                                                                      | ✅  | ✅      | ❌       | `TOP_RIGHT`                                                                                             |
-| `defaultStatusBarColorIos`                     | [`CapfaceSdk.StatusBarColor`](#capfacesdkstatusbarcolor-ios-only)                                                             | ✅  | ❌      | ❌       | `DARK_CONTENT`                                                                                          |
-| `frameCornerRadius`                            | `number`                                                                                                                      | ✅  | ✅      | ❌       | `10` (iOS) and `20` (Android)                                                                           |
-| `frameBackgroundColor`                         | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
-| `frameBorderColor`                             | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
-| `overlayBackgroundColor`                       | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
-| `guidanceBackgroundColorsAndroid`              | `string`                                                                                                                      | ❌  | ✅      | ❌       | `#FFFFFF`                                                                                               |
-| `guidanceBackgroundColorsIos`                  | `string[]`                                                                                                                    | ✅  | ❌      | ❌       | `["#FFFFFF", "#FFFFFF"]`                                                                                |
-| `guidanceForegroundColor`                      | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#272937`                                                                                               |
-| `guidanceButtonBackgroundNormalColor`          | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#026FF4`                                                                                               |
-| `guidanceButtonBackgroundDisabledColor`        | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#B3D4FC`                                                                                               |
-| `guidanceButtonBackgroundHighlightColor`       | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#0264DC`                                                                                               |
-| `guidanceButtonTextNormalColor`                | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
-| `guidanceButtonTextDisabledColor`              | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
-| `guidanceButtonTextHighlightColor`             | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
-| `guidanceRetryScreenImageBorderColor`          | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
-| `guidanceRetryScreenOvalStrokeColor`           | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
-| `ovalStrokeColor`                              | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#026FF4`                                                                                               |
-| `ovalFirstProgressColor`                       | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#0264DC`                                                                                               |
-| `ovalSecondProgressColor`                      | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#0264DC`                                                                                               |
-| `feedbackBackgroundColorsAndroid`              | `string`                                                                                                                      | ❌  | ✅      | ❌       | `#026FF4`                                                                                               |
-| `feedbackBackgroundColorsIos`                  | [`CapfaceSdk.FeedbackBackgroundColor` ](#capfacesdkfeedbackbackgroundcolor-ios-only)                                          | ✅  | ❌      | ❌       | [`FeedbackBackgroundColor` ](#capfacesdkfeedbackbackgroundcolor-ios-only)                               |
-| `feedbackTextColor`                            | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
-| `resultScreenBackgroundColorsAndroid`          | `string`                                                                                                                      | ❌  | ✅      | ❌       | `#FFFFFF`                                                                                               |
-| `resultScreenBackgroundColorsIos`              | `string[]`                                                                                                                    | ✅  | ❌      | ❌       | `["#FFFFFF", "#FFFFFF"]`                                                                                |
-| `resultScreenForegroundColor`                  | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#272937`                                                                                               |
-| `resultScreenActivityIndicatorColor`           | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#026FF4`                                                                                               |
-| `resultScreenResultAnimationBackgroundColor`   | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#026FF4`                                                                                               |
-| `resultScreenResultAnimationForegroundColor`   | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
-| `resultScreenUploadProgressFillColor`          | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#026FF4`                                                                                               |
-| `idScanSelectionScreenBackgroundColorsAndroid` | `string`                                                                                                                      | ❌  | ✅      | ❌       | `#FFFFFF`                                                                                               |
-| `idScanSelectionScreenBackgroundColorsIos`     | `string[]`                                                                                                                    | ✅  | ❌      | ❌       | `["#FFFFFF", "#FFFFFF"]`                                                                                |
-| `idScanSelectionScreenForegroundColor`         | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#272937`                                                                                               |
-| `idScanReviewScreenForegroundColor`            | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
-| `idScanReviewScreenTextBackgroundColor`        | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#026FF4`                                                                                               |
-| `idScanCaptureScreenForegroundColor`           | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
-| `idScanCaptureScreenTextBackgroundColor`       | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#026FF4`                                                                                               |
-| `idScanButtonBackgroundNormalColor`            | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#026FF4`                                                                                               |
-| `idScanButtonBackgroundDisabledColor`          | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#B3D4FC`                                                                                               |
-| `idScanButtonBackgroundHighlightColor`         | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#0264DC`                                                                                               |
-| `idScanButtonTextNormalColor`                  | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
-| `idScanButtonTextDisabledColor`                | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
-| `idScanButtonTextHighlightColor`               | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
-| `idScanCaptureScreenBackgroundColor`           | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
-| `idScanCaptureFrameStrokeColor`                | `string`                                                                                                                      | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
-| `autheticanteMessage`                          | [`CapfaceSdk.DefaultMessage`](#capfacesdkdefaultmessage)                                                                      | ✅  | ✅      | ❌       | [`DefaultMessage`](#capfacesdkdefaultmessage)                                                           |
-| `enrollMessage`                                | [`CapfaceSdk.DefaultMessage`](#capfacesdkdefaultmessage)                                                                      | ✅  | ✅      | ❌       | [`DefaultMessage`](#capfacesdkdefaultmessage)                                                           |
-| `photoIdScanMessage`                           | [`CapfaceSdk.DefaultScanMessage`](#capfacesdkdefaultscanmessage)                                                              | ✅  | ✅      | ❌       | [`DefaultScanMessage`](#capfacesdkdefaultscanmessage)                                                   |
-| `photoIdMatchMessage`                          | [`CapfaceSdk.DefaultScanMessage`](#capfacesdkdefaultscanmessage) and [`CapfaceSdk.DefaultMessage`](#capfacesdkdefaultmessage) | ✅  | ✅      | ❌       | [`DefaultScanMessage`](#capfacesdkdefaultscanmessage) and [`DefaultMessage`](#capfacesdkdefaultmessage) |
+| `CapfaceSdkProps.Theme`                        | type                                                                                                                                    | iOS | Android | Required | Default                                                                                                 |
+| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | --- | ------- | -------- | ------------------------------------------------------------------------------------------------------- |
+| `logoImage`                                    | `string`                                                                                                                                | ✅  | ✅      | ❌       | `facetec_your_app_logo.png`                                                                             |
+| `cancelImage`                                  | `string`                                                                                                                                | ✅  | ✅      | ❌       | `facetec_cancel.png`                                                                                    |
+| `cancelButtonLocation`                         | [`CapfaceSdkProps.ButtonLocation`](#capfacesdkbuttonlocation)                                                                           | ✅  | ✅      | ❌       | `TOP_RIGHT`                                                                                             |
+| `defaultStatusBarColorIos`                     | [`CapfaceSdkProps.StatusBarColor`](#capfacesdkstatusbarcolor-ios-only)                                                                  | ✅  | ❌      | ❌       | `DARK_CONTENT`                                                                                          |
+| `frameCornerRadius`                            | `number`                                                                                                                                | ✅  | ✅      | ❌       | `10` (iOS) and `20` (Android)                                                                           |
+| `frameBackgroundColor`                         | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
+| `frameBorderColor`                             | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
+| `overlayBackgroundColor`                       | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
+| `guidanceBackgroundColorsAndroid`              | `string`                                                                                                                                | ❌  | ✅      | ❌       | `#FFFFFF`                                                                                               |
+| `guidanceBackgroundColorsIos`                  | `string[]`                                                                                                                              | ✅  | ❌      | ❌       | `["#FFFFFF", "#FFFFFF"]`                                                                                |
+| `guidanceForegroundColor`                      | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#272937`                                                                                               |
+| `guidanceButtonBackgroundNormalColor`          | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#026FF4`                                                                                               |
+| `guidanceButtonBackgroundDisabledColor`        | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#B3D4FC`                                                                                               |
+| `guidanceButtonBackgroundHighlightColor`       | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#0264DC`                                                                                               |
+| `guidanceButtonTextNormalColor`                | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
+| `guidanceButtonTextDisabledColor`              | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
+| `guidanceButtonTextHighlightColor`             | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
+| `guidanceRetryScreenImageBorderColor`          | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
+| `guidanceRetryScreenOvalStrokeColor`           | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
+| `ovalStrokeColor`                              | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#026FF4`                                                                                               |
+| `ovalFirstProgressColor`                       | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#0264DC`                                                                                               |
+| `ovalSecondProgressColor`                      | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#0264DC`                                                                                               |
+| `feedbackBackgroundColorsAndroid`              | `string`                                                                                                                                | ❌  | ✅      | ❌       | `#026FF4`                                                                                               |
+| `feedbackBackgroundColorsIos`                  | [`CapfaceSdkProps.FeedbackBackgroundColor` ](#capfacesdkfeedbackbackgroundcolor-ios-only)                                               | ✅  | ❌      | ❌       | [`FeedbackBackgroundColor` ](#capfacesdkfeedbackbackgroundcolor-ios-only)                               |
+| `feedbackTextColor`                            | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
+| `resultScreenBackgroundColorsAndroid`          | `string`                                                                                                                                | ❌  | ✅      | ❌       | `#FFFFFF`                                                                                               |
+| `resultScreenBackgroundColorsIos`              | `string[]`                                                                                                                              | ✅  | ❌      | ❌       | `["#FFFFFF", "#FFFFFF"]`                                                                                |
+| `resultScreenForegroundColor`                  | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#272937`                                                                                               |
+| `resultScreenActivityIndicatorColor`           | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#026FF4`                                                                                               |
+| `resultScreenResultAnimationBackgroundColor`   | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#026FF4`                                                                                               |
+| `resultScreenResultAnimationForegroundColor`   | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
+| `resultScreenUploadProgressFillColor`          | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#026FF4`                                                                                               |
+| `idScanSelectionScreenBackgroundColorsAndroid` | `string`                                                                                                                                | ❌  | ✅      | ❌       | `#FFFFFF`                                                                                               |
+| `idScanSelectionScreenBackgroundColorsIos`     | `string[]`                                                                                                                              | ✅  | ❌      | ❌       | `["#FFFFFF", "#FFFFFF"]`                                                                                |
+| `idScanSelectionScreenForegroundColor`         | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#272937`                                                                                               |
+| `idScanReviewScreenForegroundColor`            | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
+| `idScanReviewScreenTextBackgroundColor`        | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#026FF4`                                                                                               |
+| `idScanCaptureScreenForegroundColor`           | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
+| `idScanCaptureScreenTextBackgroundColor`       | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#026FF4`                                                                                               |
+| `idScanButtonBackgroundNormalColor`            | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#026FF4`                                                                                               |
+| `idScanButtonBackgroundDisabledColor`          | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#B3D4FC`                                                                                               |
+| `idScanButtonBackgroundHighlightColor`         | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#0264DC`                                                                                               |
+| `idScanButtonTextNormalColor`                  | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
+| `idScanButtonTextDisabledColor`                | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
+| `idScanButtonTextHighlightColor`               | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
+| `idScanCaptureScreenBackgroundColor`           | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
+| `idScanCaptureFrameStrokeColor`                | `string`                                                                                                                                | ✅  | ✅      | ❌       | `#FFFFFF`                                                                                               |
+| `autheticanteMessage`                          | [`CapfaceSdkProps.DefaultMessage`](#capfacesdkdefaultmessage)                                                                           | ✅  | ✅      | ❌       | [`DefaultMessage`](#capfacesdkdefaultmessage)                                                           |
+| `enrollMessage`                                | [`CapfaceSdkProps.DefaultMessage`](#capfacesdkdefaultmessage)                                                                           | ✅  | ✅      | ❌       | [`DefaultMessage`](#capfacesdkdefaultmessage)                                                           |
+| `livenessMessage`                              | [`CapfaceSdkProps.DefaultMessage`](#capfacesdkdefaultmessage)                                                                           | ✅  | ✅      | ❌       | [`DefaultMessage`](#capfacesdkdefaultmessage)                                                           |
+| `photoIdMatchMessage`                          | [`CapfaceSdkProps.DefaultScanMessage`](#capfacesdkdefaultscanmessage) and [`CapfaceSdkProps.DefaultMessage`](#capfacesdkdefaultmessage) | ✅  | ✅      | ❌       | [`DefaultScanMessage`](#capfacesdkdefaultscanmessage) and [`DefaultMessage`](#capfacesdkdefaultmessage) |
 
-### `CapfaceSdk.ButtonLocation`
+### `CapfaceSdkProps.ButtonLocation`
 
 This type must be used to position of the cancel button on screen.
 
-| `CapfaceSdk.ButtonLocation` | Description                                                     |
-| --------------------------- | --------------------------------------------------------------- |
-| `DISABLED`                  | Disable cancel button and doesn't show it.                      |
-| `TOP_LEFT`                  | Position cancel button in top right.                            |
-| `TOP_RIGHT`                 | Position cancel button in top right. It's **default** position. |
+| `CapfaceSdkProps.ButtonLocation` | Description                                                     |
+| -------------------------------- | --------------------------------------------------------------- |
+| `DISABLED`                       | Disable cancel button and doesn't show it.                      |
+| `TOP_LEFT`                       | Position cancel button in top right.                            |
+| `TOP_RIGHT`                      | Position cancel button in top right. It's **default** position. |
 
-### `CapfaceSdk.StatusBarColor` (`iOS` only)
+### `CapfaceSdkProps.StatusBarColor` (`iOS` only)
 
 This type must be used to status bar color.
 
-| `CapfaceSdk.StatusBarColor` | Description                                  |
-| --------------------------- | -------------------------------------------- |
-| `DARK_CONTENT`              | **Default** color to status bar.             |
-| `DEFAULT`                   | Status bar color that's set from the device. |
-| `LIGHT_CONTENT`             | Light color to status bar.                   |
+| `CapfaceSdkProps.StatusBarColor` | Description                                  |
+| -------------------------------- | -------------------------------------------- |
+| `DARK_CONTENT`                   | **Default** color to status bar.             |
+| `DEFAULT`                        | Status bar color that's set from the device. |
+| `LIGHT_CONTENT`                  | Light color to status bar.                   |
 
-### `CapfaceSdk.FeedbackBackgroundColor` (`iOS` only)
+### `CapfaceSdkProps.FeedbackBackgroundColor` (`iOS` only)
 
 This type must be used to **set** the **theme** of the feedback box.
 
-| `CapfaceSdk.FeedbackBackgroundColor` | Description                                                                                    | type                                 | Required | Default                  |
-| ------------------------------------ | ---------------------------------------------------------------------------------------------- | ------------------------------------ | -------- | ------------------------ |
-| `colors`                             | An array of colors defining the color of each gradient stop.                                   | `string[]`                           | ❌       | `["#026FF4", "#026FF4"]` |
-| `locations`                          | It's accepts only two values between 0 and 1 that defining the location of each gradient stop. | `[number, number]`                   | ❌       | `[0, 1]`                 |
-| `startPoint`                         | The start point of the gradient when drawn in the layer’s coordinate space.                    | [`Point`](#capfacesdkpoint-ios-only) | ❌       | `x: 0` and `y: 0`        |
-| `endPoint`                           | The end point of the gradient when drawn in the layer’s coordinate space.                      | [`Point`](#capfacesdkpoint-ios-only) | ❌       | `x: 1` and `y: 0`        |
+| `CapfaceSdkProps.FeedbackBackgroundColor` | Description                                                                                    | type                                 | Required | Default                  |
+| ----------------------------------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------ | -------- | ------------------------ |
+| `colors`                                  | An array of colors defining the color of each gradient stop.                                   | `string[]`                           | ❌       | `["#026FF4", "#026FF4"]` |
+| `locations`                               | It's accepts only two values between 0 and 1 that defining the location of each gradient stop. | `[number, number]`                   | ❌       | `[0, 1]`                 |
+| `startPoint`                              | The start point of the gradient when drawn in the layer’s coordinate space.                    | [`Point`](#capfacesdkpoint-ios-only) | ❌       | `x: 0` and `y: 0`        |
+| `endPoint`                                | The end point of the gradient when drawn in the layer’s coordinate space.                      | [`Point`](#capfacesdkpoint-ios-only) | ❌       | `x: 1` and `y: 0`        |
 
-### `CapfaceSdk.Point` (`iOS` only)
+### `CapfaceSdkProps.Point` (`iOS` only)
 
 This interface defines the drawn in the layer's coordinate space.
 
-| `CapfaceSdk.Point` | type     | Required | Default     |
-| ------------------ | -------- | -------- | ----------- |
-| `x`                | `number` | ❌       | `undefined` |
-| `y`                | `number` | ❌       | `undefined` |
+| `CapfaceSdkProps.Point` | type     | Required | Default     |
+| ----------------------- | -------- | -------- | ----------- |
+| `x`                     | `number` | ❌       | `undefined` |
+| `y`                     | `number` | ❌       | `undefined` |
 
-### `CapfaceSdk.DefaultMessage`
+### `CapfaceSdkProps.DefaultMessage`
 
 This interface represents the success message and loading data message during to CapfaceSDK flow. It interface is used **more** by processors's [authenticate](#authenticatedata-capfacesdkdata) and [enroll](#enrolldata-capfacesdkdata) processors.
 
-| `CapfaceSdk.DefaultMessage` | type     | iOS | Android | Required | Default                                                                 |
-| --------------------------- | -------- | --- | ------- | -------- | ----------------------------------------------------------------------- |
-| `successMessage`            | `string` | ✅  | ✅      | ❌       | `Liveness Confirmed` (Exception to authenticate method: `Autheticated`) |
-| `uploadMessageIos`          | `string` | ✅  | ❌      | ❌       | `Still Uploading...`                                                    |
+| `CapfaceSdkProps.DefaultMessage` | type     | iOS | Android | Required | Default                                                                 |
+| -------------------------------- | -------- | --- | ------- | -------- | ----------------------------------------------------------------------- |
+| `successMessage`                 | `string` | ✅  | ✅      | ❌       | `Liveness Confirmed` (Exception to authenticate method: `Autheticated`) |
+| `uploadMessageIos`               | `string` | ✅  | ❌      | ❌       | `Still Uploading...`                                                    |
 
-### `CapfaceSdk.DefaultScanMessage`
+### `CapfaceSdkProps.DefaultScanMessage`
 
 This interface represents the all scan messages during to CapfaceSDK flow. It interface is used by [photoMatch](#photomatchdata-capfacesdkdata) processors.
 
-| `CapfaceSdk.DefaultScanMessage`                     | type     | iOS | Android | Required | Default                              |
+| `CapfaceSdkProps.DefaultScanMessage`                | type     | iOS | Android | Required | Default                              |
 | --------------------------------------------------- | -------- | --- | ------- | -------- | ------------------------------------ |
 | `frontSideUploadStarted`                            | `string` | ✅  | ✅      | ❌       | `Uploading Encrypted ID Scan`        |
 | `frontSideStillUploading`                           | `string` | ✅  | ✅      | ❌       | `Still Uploading... Slow Connection` |
@@ -421,17 +417,43 @@ This interface represents the all scan messages during to CapfaceSDK flow. It in
 | `retryIDTypeNotSupported`                           | `string` | ✅  | ✅      | ❌       | `ID Type Mismatch Please Try Again`  |
 | `skipOrErrorNFC`                                    | `string` | ✅  | ✅      | ❌       | `ID Details Uploaded`                |
 
-### `CapfaceSdk.Errors`
+### `CapfaceSdkProps.Errors`
 
-| `CapfaceSdk.Errors`             | Description                                                                          | iOS | Android |
-| ------------------------------- | ------------------------------------------------------------------------------------ | --- | ------- |
-| `CapFaceHasNotBeenInitialized`  | When some processors method is runned, but CapfaceSDK **has not been initialized**.  | ✅  | ✅      |
-| `CapFaceValuesWereNotProcessed` | When the image sent to the processors cannot be processed due to inconsistency.      | ✅  | ✅      |
-| `HTTPSError`                    | When exists some network error.                                                      | ✅  | ✅      |
-| `JSONError`                     | When exists some problem in getting data in request of **base URL** information.     | ❌  | ✅      |
-| `CapFaceInvalidSession`         | When session status is invalid.                                                      | ❌  | ✅      |
-| `CapFaceLivenessWasntProcessed` | When the image user sent to the processors cannot be processed due to inconsistency. | ❌  | ✅      |
-| `CapFaceScanWasntProcessed`     | When the image ID sent to the processors cannot be processed due to inconsistency.   | ❌  | ✅      |
+This enum represents all errors that are encountered on the CapFace SDK.
+
+| `CapfaceSdkProps.Errors`        | Description                                                                                                          | iOS | Android |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------------- | --- | ------- |
+| `CapFaceHasNotBeenInitialized`  | When some processors method is runned, but CapfaceSDK **has not been initialized**.                                  | ✅  | ✅      |
+| `CapFaceValuesWereNotProcessed` | When the image sent to the processors cannot be processed due to inconsistency.                                      | ✅  | ✅      |
+| `HTTPSError`                    | When exists some network error.                                                                                      | ✅  | ✅      |
+| `JSONError`                     | When exists some problem in getting data in request of **base URL** information.                                     | ✅  | ✅      |
+| `NoConfigurationsProvided`      | When the configurations [`faceMatch`](#facematchtype-capfacesdkmatchtype-data-capfacesdkmatchdata) doesn't provided. | ❌  | ✅      |
+| `CapFaceInvalidSession`         | When session status is invalid.                                                                                      | ❌  | ✅      |
+| `CapFaceLivenessWasntProcessed` | When the image user sent to the processors cannot be processed due to inconsistency.                                 | ❌  | ✅      |
+| `CapFaceScanWasntProcessed`     | When the image ID sent to the processors cannot be processed due to inconsistency.                                   | ❌  | ✅      |
+
+### `CapfaceSdkProps.MatchType`
+
+This enum represents all the possible types of flow that can be used on the [`faceMatch`](#facematchtype-capfacesdkmatchtype-data-capfacesdkmatchdata) method.
+
+| `CapfaceSdkProps.MatchType` | Description                              | iOS | Android |
+| --------------------------- | ---------------------------------------- | --- | ------- |
+| `authenticate`              | When you want to make authenticate flow. | ✅  | ✅      |
+| `enroll`                    | When you want to make enrollment flow.   | ✅  | ✅      |
+| `liveness`                  | When you want to make liveness flow.     | ✅  | ✅      |
+
+> The **authenticate flow** depends on to enrollment flow to **work** because the authenticate flow is done using an **UUID** that's was created by enrollment flow.
+
+### `CapfaceSdkProps.MatchData`
+
+The object with properties that will be sent to native modules to make the requests, change text labels and sent parameters via headers.
+
+| `CapfaceSdkProps.MatchData` | type               | iOS | Android | Required | Default                                                                                     |
+| --------------------------- | ------------------ | --- | ------- | -------- | ------------------------------------------------------------------------------------------- |
+| `endpoint`                  | `string` or `null` | ✅  | ✅      | ❌       | `Authenticated` (authenticate) or `Liveness\nConfirmed` (enrollment and liveness)           |
+| `parameters`                | `string` or `null` | ✅  | ✅      | ❌       | `null`                                                                                      |
+| `successMessage`            | `string` or `null` | ✅  | ✅      | ❌       | `/match-3d-3d` (authenticate) or `/enrollment-3d` (enrollment) or `/liveness-3d` (liveness) |
+| `uploadMessageIos`          | `string` or `null` | ✅  | ✅      | ❌       | `Still Uploading...`                                                                        |
 
 <hr/>
 
@@ -472,7 +494,7 @@ import React, { useEffect } from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 import {
   initialize,
-  enroll,
+  faceMatch,
   setTheme,
 } from '@capitual/react-native-capface-sdk';
 
@@ -515,7 +537,7 @@ export default function App() {
         }}
         onPress={async () => {
           try {
-            const isSuccess = await enroll();
+            const isSuccess = await faceMatch('enroll');
             console.log(isSuccess);
           } catch (error: any) {
             console.error(error);

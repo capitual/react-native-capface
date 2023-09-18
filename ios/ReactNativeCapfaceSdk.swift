@@ -13,6 +13,7 @@ import LocalAuthentication
 
 @objc(ReactNativeCapfaceSdk)
 class ReactNativeCapfaceSdk: RCTEventEmitter, URLSessionDelegate {
+    private let initializationMessage = "CapFace SDK has not been initialized!"
     public static var emitter: RCTEventEmitter!
     var capFaceViewController: CapFaceViewController!
     var isInitialized: Bool = false;
@@ -41,12 +42,10 @@ class ReactNativeCapfaceSdk: RCTEventEmitter, URLSessionDelegate {
     @objc func initializeSdk(_ params: NSDictionary, headers: NSDictionary, callback: @escaping RCTResponseSenderBlock) -> Void {
         DispatchQueue.main.async {
             self.capFaceViewController = CapFaceViewController();
-            self.handleTheme(Config.Theme);
             
             if params.count == 0 {
                 self.isInitialized = false;
                 callback([false]);
-                print("No parameters provided!");
                 return;
             }
             
@@ -60,8 +59,9 @@ class ReactNativeCapfaceSdk: RCTEventEmitter, URLSessionDelegate {
             } else {
                 self.isInitialized = false;
                 callback([false]);
-                print("CapFace SDK Configuration doesn't exists!");
             }
+
+            self.handleTheme(Config.Theme);
         }
     }
     
@@ -81,30 +81,11 @@ class ReactNativeCapfaceSdk: RCTEventEmitter, URLSessionDelegate {
         return ["onCloseModal"];
     }
     
-    @objc func handleLivenessCheck(_ data: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+    @objc func handleFaceUser(_ config: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         if self.isInitialized {
-            self.capFaceViewController.onLivenessCheck(data, resolve: resolve, reject: reject);
+            self.capFaceViewController.onFaceUser(config, resolve: resolve, reject: reject);
         } else {
-            print("CapFace SDK has not been initialized!");
-            return reject("CapFace SDK has not been initialized!", "CapFaceHasNotBeenInitialized", nil);
-        }
-    }
-    
-    @objc func handleEnrollUser(_ data: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        if self.isInitialized {
-            self.capFaceViewController.onEnrollUser(data, resolve: resolve, reject: reject);
-        } else {
-            print("CapFace SDK has not been initialized!");
-            return reject("CapFace SDK has not been initialized!", "CapFaceHasNotBeenInitialized", nil);
-        }
-    }
-    
-    @objc func handleAuthenticateUser(_ data: NSDictionary, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        if self.isInitialized {
-            self.capFaceViewController.onAuthenticateUser(data, resolve: resolve, reject: reject);
-        } else {
-            print("CapFace SDK has not been initialized!");
-            return reject("CapFace SDK has not been initialized!", "CapFaceHasNotBeenInitialized", nil);
+            return reject(self.initializationMessage, "CapFaceHasNotBeenInitialized", nil);
         }
     }
     
@@ -112,8 +93,7 @@ class ReactNativeCapfaceSdk: RCTEventEmitter, URLSessionDelegate {
         if self.isInitialized {
             self.capFaceViewController.onPhotoIDMatch(data, resolve: resolve, reject: reject);
         } else {
-            print("CapFace SDK has not been initialized!");
-            return reject("CapFace SDK has not been initialized!", "CapFaceHasNotBeenInitialized", nil);
+            return reject(self.initializationMessage, "CapFaceHasNotBeenInitialized", nil);
         }
     }
     
@@ -121,8 +101,7 @@ class ReactNativeCapfaceSdk: RCTEventEmitter, URLSessionDelegate {
         if self.isInitialized {
             self.capFaceViewController.onPhotoIDScan(data, resolve: resolve, reject: reject);
         } else {
-            print("CapFace SDK has not been initialized!");
-            return reject("CapFace SDK has not been initialized!", "CapFaceHasNotBeenInitialized", nil);
+            return reject(self.initializationMessage, "CapFaceHasNotBeenInitialized", nil);
         }
     }
     

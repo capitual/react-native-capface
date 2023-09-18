@@ -11,13 +11,13 @@ import Foundation
 import FaceTecSDK
 
 public class Config {
+    private static let CapThemeUtils: ThemeUtils! = ThemeUtils();
     public static var DeviceKeyIdentifier: String!
     public static var BaseURL: String!
     public static var PublicFaceScanEncryptionKey: String!
     public static var ProductionKeyText: String!
     public static var Headers: NSDictionary?
     public static var Theme: NSDictionary?
-    private static let CapThemeUtils: ThemeUtils! = ThemeUtils();
 
     public static func setDevice(_ device: String) {
         Config.DeviceKeyIdentifier = device;

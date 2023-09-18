@@ -1,7 +1,6 @@
 package com.capitual.processors;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -14,26 +13,27 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Map;
 
 import com.capitual.processors.helpers.ThemeUtils;
 import com.capitual.reactnativecapfacesdk.ReactNativeCapfaceSdkModule;
-import com.facebook.react.bridge.ReadableMap;
 import com.facetec.sdk.*;
 
-public class LivenessCheckProcessor extends Processor implements FaceTecFaceScanProcessor {
-  private boolean success = false;
-  private final String principalKey = "livenessMessage";
+public class FaceProcessor extends Processor implements FaceTecFaceScanProcessor {
+  private final String key;
   private final ReactNativeCapfaceSdkModule capFaceModule;
-  private final ReadableMap data;
+  private final FaceConfig faceConfig;
   private final ThemeUtils capThemeUtils = new ThemeUtils();
+  private boolean success = false;
 
-  public LivenessCheckProcessor(String sessionToken, Context context, ReactNativeCapfaceSdkModule capFaceModule,
-      ReadableMap data) {
+  public FaceProcessor(String sessionToken, Context context, ReactNativeCapfaceSdkModule capFaceModule,
+      FaceConfig faceConfig) {
     this.capFaceModule = capFaceModule;
-    this.data = data;
+    this.faceConfig = faceConfig;
+    this.key = faceConfig.getKey();
 
     capFaceModule.sendEvent("onCloseModal", true);
-    FaceTecSessionActivity.createAndLaunchSession(context, LivenessCheckProcessor.this, sessionToken);
+    FaceTecSessionActivity.createAndLaunchSession(context, FaceProcessor.this, sessionToken);
   }
 
   public void processSessionWhileFaceTecSDKWaits(final FaceTecSessionResult sessionResult,
@@ -50,22 +50,28 @@ public class LivenessCheckProcessor extends Processor implements FaceTecFaceScan
 
     JSONObject parameters = new JSONObject();
     try {
-      if (this.data != null) {
-        parameters.put("data", new JSONObject(this.data.toHashMap()));
+      final Map extraParameters = this.faceConfig.getParameters();
+      if (extraParameters != null) {
+        parameters.put("data", new JSONObject(extraParameters));
       }
       parameters.put("faceScan", sessionResult.getFaceScanBase64());
       parameters.put("auditTrailImage", sessionResult.getAuditTrailCompressedBase64()[0]);
       parameters.put("lowQualityAuditTrailImage", sessionResult.getLowQualityAuditTrailCompressedBase64()[0]);
+
+      final boolean hasExternalDatabaseRefID = this.faceConfig.getHasExternalDatabaseRefID();
+      if (hasExternalDatabaseRefID) {
+        parameters.put("externalDatabaseRefID", capFaceModule.getLatestExternalDatabaseRefID());
+      }
     } catch (JSONException e) {
       e.printStackTrace();
-      Log.d("Capitual - JSON", "Exception raised while attempting to create JSON payload for upload.");
       capFaceModule.sendEvent("onCloseModal", false);
       capFaceModule.processorPromise.reject("Exception raised while attempting to create JSON payload for upload.",
           "JSONError");
     }
 
+    final String endpoint = this.faceConfig.getEndpoint();
     okhttp3.Request request = new okhttp3.Request.Builder()
-        .url(Config.BaseURL + "/liveness-3d")
+        .url(Config.BaseURL + endpoint)
         .headers(Config.getHeaders("POST"))
         .post(new ProgressRequestBody(
             RequestBody.create(MediaType.parse("application/json; charset=utf-8"), parameters.toString()),
@@ -87,9 +93,11 @@ public class LivenessCheckProcessor extends Processor implements FaceTecFaceScan
           JSONObject responseJSON = new JSONObject(responseString);
           boolean wasProcessed = responseJSON.getBoolean("wasProcessed");
           String scanResultBlob = responseJSON.getString("scanResultBlob");
+
           if (wasProcessed) {
-            FaceTecCustomization.overrideResultScreenSuccessMessage = capThemeUtils.handleMessage(principalKey,
-                "successMessage", "Liveness\nConfirmed");
+            final String message = faceConfig.getSuccessMessage();
+            FaceTecCustomization.overrideResultScreenSuccessMessage = capThemeUtils
+                .handleMessage(key, "successMessage", message);
             success = faceScanResultCallback.proceedToNextStep(scanResultBlob);
             if (success) {
               capFaceModule.sendEvent("onCloseModal", false);
@@ -103,7 +111,6 @@ public class LivenessCheckProcessor extends Processor implements FaceTecFaceScan
           }
         } catch (JSONException e) {
           e.printStackTrace();
-          Log.d("Capitual - JSON", "Exception raised while attempting to parse JSON result.");
           faceScanResultCallback.cancel();
           capFaceModule.sendEvent("onCloseModal", false);
           capFaceModule.processorPromise.reject("Exception raised while attempting to parse JSON result.",
@@ -113,7 +120,6 @@ public class LivenessCheckProcessor extends Processor implements FaceTecFaceScan
 
       @Override
       public void onFailure(@NonNull Call call, IOException e) {
-        Log.d("Capitual - HTTPS", "Exception raised while attempting HTTPS call.");
         faceScanResultCallback.cancel();
         capFaceModule.sendEvent("onCloseModal", false);
         capFaceModule.processorPromise.reject("Exception raised while attempting HTTPS call.", "HTTPSError");

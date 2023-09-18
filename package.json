@@ -36,7 +36,8 @@
     "build:ios": "cd example/ios && xcodebuild -workspace ReactNativeCapfaceSdkExample.xcworkspace -scheme ReactNativeCapfaceSdkExample -configuration Debug -sdk iphonesimulator CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ GCC_OPTIMIZATION_LEVEL=0 GCC_PRECOMPILE_PREFIX_HEADER=YES ASSETCATALOG_COMPILER_OPTIMIZATION=time DEBUG_INFORMATION_FORMAT=dwarf COMPILER_INDEX_STORE_ENABLE=NO",
     "bootstrap": "npm i example && npm install && npm i example pods",
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build",
-    "podspec": "pod ipc spec capitual-react-native-capface-sdk.podspec"
+    "podspec": "pod ipc spec capitual-react-native-capface-sdk.podspec",
+    "test:clean": "jest --clearCache"
   },
   "keywords": [
     "react-native",
@@ -111,6 +112,15 @@
       "prettier"
     ],
     "rules": {
+      "no-bitwise": [
+        "error",
+        {
+          "allow": [
+            "<<",
+            "|"
+          ]
+        }
+      ],
       "prettier/prettier": [
         "error",
         {

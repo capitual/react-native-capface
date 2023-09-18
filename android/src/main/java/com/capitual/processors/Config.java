@@ -14,13 +14,13 @@ import okhttp3.Headers;
 import okhttp3.Request;
 
 public class Config {
+	private static final ThemeUtils CapThemeUtils = new ThemeUtils();
 	public static String DeviceKeyIdentifier;
 	public static String BaseURL;
 	public static String PublicFaceScanEncryptionKey;
 	public static String ProductionKeyText;
 	public static ReadableMap Theme;
 	public static ReadableMap RequestHeaders;
-	private static final ThemeUtils CapThemeUtils = new ThemeUtils();
 
 	private static Map<String, String> parseReadableMapToMap() {
 		Map<String, String> headers = new HashMap<String, String>();
@@ -42,7 +42,7 @@ public class Config {
 				.header("X-Device-Key", DeviceKeyIdentifier)
 				.header("X-User-Agent", FaceTecSDK.createFaceTecAPIUserAgentString(""));
 
-		if (!httpMethod.equals("GET")) {
+		if (!httpMethod.equalsIgnoreCase("GET")) {
 			buildHeader = buildHeader.header("Content-Type", "application/json");
 		}
 

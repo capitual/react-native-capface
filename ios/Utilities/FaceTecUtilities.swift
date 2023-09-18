@@ -14,22 +14,25 @@ class FaceTecUtilities: NSObject {
 
     private static func preferredStatusBarStyle() -> UIStatusBarStyle {
         if #available(iOS 13, *) {
-            let statusBarColor: UIStatusBarStyle = CapThemeUtils.handleStatusBarStyle("defaultStatusBarColorIos")
-            return statusBarColor;
+            return CapThemeUtils.handleStatusBarStyle("defaultStatusBarColorIos")
         } else {
-            return DefaultStatusBarStyle;
+            return DefaultStatusBarStyle
         }
     }
 
     public static func getTopMostViewController() -> UIViewController? {
-        UIApplication.shared.statusBarStyle = preferredStatusBarStyle();
+        if let topViewController = UIApplication.shared.windows.first?.rootViewController {
+            var topMostViewController = topViewController
 
-        var topMostViewController = UIApplication.shared.windows[0].rootViewController;
+            while let presentedViewController = topMostViewController.presentedViewController {
+                topMostViewController = presentedViewController
+            }
 
-        while let presentedViewController = topMostViewController?.presentedViewController {
-            topMostViewController = presentedViewController;
+            topMostViewController.setNeedsStatusBarAppearanceUpdate()
+
+            return topMostViewController
         }
 
-        return topMostViewController;
+        return nil
     }
 }

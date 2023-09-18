@@ -1,8 +1,8 @@
 //
-//  AuthenticateProcessor.swift
+//  LivenessCheckProcessor.swift
 //  ReactNativeCapfaceSdk
 //
-//  Created by Nayara Dias, Bruno Fialho and Daniel Sansão on 04/09/23.
+//  Created by Nayara Dias, Bruno Fialho and Daniel Sansão on 12/09/23.
 //  Copyright © 2023 Capitual. All rights reserved.
 //
 
@@ -10,25 +10,26 @@ import UIKit
 import Foundation
 import FaceTecSDK
 
-class AuthenticateProcessor: NSObject, Processor, FaceTecFaceScanProcessorDelegate, URLSessionTaskDelegate {
+class FaceProcessor: NSObject, Processor, FaceTecFaceScanProcessorDelegate, URLSessionTaskDelegate {
+    private let key: String!
+    private let faceConfig: FaceConfig!
+    private let CapThemeUtils: ThemeUtils! = ThemeUtils();
     var success = false
-    var data: NSDictionary!
     var latestNetworkRequest: URLSessionTask!
     var fromViewController: CapFaceViewController!
     var faceScanResultCallback: FaceTecFaceScanResultCallback!
-    private let principalKey = "authenticateMessage";
-    private let CapThemeUtils: ThemeUtils! = ThemeUtils();
 
-    init(sessionToken: String, fromViewController: CapFaceViewController, data: NSDictionary) {
+    init(sessionToken: String, fromViewController: CapFaceViewController, faceConfig: FaceConfig) {
         self.fromViewController = fromViewController
-        self.data = data
+        self.faceConfig = faceConfig
+        self.key = faceConfig.getKey()
         super.init()
 
         ReactNativeCapfaceSdk.emitter.sendEvent(withName: "onCloseModal", body: true);
 
-        let authenticateViewController = FaceTec.sdk.createSessionVC(faceScanProcessorDelegate: self, sessionToken: sessionToken)
+        let faceViewController = FaceTec.sdk.createSessionVC(faceScanProcessorDelegate: self, sessionToken: sessionToken)
 
-        FaceTecUtilities.getTopMostViewController()?.present(authenticateViewController, animated: true, completion: nil)
+        FaceTecUtilities.getTopMostViewController()?.present(faceViewController, animated: true, completion: nil)
     }
 
     func processSessionWhileFaceTecSDKWaits(sessionResult: FaceTecSessionResult, faceScanResultCallback: FaceTecFaceScanResultCallback) {
@@ -47,59 +48,64 @@ class AuthenticateProcessor: NSObject, Processor, FaceTecFaceScanProcessorDelega
         }
 
         var parameters: [String : Any] = [:]
-        if (self.data != nil) {
-            parameters["data"] = self.data
+        let extraParameters: [String: Any]? = self.faceConfig.getParameters()
+        if extraParameters != nil {
+            parameters["data"] = extraParameters
         }
         parameters["faceScan"] = sessionResult.faceScanBase64
         parameters["auditTrailImage"] = sessionResult.auditTrailCompressedBase64![0]
         parameters["lowQualityAuditTrailImage"] = sessionResult.lowQualityAuditTrailCompressedBase64![0]
-        parameters["externalDatabaseRefID"] = fromViewController.getLatestExternalDatabaseRefID()
+        
+        let hasExternalDatabaseRefID: Bool = self.faceConfig.getHasExternalDatabaseRefID()
+        if hasExternalDatabaseRefID {
+            parameters["externalDatabaseRefID"] = fromViewController.getLatestExternalDatabaseRefID()
+        }
 
-        var request = Config.makeRequest(url: "/match-3d-3d", httpMethod: "POST")
+        let endpoint: String? = self.faceConfig.getEndpoint()
+        var request = Config.makeRequest(url: endpoint ?? "", httpMethod: "POST")
         request.httpBody = try! JSONSerialization.data(withJSONObject: parameters, options: JSONSerialization.WritingOptions(rawValue: 0))
 
         let session = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: OperationQueue.main)
         latestNetworkRequest = session.dataTask(with: request as URLRequest, completionHandler: { data, response, error in
             if let httpResponse = response as? HTTPURLResponse {
                 if httpResponse.statusCode < 200 || httpResponse.statusCode >= 299 {
-                    print("Exception raised while attempting HTTPS call. Status code: \(httpResponse.statusCode)");
-                    faceScanResultCallback.onFaceScanResultCancel()
                     ReactNativeCapfaceSdk.emitter.sendEvent(withName: "onCloseModal", body: false);
+                    faceScanResultCallback.onFaceScanResultCancel()
                     return
                 }
             }
 
             if let error = error {
-                print("Exception raised while attempting HTTPS call.")
-                faceScanResultCallback.onFaceScanResultCancel()
                 ReactNativeCapfaceSdk.emitter.sendEvent(withName: "onCloseModal", body: false);
+                faceScanResultCallback.onFaceScanResultCancel()
                 return
             }
 
             guard let data = data else {
-                faceScanResultCallback.onFaceScanResultCancel()
                 ReactNativeCapfaceSdk.emitter.sendEvent(withName: "onCloseModal", body: false);
+                faceScanResultCallback.onFaceScanResultCancel()
                 return
             }
 
             guard let responseJSON = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as? [String: AnyObject] else {
-                faceScanResultCallback.onFaceScanResultCancel()
                 ReactNativeCapfaceSdk.emitter.sendEvent(withName: "onCloseModal", body: false);
+                faceScanResultCallback.onFaceScanResultCancel()
                 return
             }
 
             guard let scanResultBlob = responseJSON["scanResultBlob"] as? String,
                   let wasProcessed = responseJSON["wasProcessed"] as? Bool else {
-                faceScanResultCallback.onFaceScanResultCancel()
                 ReactNativeCapfaceSdk.emitter.sendEvent(withName: "onCloseModal", body: false);
+                faceScanResultCallback.onFaceScanResultCancel()
                 return;
             }
 
             if wasProcessed == true {
-                let message = self.CapThemeUtils.handleMessage(self.principalKey, child: "successMessage", defaultMessage: "Authenticated");
+                let successMessage: String? = self.faceConfig.getSuccessMessage()
+                let message = self.CapThemeUtils.handleMessage(self.key, child: "successMessage", defaultMessage: successMessage ?? "");
                 FaceTecCustomization.setOverrideResultScreenSuccessMessage(message);
 
-                self.success = faceScanResultCallback.onFaceScanGoToNextStep(scanResultBlob: scanResultBlob)
+                self.success = faceScanResultCallback.onFaceScanGoToNextStep(scanResultBlob: scanResultBlob);
             } else {
                 ReactNativeCapfaceSdk.emitter.sendEvent(withName: "onCloseModal", body: false);
                 faceScanResultCallback.onFaceScanResultCancel()
@@ -112,9 +118,10 @@ class AuthenticateProcessor: NSObject, Processor, FaceTecFaceScanProcessorDelega
         DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
             if self.latestNetworkRequest.state == .completed { return }
 
-            let message = self.CapThemeUtils.handleMessage(self.principalKey, child: "uploadMessageIos", defaultMessage: "Still Uploading...");
-            let uploadMessage:NSMutableAttributedString = NSMutableAttributedString.init(string: message);
-            faceScanResultCallback.onFaceScanUploadMessageOverride(uploadMessageOverride: uploadMessage);
+            let uploadMessage: String = self.faceConfig.getUploadMessage()
+            let message = self.CapThemeUtils.handleMessage(self.key, child: "uploadMessageIos", defaultMessage: uploadMessage);
+            let uploadMessageOverride: NSMutableAttributedString = NSMutableAttributedString.init(string: message);
+            faceScanResultCallback.onFaceScanUploadMessageOverride(uploadMessageOverride: uploadMessageOverride);
         }
     }
 
